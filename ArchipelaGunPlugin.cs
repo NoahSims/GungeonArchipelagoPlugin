@@ -8,6 +8,7 @@ using BepInEx;
 using UnityEngine;
 using ArchiGungeon.Character;
 using ArchiGungeon.Data;
+using HarmonyLib;
 
 namespace ArchiGungeon
 {
@@ -28,10 +29,18 @@ namespace ArchiGungeon
         public const string MOD_ITEM_PREFIX = "arch";
         public const string AP_WORLD_VERSION = "0.1.1";
 
+        private readonly Harmony _harmony = new Harmony(GUID);
+
         #region Plugin Startup
         public static ArchipelagoGUI ArchipelagoModMenu { get; protected set; }
         private static bool isInit = false;
 
+
+        private void Awake()
+        {
+            ETGModConsole.Log("LOG TEST - HELLO FROM AWAKE!");
+            _harmony.PatchAll();
+        }
 
         public void Start()
         {
