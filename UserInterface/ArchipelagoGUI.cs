@@ -252,6 +252,12 @@ namespace ArchiGungeon.UserInterface
 
         public override void Update()
         {
+            // Maybe a 'cleaner' spot, but this works for getting started.
+            if (Input.GetKeyDown(KeyCode.F4))
+            {
+                OnOpen();
+            }
+
             if (IsOpen && IsHoldingInput)
             {
                 // keep focus on UI while open
