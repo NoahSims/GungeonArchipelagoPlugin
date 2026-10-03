@@ -400,3 +400,5 @@ FodyWeavers.xsd
 *.sln.iml
 _DLLRepack/ArchipelagoGungeon - Shortcut.lnk
 _DLLRepack/command.txt
+Mod.csproj
+_DLLRepack

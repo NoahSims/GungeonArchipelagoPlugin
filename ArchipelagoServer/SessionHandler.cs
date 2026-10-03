@@ -125,6 +125,10 @@ namespace ArchiGungeon.ArchipelagoServer
             ArchipelagoGUI.Instance.OnClose();
             CallRetrieveDataCoroutine();
 
+            // Fire confirmation notification
+            GameUIRoot gameUIRoot = FindObjectOfType<GameUIRoot>();
+            gameUIRoot.notificationController?.DoCustomNotification("Connected to Multiworld", "yippee!", new tk2dSpriteCollectionData(), 1);
+
             return;
         }
 
