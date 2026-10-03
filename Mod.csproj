@@ -52,6 +52,7 @@
     <Compile Include="CustomItemClass\CustomBlankModItem.cs" />
     <Compile Include="CustomItemClass\CustomOrbital.cs" />
     <Compile Include="Data\DataDefinitions.cs" />
+    <Compile Include="Data\SaveManagerPatch.cs" />
     <Compile Include="DebugTools\DebugCommands.cs" />
     <Compile Include="DebugTools\ArchDebugPrint.cs" />
     <Compile Include="Data\EnemyGuidDatabase.cs" />
