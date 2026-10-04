@@ -402,3 +402,6 @@ _DLLRepack/ArchipelagoGungeon - Shortcut.lnk
 _DLLRepack/command.txt
 Mod.csproj
 _DLLRepack
+_DLLRepack/_DLLFileMover.bat
+_DLLRepack/ArchiGungeon.dll
+_DLLRepack/ArchipelaGun.dll
