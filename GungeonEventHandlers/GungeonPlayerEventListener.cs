@@ -494,29 +494,53 @@ namespace ArchiGungeon.GungeonEventHandlers
 
         private static void OnNewFloorLoad(PlayerController playerController)
         {
-            GameLevelDefinition levelDef = GameManager.Instance.GetLastLoadedLevelDefinition();
-
-            if (levelDef.dungeonSceneName == lastFloorLoaded)
+            try
             {
-                return;
+                GameLevelDefinition levelDef = GameManager.Instance.GetLastLoadedLevelDefinition();
+                string newFloorLoaded = null;
+
+                if (levelDef == null)
+                {
+                    if (lastFloorLoaded == "tt_tutorial" || lastFloorLoaded == "tt_foyer")
+                    {
+                        // Should be loading into the Breach then.
+                        newFloorLoaded = "tt_foyer";
+                    }
+                    else
+                    {
+                        ArchDebugPrint.DebugLog(DebugCategory.PlayerEventListener, "OnNewFloorLoaded Error: Last loaded level definition is NULL. Likely the Breach, but coming not from tutorial so treated as an error for now.");
+                        return;
+                    }
+                }
+                else
+                {
+                    newFloorLoaded = levelDef.dungeonSceneName;
+                }
+
+                if (newFloorLoaded != lastFloorLoaded)
+                {
+                    ArchDebugPrint.DebugLog(DebugCategory.PlayerEventListener, $"Floor loaded: {newFloorLoaded}");
+
+                    SaveDataManagement.SaveCurrentRandomizerProgress();
+                    if (characterPastFloors.Contains(newFloorLoaded))
+                    {
+                        ArchDebugPrint.DebugLog(DebugCategory.PlayerEventListener, $"Loading past: {newFloorLoaded}");
+                        GameManager.Instance.OnNewLevelFullyLoaded += OnNewLevelCompleteLoad;
+
+                    }
+                    else
+                    {
+                        EnemySwapping.ReduceEnemyDamageMult(1);
+                    }
+
+                    lastFloorLoaded = newFloorLoaded;
+                }
             }
-
-
-            lastFloorLoaded = levelDef.dungeonSceneName;
-            ArchDebugPrint.DebugLog(DebugCategory.PlayerEventListener, $"Floor loaded: {lastFloorLoaded}");
-
-            SaveDataManagement.SaveCurrentRandomizerProgress();
-            if (characterPastFloors.Contains(levelDef.dungeonSceneName))
+            catch (Exception ex)
             {
-                ArchDebugPrint.DebugLog(DebugCategory.PlayerEventListener, $"Loading past: {lastFloorLoaded}");
-                GameManager.Instance.OnNewLevelFullyLoaded += OnNewLevelCompleteLoad;
-                
+                ArchDebugPrint.DebugLog(DebugCategory.PlayerEventListener, "OnNewFloorLoaded Error: An error occured on new floor load: " + ex.Message);
+                ArchDebugPrint.DebugLog(DebugCategory.PlayerEventListener, ex.StackTrace);
             }
-            else
-            {
-                EnemySwapping.ReduceEnemyDamageMult(1);
-            }
-            
 
             return;
         }
