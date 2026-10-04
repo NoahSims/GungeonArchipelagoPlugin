@@ -88,8 +88,9 @@ namespace ArchiGungeon.Character
         {
             ArchDebugPrint.DebugLog(DebugCategory.CharacterSystems, "Reint lost items from character swap paradox mode");
 
-            PickupObject archipelaGun = PickupObjectDatabase.GetById(Archipelagun.SpawnItemID);
-            player.inventory.AddGunToInventory((Gun)archipelaGun, makeActive: true);
+            // Uncomment to to use archipelagun
+            //PickupObject archipelaGun = PickupObjectDatabase.GetById(Archipelagun.SpawnItemID);
+            //player.inventory.AddGunToInventory((Gun)archipelaGun, makeActive: true);
         }
 
         public static void HandleLostItemsOnPastsLoading(string floor, PlayerController player)

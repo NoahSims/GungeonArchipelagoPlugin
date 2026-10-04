@@ -107,11 +107,12 @@ namespace ArchiGungeon
             playerWithArchipelagun.OnEnteredCombat += OnEnterCombat;
             playerWithArchipelagun.OnRoomClearEvent += OnRoomClear;
 
+            // Remark: This is one of two times we ask for call retrieve data, the other on initial connect to AP.
+            // With removing the archipelagun for now consider if we need to be making this call elsewhere, such as on the start of a run. - AS
             if(SessionHandler.Session != null)
             {
                 SessionHandler.CallRetrieveDataCoroutine();
             }
-            
 
             return;
         }
@@ -140,6 +141,7 @@ namespace ArchiGungeon
             return;
         }
 
+        // Remark: This is currently the only way to open the goals textbox. We'll need to put this somewhere else if we want to keep the functionality... but we are likely removing this goal textbox anyways. - AS
         private void OnReloadPressed(PlayerController controller, Gun gun)
         {
             if(playerWithArchipelagun.CurrentGun.ToString().Contains("archipelagun"))
@@ -148,12 +150,10 @@ namespace ArchiGungeon
                 {
                     SessionHandler.HideGoalsTextbox();
                 }
-
                 else
                 {
                     SessionHandler.ShowGoalsTextbox();
                 }
-
             }
 
             return;

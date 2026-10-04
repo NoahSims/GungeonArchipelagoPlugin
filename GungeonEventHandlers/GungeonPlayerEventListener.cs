@@ -160,7 +160,7 @@ namespace ArchiGungeon.GungeonEventHandlers
             ETGMod.Chest.OnPreOpen += OnChestPreOpen;
             ETGMod.Chest.OnPostOpen += OnChestOpen;
 
-            Archipelagun.OnPickup += OnArchipelagunPickup;
+            //Archipelagun.OnPickup += OnArchipelagunPickup;
 
             
 
@@ -252,6 +252,10 @@ namespace ArchiGungeon.GungeonEventHandlers
             return;
         }
 
+        /// <summary>
+        /// Checksif the player does not have the AP gun, if not spawns it in their inventory. 
+        /// </summary>
+        /// <remarks>Deprecated: Removed the use of the archipelagun from the game.</remarks>
         private static void CheckToForceArchipelagunOwnership()
         {
             if (PickedUpArchipelagun) { return; }
@@ -288,7 +292,8 @@ namespace ArchiGungeon.GungeonEventHandlers
                 return shouldOpen;
             }
 
-            CheckToForceArchipelagunOwnership();
+            // Uncomment to return archipelagun behavior.
+            //CheckToForceArchipelagunOwnership();
 
             ArchDebugPrint.DebugLog(DebugCategory.ItemHandling, "Chest Pre-Open Call");
 
@@ -363,8 +368,8 @@ namespace ArchiGungeon.GungeonEventHandlers
             //PickupObject archipelaGun = PickupObjectDatabase.GetById(Archipelagun.SpawnItemID);
             //controller1.inventory.AddGunToInventory((Gun)archipelaGun, makeActive: true);
 
-            GameObject archipelItem = PickupObjectDatabase.GetById(Archipelagun.SpawnItemID).gameObject;
-            LootEngine.SpawnItem(archipelItem, controller1.CenterPosition, Vector2.zero, 0);
+            //GameObject archipelItem = PickupObjectDatabase.GetById(Archipelagun.SpawnItemID).gameObject;
+            //LootEngine.SpawnItem(archipelItem, controller1.CenterPosition, Vector2.zero, 0);
 
             return;
         }
@@ -372,7 +377,8 @@ namespace ArchiGungeon.GungeonEventHandlers
 
         private static void OnBossKilled(HealthHaver haver, bool arg2)
         {
-            CheckToForceArchipelagunOwnership();
+            // Uncomment to return archipelagun behavior.
+            //CheckToForceArchipelagunOwnership();
 
             ArchDebugPrint.DebugLog(DebugCategory.PlayerEventListener, $"Boss killed: {haver.name}");
             ArchDebugPrint.DebugLog(DebugCategory.PlayerEventListener, $"Boss GUID: {haver.aiActor.EnemyGuid}");
@@ -562,7 +568,8 @@ namespace ArchiGungeon.GungeonEventHandlers
 
         private static void OnRoomClear(PlayerController playerController)
         {
-            CheckToForceArchipelagunOwnership();
+            // Uncomment to return archipelagun behavior.
+            //CheckToForceArchipelagunOwnership();
 
             roomsClearedThisRun += 1;
 
@@ -584,7 +591,8 @@ namespace ArchiGungeon.GungeonEventHandlers
                 return;
             }
 
-            CheckToForceArchipelagunOwnership();
+            // Uncomment to return archipelagun behavior.
+            //CheckToForceArchipelagunOwnership();
 
             int spentMoney = shopItem.CurrentPrice;
             ArchDebugPrint.DebugLog(DebugCategory.PlayerEventListener, "Adding cash spent: " + spentMoney);
