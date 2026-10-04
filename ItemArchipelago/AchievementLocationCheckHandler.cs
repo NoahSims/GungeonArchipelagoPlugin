@@ -9,6 +9,9 @@ using ArchiGungeon.Data;
 
 namespace ArchiGungeon.ItemArchipelago
 {
+    /// <summary>
+    /// Note this class doesn't interface with Gungeon Achivements, this is for old AP location checks such as room clears and chests opened.
+    /// </summary>
     class AchievementLocationCheckHandler
     {
         private static Dictionary<CountStats, long> StatToStartLocationID { get; } = new Dictionary<CountStats, long>()

@@ -162,8 +162,6 @@ namespace ArchiGungeon.GungeonEventHandlers
 
             //Archipelagun.OnPickup += OnArchipelagunPickup;
 
-            
-
             return;
         }
 

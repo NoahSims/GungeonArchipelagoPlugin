@@ -491,11 +491,16 @@ namespace ArchiGungeon.ArchipelagoServer
             return;
         }
 
-        
+        /// <summary>
+        /// Adds an item to the game of any type.
+        /// </summary>
+        /// <param name="itemInfo"></param>
         public static void AddItemToLocalGungeon(ItemInfo itemInfo)
         {
+            // If traps aren't valid to spawn now, don't ever spawn them.
             if(TrapSpawnHandler.IsSpawnValid == false)
             {
+                //Todo: Make the not magic consts
                 if(itemInfo.ItemId >= 8754200 && itemInfo.ItemId < 8754300)
                 {
                     ArchDebugPrint.DebugLog(DebugCategory.ServerReceive, $"Skipping item on Retrieve command: {itemInfo.ItemName}");
@@ -506,7 +511,7 @@ namespace ArchiGungeon.ArchipelagoServer
                 }
             }
 
-            //GungeonControl.GiveGungeonItem(itemInfo.ItemId);
+            //TODO: add to different queues depending on if its an item that can be added anywhere or only in a run (which would replace trap logic above too)
 
             ArchDebugPrint.DebugLog(DebugCategory.ServerReceive, $"Receiving item: {itemInfo.ItemName}");
 
@@ -553,8 +558,12 @@ namespace ArchiGungeon.ArchipelagoServer
             IsProgressItemsGiven = true;
         }
 
+        /// <summary>
+        /// Check each tick if there is an AP item to spawn if in a valid state to spawn items.
+        /// </summary>
         public static void TickCheckItemQueue()
         {
+            //TODO split into two queues, one for spawn anywhere and another for spawn in run only. Also consider verifying not on title screen.
             if (item_add_queue.Count > 0 && IsValidToSpawnItems)
             {
                 ArchDebugPrint.DebugLog(DebugCategory.ItemHandling, $"Handling item ID: {item_add_queue[0]}");
@@ -564,8 +573,6 @@ namespace ArchiGungeon.ArchipelagoServer
                     ArchipelagoGungeonBridge.GiveGungeonItem(item_add_queue[0]);
                     itemsHandledThisRun.Add(item_add_queue[0]);
                 }
-
-
                 catch (Exception ex)
                 {
                     ArchipelagoGUI.ConsoleLog("Exception caused during handling giving Archipelago item. Please contact dev: " + ex);
@@ -865,17 +872,17 @@ namespace ArchiGungeon.ArchipelagoServer
                 {
                     ArchDebugPrint.DebugLog(DebugCategory.GameCompletion, $"Remaining goals: ");
 
-                    foreach(string goal in unmetGoalStatCounts)
+                    foreach (string goal in unmetGoalStatCounts)
                     {
                         ArchDebugPrint.DebugLog(DebugCategory.GameCompletion, goal);
                     }
-
-                    return;
                 }
+                else
+                {
+                    ArchDebugPrint.DebugLog(DebugCategory.GameCompletion, $"Goal checks passed! Sending completion event");
 
-                ArchDebugPrint.DebugLog(DebugCategory.GameCompletion, $"Goal checks passed! Sending completion event");
-
-                SendGameCompletion();
+                    SendGameCompletion();
+                }
                 return;
             }
 
@@ -883,7 +890,7 @@ namespace ArchiGungeon.ArchipelagoServer
             {
                 StatusUpdatePacket statusUpdatePacket = new StatusUpdatePacket();
                 statusUpdatePacket.Status = ArchipelagoClientState.ClientGoal;
-                Session.Socket.SendPacket(statusUpdatePacket);
+                Session?.Socket.SendPacket(statusUpdatePacket);
                 return;
             }
 
@@ -941,7 +948,10 @@ namespace ArchiGungeon.ArchipelagoServer
                 return;
             }
 
-
+            /// <summary>
+            /// Called when the AP session recieves an item for the game.
+            /// </summary>
+            /// <param name="helper"></param>
             public static void OnItemReceived(ReceivedItemsHelper helper)
             {
                 ItemInfo itemInfo = helper.PeekItem();

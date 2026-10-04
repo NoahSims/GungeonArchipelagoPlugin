@@ -8,18 +8,23 @@ using ArchiGungeon.ItemArchipelago;
 using ArchiGungeon.DebugTools;
 using ArchiGungeon.Character;
 using ArchiGungeon.Data;
+using HutongGames.PlayMaker.Actions;
 
 namespace ArchiGungeon.ArchipelagoServer
 {
     public class ArchipelagoGungeonBridge
     {
         #region APWorld Data
-        private static readonly long baseItemID = 8754000;
-        private static readonly long consumableCategoryItemID = 8754100;
-        private static readonly long trapCategoryItemID = 8754200;
-        private static readonly long progressionItemID = 8754300;
-        private static readonly long paradoxCharacterItemID = 8754400;
-        private static readonly long undoCurseItemID = 8754500;
+        private static readonly long _baseItemID = 8754000;
+        private static readonly long _gunAndItemIdRange = 1000;
+        private static readonly long _progressiveRange = 1000;
+        private static readonly long _fillerRange = 1000;
+
+        //private static readonly long consumableCategoryItemID = 8754100;
+        //private static readonly long trapCategoryItemID = 8754200;
+        //private static readonly long progressionItemID = 8754300;
+        //private static readonly long paradoxCharacterItemID = 8754400;
+        //private static readonly long undoCurseItemID = 8754500;
 
         #endregion
 
@@ -76,11 +81,34 @@ namespace ArchiGungeon.ArchipelagoServer
             return;
         }
 
+        /// <summary>
+        /// Unlocks the item or spawns it if appropriate.
+        /// </summary>
+        /// <param name="receivedItemID">Item id from AP of item to give. This is a custom set Id that will match whats set in the APWorld.</param>
         public static void GiveGungeonItem(long receivedItemID)
         {
-            bool foundSpecificItem = CheckIDForSpecificItem(receivedItemID);
+            long adjustedItemId = receivedItemID - _baseItemID;
+            if(adjustedItemId < _gunAndItemIdRange)
+            {
+                //TODO: Also unlock the item in the ammonomicon/loot pool
+                var spawneditem = SpecificItemSpawnHandler.GivePlayerSpecificItem((int)adjustedItemId);
+                GameStatsManager.Instance.ForceUnlock(spawneditem.GetComponent<EncounterTrackable>()?.EncounterGuid);
+            }
+            else if(adjustedItemId < _progressiveRange)
+            {
 
-            if(foundSpecificItem)
+            }
+            else if(adjustedItemId < _fillerRange)
+            {
+
+            }
+        }
+
+        /* Old giving of items based more on random items than specific ones.
+        public static void GiveGungeonItem(long receivedItemID)
+        {
+            // Is it a curse reverse?
+            if(CheckIDForSpecificItem(receivedItemID))
             {
                 return;
             }
@@ -127,22 +155,28 @@ namespace ArchiGungeon.ArchipelagoServer
 
             return;
         }
+        */
         #endregion
 
         #region Item Spawning
-        private static bool CheckIDForSpecificItem(long itemIdToCheck)
-        {
-            bool matchedItem = false;
+        /// <summary>
+        /// Just checks if the item Id is the undoCurseItemID
+        /// </summary>
+        /// <param name="itemIdToCheck"></param>
+        /// <returns>true if its an undo Curse item</returns>
+        //private static bool CheckIDForSpecificItem(long itemIdToCheck)
+        //{
+        //    bool matchedItem = false;
 
-            if(itemIdToCheck == undoCurseItemID)
-            {
-                GiveUndoReverseCurse(1);
-                matchedItem = true;
-            }
+        //    if(itemIdToCheck == undoCurseItemID)
+        //    {
+        //        GiveUndoReverseCurse(1);
+        //        matchedItem = true;
+        //    }
 
 
-            return matchedItem;
-        }
+        //    return matchedItem;
+        //}
 
         public static void SpawnAPItem(int numberToSpawn)
         {
