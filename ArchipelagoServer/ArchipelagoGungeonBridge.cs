@@ -17,8 +17,8 @@ namespace ArchiGungeon.ArchipelagoServer
         #region APWorld Data
         private static readonly long _baseItemID = 8754000;
         private static readonly long _gunAndItemIdRange = 1000;
-        private static readonly long _progressiveRange = 1000;
-        private static readonly long _fillerRange = 1000;
+        private static readonly long _npcRange = 1100;
+        private static readonly long _fillerRange = 1200;
 
         //private static readonly long consumableCategoryItemID = 8754100;
         //private static readonly long trapCategoryItemID = 8754200;
@@ -87,16 +87,16 @@ namespace ArchiGungeon.ArchipelagoServer
         /// <param name="receivedItemID">Item id from AP of item to give. This is a custom set Id that will match whats set in the APWorld.</param>
         public static void GiveGungeonItem(long receivedItemID)
         {
+            // Reduce the AP Item Id down to an Id that matches the internal item ids for guns/items.
             long adjustedItemId = receivedItemID - _baseItemID;
             if(adjustedItemId < _gunAndItemIdRange)
             {
-                //TODO: Also unlock the item in the ammonomicon/loot pool
                 var spawneditem = SpecificItemSpawnHandler.GivePlayerSpecificItem((int)adjustedItemId);
                 GameStatsManager.Instance.ForceUnlock(spawneditem.GetComponent<EncounterTrackable>()?.EncounterGuid);
             }
-            else if(adjustedItemId < _progressiveRange)
+            else if(adjustedItemId < _npcRange)
             {
-
+                UnlockNPC((int)adjustedItemId - (int)_gunAndItemIdRange);
             }
             else if(adjustedItemId < _fillerRange)
             {
@@ -159,11 +159,7 @@ namespace ArchiGungeon.ArchipelagoServer
         #endregion
 
         #region Item Spawning
-        /// <summary>
-        /// Just checks if the item Id is the undoCurseItemID
-        /// </summary>
-        /// <param name="itemIdToCheck"></param>
-        /// <returns>true if its an undo Curse item</returns>
+        
         //private static bool CheckIDForSpecificItem(long itemIdToCheck)
         //{
         //    bool matchedItem = false;
@@ -177,6 +173,36 @@ namespace ArchiGungeon.ArchipelagoServer
 
         //    return matchedItem;
         //}
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="NPCId"></param>
+        public static void UnlockNPC(int NPCId)
+        {
+            ArchDebugPrint.DebugLog(DebugCategory.ServerReceive, "Unlocking NPC: " + NPCId);
+            switch (NPCId)
+            {
+                case 0: // Ox and Candence
+                    GameStatsManager.Instance.SetFlag(GungeonFlags.META_SHOP_ACTIVE_IN_FOYER, true);
+                    break;
+                case 1: // Prof Goop
+                    GameStatsManager.Instance.SetFlag(GungeonFlags.SHOP_GOOP_ACTIVE, true);
+                    GameStatsManager.Instance.SetFlag(GungeonFlags.SHOP_HAS_MET_GOOP, true);
+                    break;
+                case 2: // Trorc
+                    GameStatsManager.Instance.SetFlag(GungeonFlags.SHOP_TRUCK_ACTIVE, true);
+                    break;
+                case 3: // Doug
+                    GameStatsManager.Instance.SetFlag(GungeonFlags.SHOP_BEETLE_ACTIVE, true);
+                    break;
+                case 4: // Tinker
+                    GameStatsManager.Instance.SetFlag(GungeonFlags.SHERPA_ACTIVE_IN_ELEVATOR_ROOM, true);
+                    GameStatsManager.Instance.SetFlag(GungeonFlags.SHERPA_READY_FOR_UNLOCKS, true);
+                    break;
+                default:
+                    break;
+            }
+        }
 
         public static void SpawnAPItem(int numberToSpawn)
         {
