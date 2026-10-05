@@ -58,11 +58,13 @@
     <Compile Include="DebugTools\UnitTests.cs" />
     <Compile Include="EnemyHandlers\EnemySwapping.cs" />
     <Compile Include="GungeonEventHandlers\EffectsController.cs" />
+    <Compile Include="ItemArchipelago\GameStatsManagerPatch.cs" />
     <Compile Include="ItemArchipelago\ReverseCurseItems.cs" />
     <Compile Include="ItemArchipelago\APPickUpItem.cs" />
     <Compile Include="ItemArchipelago\Archipelagun.cs" />
     <Compile Include="ItemArchipelago\AchievementLocationCheckHandler.cs" />
     <Compile Include="ItemArchipelago\ShopAPItemHandler.cs" />
+    <Compile Include="UserInterface\AchripelagoUIHelper.cs" />
     <Compile Include="UserInterface\ArchipelagoGUI.cs" />
     <Compile Include="GungeonEventHandlers\GungeonPlayerEventListener.cs" />
     <Compile Include="GungeonEventHandlers\SpawningItemsHandler.cs" />
@@ -310,4 +312,8 @@
     <Error Condition="!Exists('packages\BepInEx.Core.5.4.21\build\BepInEx.Core.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\BepInEx.Core.5.4.21\build\BepInEx.Core.targets'))" />
     <Error Condition="!Exists('packages\ILRepack.2.0.41\build\ILRepack.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\ILRepack.2.0.41\build\ILRepack.props'))" />
   </Target>
+  <PropertyGroup>
+    <PostBuildEvent>cd C:\Users\Noah\Documents\ModProjects\GungeonArchipelagoPlugin\_DLLRepack
+_DLLFileMover.bat</PostBuildEvent>
+  </PropertyGroup>
 </Project>
