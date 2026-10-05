@@ -340,16 +340,27 @@ namespace ArchiGungeon.Data
         #endregion
     }
 
+    public class ArchipelaGunData
+    {
+        public Dictionary<CountStats, int> countSaveData;
+        public HashSet<GungeonFlags> locationsCheckedFlagsData;
+
+    }
+
     public class SaveDataManagement
     {
+        public static HashSet<GungeonFlags> locationsCheckedFlags = new HashSet<GungeonFlags>(new GungeonFlagsComparer());
+
         public static void TryPreviousSaveLoad(PlayerConnectionInfo playerInfo)
         {
             if(SaveDataWriter.InitSaveFilenameAndCheckPrevious(playerInfo.PlayerName, playerInfo.Seed) == true)
             {
                 // TODO FUTURE: define other dicts for multiple save data types to consider
-                Dictionary<CountStats, int> saveData = SaveDataWriter.RetrieveSaveData();
+                //Dictionary<CountStats, int> saveData = SaveDataWriter.RetrieveSaveData();
+                ArchipelaGunData data = SaveDataWriter.RetrieveSaveData2();
 
-                CountGoalManager.SetFullCountSaveData(saveData);
+                CountGoalManager.SetFullCountSaveData(data.countSaveData);
+                locationsCheckedFlags = data.locationsCheckedFlagsData;
                 return;
             }
             else
@@ -378,8 +389,12 @@ namespace ArchiGungeon.Data
                 }
 
             }
+            ArchipelaGunData dataToSave = new ArchipelaGunData();
+            dataToSave.countSaveData = countSaveDataToWrite;
+            dataToSave.locationsCheckedFlagsData = locationsCheckedFlags;
 
-            SaveDataWriter.WriteSaveFile(countSaveDataToWrite);
+            //SaveDataWriter.WriteSaveFile(countSaveDataToWrite);
+            SaveDataWriter.WriteSaveFile(dataToSave);
         }
 
         public static void SaveCurrentRandomizerProgress()

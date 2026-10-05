@@ -45,6 +45,21 @@ namespace ArchiGungeon.Data
             return;
         }
         
+        public static void WriteSaveFile(ArchipelaGunData saveData)
+        {
+            if (!isSavePathInitialized)
+            {
+                return;
+            }
+            string outputToWrite = JsonConvert.SerializeObject(saveData);
+            File.WriteAllText(SaveFilepath, outputToWrite);
+
+            ArchipelagoGUI.ConsoleLog($"Save data updated: {SaveFilepath}");
+
+            ETGModConsole.Log($"SaveDataWriter: Save data updated: {SaveFilepath}");
+            return;
+        }
+
         public static Dictionary<CountStats, int> RetrieveSaveData(string playerName ="", string seedString="")
         {
             if(playerName != "" && seedString != "")
@@ -66,7 +81,30 @@ namespace ArchiGungeon.Data
                 return null;
             }
         }
+        
+        public static ArchipelaGunData RetrieveSaveData2(string playerName = "", string seedString = "")
+        {
+            if (playerName != "" && seedString != "")
+            {
+                string fileName = SAVE_DATA_FILEPREFIX + playerName + seedString.Substring(0, 8) + ".json";
+                SaveFilepath = Path.Combine(ConfigPath, fileName);
+            }
 
+            if (File.Exists(SaveFilepath))
+            {
+                string localData = File.ReadAllText(SaveFilepath);
+                ArchipelaGunData saveData = JsonConvert.DeserializeObject<ArchipelaGunData>(localData);
+
+                ETGModConsole.Log("SaveDataWriter: Archipelagun data retrieved!");
+                return saveData;
+            }
+            else
+            {
+                ETGModConsole.Log($"SaveDataWriter: ERROR filepath does not exist:{SaveFilepath}");
+                ArchipelagoGUI.ConsoleLog($"ERROR filepath does not exist:{SaveFilepath}");
+                return null;
+            }
+        }
     }
 
     #endregion
