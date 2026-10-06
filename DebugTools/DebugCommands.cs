@@ -7,6 +7,7 @@ using ArchiGungeon.GungeonEventHandlers;
 using ArchiGungeon.UserInterface;
 using ArchiGungeon.Data;
 using Archipelago.MultiClient.Net.Models;
+using Archipelago.MultiClient.Net.DataPackage;
 
 namespace ArchiGungeon.DebugTools
 {
@@ -247,9 +248,10 @@ namespace ArchiGungeon.DebugTools
                         // Create a dummy AP item to serve as the container of the item ID.
                         NetworkItem debugNetworkItem = new NetworkItem() 
                         { 
-                            Item = (long)Convert.ToDouble(additionalInput) 
+                            Item = (long)Convert.ToDouble(additionalInput)
                         };
-                        ItemInfo debugItem = new ItemInfo(debugNetworkItem, "This game", "Debug Game", null, null);
+                        DebugItemInfoResolver itemInfoResolver = new DebugItemInfoResolver();
+                        ItemInfo debugItem = new ItemInfo(debugNetworkItem, "This game", "Debug Game", itemInfoResolver, null);
                         ArchipelagoGungeonBridge.GiveGungeonItem(debugItem);
                         return;
                     }
@@ -262,5 +264,26 @@ namespace ArchiGungeon.DebugTools
 
         }
         #endregion
+    }
+}
+
+/// <summary>
+/// Test class, we can remove this later if more elegant solution.
+/// </summary>
+public class DebugItemInfoResolver : IItemInfoResolver
+{
+    public string GetItemName(long itemId, string game = null)
+    {
+        return itemId.ToString() + game;
+    }
+
+    public long GetLocationId(string locationName, string game = null)
+    {
+        return 0;
+    }
+
+    public string GetLocationName(long locationId, string game = null)
+    {
+        return locationId.ToString() + game;
     }
 }

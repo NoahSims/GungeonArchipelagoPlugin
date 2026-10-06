@@ -1,15 +1,16 @@
-﻿using System;
+﻿using ArchiGungeon.Character;
+using ArchiGungeon.Data;
+using ArchiGungeon.DebugTools;
+using ArchiGungeon.GungeonEventHandlers;
+using ArchiGungeon.ItemArchipelago;
+using ArchiGungeon.UserInterface;
+using Archipelago.MultiClient.Net.Models;
+using HutongGames.PlayMaker.Actions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
-using ArchiGungeon.GungeonEventHandlers;
-using ArchiGungeon.ItemArchipelago;
-using ArchiGungeon.DebugTools;
-using ArchiGungeon.Character;
-using ArchiGungeon.Data;
-using HutongGames.PlayMaker.Actions;
-using Archipelago.MultiClient.Net.Models;
 
 namespace ArchiGungeon.ArchipelagoServer
 {
@@ -88,7 +89,7 @@ namespace ArchiGungeon.ArchipelagoServer
         /// <param name="receivedItem">Item id from AP of item to give. This is a custom set Id that will match whats set in the APWorld.</param>
         public static void GiveGungeonItem(ItemInfo receivedItem)
         {
-            // TODO: Add item recieve banner here.
+            AchripelagoUIHelper.ArchipelagoUINotification("Received " + receivedItem.ItemDisplayName, "Found in " + receivedItem.LocationGame);
             // TODO: remove this weird id range logic to more defined flags.
             // Reduce the AP Item Id down to an Id that matches the internal item ids for guns/items.
             long adjustedItemId = receivedItem.ItemId - _baseItemID;
