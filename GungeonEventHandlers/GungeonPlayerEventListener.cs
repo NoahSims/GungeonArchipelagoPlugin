@@ -313,7 +313,7 @@ namespace ArchiGungeon.GungeonEventHandlers
                 }
             }
 
-            SaveDataManagement.AddToCountSaveDataEntry(CountStats.ChestsOpened, 1);
+            ArchipelaGunLocalDataManager.AddToCountSaveDataEntry(CountStats.ChestsOpened, 1);
             return shouldOpen;
         }
 
@@ -386,12 +386,12 @@ namespace ArchiGungeon.GungeonEventHandlers
 
             if(PastKillsGuids.Contains(enemyGuid))
             {
-                SaveDataManagement.AddToCountSaveDataEntry(CountStats.PastKills, 1);
+                ArchipelaGunLocalDataManager.AddToCountSaveDataEntry(CountStats.PastKills, 1);
             }
             
             if(BossGUIDToStat.ContainsKey(enemyGuid))
             {
-                SaveDataManagement.AddToCountSaveDataEntry(BossGUIDToStat[enemyGuid], 1);
+                ArchipelaGunLocalDataManager.AddToCountSaveDataEntry(BossGUIDToStat[enemyGuid], 1);
             }
 
             else if(TriggerTwinGuids.Contains(enemyGuid))
@@ -400,7 +400,7 @@ namespace ArchiGungeon.GungeonEventHandlers
 
                 if(triggerTwinKills == 2)
                 {
-                    SaveDataManagement.AddToCountSaveDataEntry(CountStats.Floor1Clears, 1);
+                    ArchipelaGunLocalDataManager.AddToCountSaveDataEntry(CountStats.Floor1Clears, 1);
                 }
             }
 
@@ -410,16 +410,16 @@ namespace ArchiGungeon.GungeonEventHandlers
 
                 if (killPillarKills == 4)
                 {
-                    SaveDataManagement.AddToCountSaveDataEntry(CountStats.Floor4Clears, 1);
+                    ArchipelaGunLocalDataManager.AddToCountSaveDataEntry(CountStats.Floor4Clears, 1);
                 }
             }
 
             if(GameCompletionGUIds.ContainsKey(enemyGuid))
             {
                 ArchDebugPrint.DebugLog(DebugCategory.PlayerEventListener, $"Possible completion boss: {haver.name}");
-                SaveDataManagement.AddToCountSaveDataEntry(GameCompletionGUIds[enemyGuid], 1);
+                ArchipelaGunLocalDataManager.AddToCountSaveDataEntry(GameCompletionGUIds[enemyGuid], 1);
 
-                SaveDataManagement.SaveCurrentRandomizerProgress();
+                ArchipelaGunLocalDataManager.SaveCurrentRandomizerProgress();
                 SessionHandler.DataSender.CheckForGameCompletion();
 
             }
@@ -521,7 +521,7 @@ namespace ArchiGungeon.GungeonEventHandlers
                 {
                     ArchDebugPrint.DebugLog(DebugCategory.PlayerEventListener, $"Floor loaded: {newFloorLoaded}");
 
-                    SaveDataManagement.SaveCurrentRandomizerProgress();
+                    ArchipelaGunLocalDataManager.SaveCurrentRandomizerProgress();
                     if (characterPastFloors.Contains(newFloorLoaded))
                     {
                         ArchDebugPrint.DebugLog(DebugCategory.PlayerEventListener, $"Loading past: {newFloorLoaded}");
@@ -571,7 +571,7 @@ namespace ArchiGungeon.GungeonEventHandlers
             }
             controller.characterIdentity = PlayableCharacters.Pilot;
             PickedUpArchipelagun = false;
-            SaveDataManagement.SaveCurrentRandomizerProgress();
+            ArchipelaGunLocalDataManager.SaveCurrentRandomizerProgress();
 
             string deathCause = $"Died to {controller.healthHaver.lastIncurredDamageSource} in the Gungeon";
             SessionHandler.DataSender.SendDeathlink(causeOfDeath:deathCause);
@@ -582,7 +582,7 @@ namespace ArchiGungeon.GungeonEventHandlers
 
             if(PlayerOne.healthHaver.IsDead )
             {
-                SaveDataManagement.SaveCurrentRandomizerProgress();
+                ArchipelaGunLocalDataManager.SaveCurrentRandomizerProgress();
                 string deathCause = $"Died to {controller.healthHaver.lastIncurredDamageSource} in the Gungeon";
                 SessionHandler.DataSender.SendDeathlink(causeOfDeath: deathCause);
             }
@@ -601,7 +601,7 @@ namespace ArchiGungeon.GungeonEventHandlers
 
             ArchDebugPrint.DebugLog(DebugCategory.PlayerEventListener, "Adding room points: " + roomsClearedThisRun);
 
-            SaveDataManagement.AddToCountSaveDataEntry(CountStats.RoomPoints, roomsClearedThisRun);
+            ArchipelaGunLocalDataManager.AddToCountSaveDataEntry(CountStats.RoomPoints, roomsClearedThisRun);
             //SessionHandler.CheckForUnhandledServerItems();
 
             return;
@@ -621,7 +621,7 @@ namespace ArchiGungeon.GungeonEventHandlers
             int spentMoney = shopItem.CurrentPrice;
             ArchDebugPrint.DebugLog(DebugCategory.PlayerEventListener, "Adding cash spent: " + spentMoney);
 
-            SaveDataManagement.AddToCountSaveDataEntry(CountStats.CashSpent, spentMoney);
+            ArchipelaGunLocalDataManager.AddToCountSaveDataEntry(CountStats.CashSpent, spentMoney);
 
             return;
         }
