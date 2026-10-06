@@ -357,7 +357,7 @@ namespace ArchiGungeon.Data
             {
                 // TODO FUTURE: define other dicts for multiple save data types to consider
                 //Dictionary<CountStats, int> saveData = SaveDataWriter.RetrieveSaveData();
-                ArchipelaGunData data = SaveDataWriter.RetrieveSaveData2();
+                ArchipelaGunData data = SaveDataWriter.RetrieveSaveData();
 
                 CountGoalManager.SetFullCountSaveData(data.countSaveData);
                 locationsCheckedFlags = data.locationsCheckedFlagsData;
@@ -390,10 +390,11 @@ namespace ArchiGungeon.Data
 
             }
             ArchipelaGunData dataToSave = new ArchipelaGunData();
+
+            // TODO does locationsCheckedFlags need to be validated??
             dataToSave.countSaveData = countSaveDataToWrite;
             dataToSave.locationsCheckedFlagsData = locationsCheckedFlags;
 
-            //SaveDataWriter.WriteSaveFile(countSaveDataToWrite);
             SaveDataWriter.WriteSaveFile(dataToSave);
         }
 

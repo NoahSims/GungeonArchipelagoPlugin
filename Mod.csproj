@@ -58,7 +58,7 @@
     <Compile Include="DebugTools\UnitTests.cs" />
     <Compile Include="EnemyHandlers\EnemySwapping.cs" />
     <Compile Include="GungeonEventHandlers\EffectsController.cs" />
-    <Compile Include="ItemArchipelago\GameStatsManagerPatch.cs" />
+    <Compile Include="ItemArchipelago\MetaShopLocationsHandler.cs" />
     <Compile Include="ItemArchipelago\ReverseCurseItems.cs" />
     <Compile Include="ItemArchipelago\APPickUpItem.cs" />
     <Compile Include="ItemArchipelago\Archipelagun.cs" />

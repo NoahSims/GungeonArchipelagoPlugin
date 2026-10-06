@@ -30,20 +30,6 @@ namespace ArchiGungeon.Data
 
             return File.Exists(SaveFilepath);
         }
-
-        public static void WriteSaveFile(Dictionary<CountStats, int> countSaveData)
-        {
-            if(!isSavePathInitialized)
-            {
-                return;
-            }
-            string outputToWrite = JsonConvert.SerializeObject(countSaveData);
-            File.WriteAllText(SaveFilepath, outputToWrite);
-
-            ArchipelagoGUI.ConsoleLog($"Save data updated: {SaveFilepath}");
-
-            return;
-        }
         
         public static void WriteSaveFile(ArchipelaGunData saveData)
         {
@@ -59,30 +45,8 @@ namespace ArchiGungeon.Data
             ETGModConsole.Log($"SaveDataWriter: Save data updated: {SaveFilepath}");
             return;
         }
-
-        public static Dictionary<CountStats, int> RetrieveSaveData(string playerName ="", string seedString="")
-        {
-            if(playerName != "" && seedString != "")
-            {
-                string fileName = SAVE_DATA_FILEPREFIX + playerName + seedString.Substring(0, 8) +".json";
-                SaveFilepath = Path.Combine(ConfigPath, fileName);
-            }
-
-            if (File.Exists(SaveFilepath))
-            {
-                string localData = File.ReadAllText(SaveFilepath);
-                Dictionary<CountStats, int> saveData = JsonConvert.DeserializeObject<Dictionary<CountStats, int>>(localData);
-
-                return saveData;
-            }
-            else
-            {
-                ArchipelagoGUI.ConsoleLog($"ERROR filepath does not exist:{SaveFilepath}");
-                return null;
-            }
-        }
         
-        public static ArchipelaGunData RetrieveSaveData2(string playerName = "", string seedString = "")
+        public static ArchipelaGunData RetrieveSaveData(string playerName = "", string seedString = "")
         {
             if (playerName != "" && seedString != "")
             {

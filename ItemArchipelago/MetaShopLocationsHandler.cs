@@ -11,15 +11,24 @@ using System.Text;
 namespace ArchiGungeon.ItemArchipelago
 {
     [HarmonyPatch]
-    internal class GameStatsManagerPatch
+    internal class MetaShopLocationsHandler
     {
+        /*
+         * Patch - GameStatsManager.SetFlag
+         * For meta shops, capture location check without unlocking associated item.
+         * Any time an item is purchased from the metashop, the associated flag is set for the save file.
+         * This patch takes over that SetFlag function, checks if the flag being set is a metashop location,
+         * then captures that flag as an archipelago location without unlocking the item.
+         */
         [HarmonyPatch(typeof(GameStatsManager), nameof(GameStatsManager.SetFlag))]
         [HarmonyPrefix]
-        public static bool Patch_HandleEncounterable(GungeonFlags flag, bool value)
+        public static bool CaptureMetaShopLocationChecks(GungeonFlags flag, bool value)
         {
+            //TODO make collection of all meta shop flags to compare against.
             if (flag == GungeonFlags.BLUEPRINTMETA_HEARTBOTTLE)
             {
                 //ETGModConsole.Log("GameStatsManagerPatch: Heartbottle purchased - Location checked. Send item here");
+                //TODO - send items from location check
                 AchripelagoUIHelper.ArchipelagoUINotification("Sent <item> to <example>", "TODO - this is a location");
                 SaveDataManagement.locationsCheckedFlags.Add(flag);
                 return false;
@@ -28,6 +37,10 @@ namespace ArchiGungeon.ItemArchipelago
             return true;
         }
 
+        /*
+         * Patch - MetaShopController.GetFlagFromTargetItem
+         * Specific to Ox and Cadence shop; Prevent locations checked from reappearing in shop after purchase
+         */
         [HarmonyPatch(typeof(MetaShopController), nameof(MetaShopController.GetFlagFromTargetItem))]
         [HarmonyPrefix]
         public static bool Patch_GetFlagFromTargetItem(ref GungeonFlags __result, int shopItemId)
@@ -53,6 +66,7 @@ namespace ArchiGungeon.ItemArchipelago
         }
 
         // This function will trigger any time the game tries to generate the loot pool and read what it thinks are in the pool. Could be useful for debugging.
+        // I don't know where else to put this, so this can hang out here for now. Uncomment if you want, I guess
         /*
         [HarmonyPatch(typeof(GenericLootTable), nameof(GenericLootTable.GetCompiledRawItems))]
         [HarmonyPostfix]
