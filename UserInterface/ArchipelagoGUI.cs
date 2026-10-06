@@ -255,6 +255,7 @@ namespace ArchiGungeon.UserInterface
             // Maybe a 'cleaner' spot, but this works for getting started.
             if (Input.GetKeyDown(KeyCode.F4))
             {
+                ArchDebugPrint.DebugLog(DebugCategory.UserInterface, "Opening AP console with F4");
                 OnOpen();
             }
 

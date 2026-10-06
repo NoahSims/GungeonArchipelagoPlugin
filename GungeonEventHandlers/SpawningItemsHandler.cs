@@ -276,6 +276,24 @@ namespace ArchiGungeon.GungeonEventHandlers
 
     }
 
+    public class SpecificItemSpawnHandler
+    {
+        /// <summary>
+        /// Given the internal item Id, spawn it on the ground for the player.
+        /// </summary>
+        /// <param name="itemId"></param>
+        /// <returns>The PickupObject the item being spawned.</returns>
+        public static PickupObject GivePlayerSpecificItem(int itemId)
+        {
+            EffectsController.PlaySynergyVFX();
+            PlayerController playerToSpawnOn = GungeonPlayerEventListener.GetFirstAlivePlayer();
+            PickupObject objToGive = PickupObjectDatabase.GetById(itemId);
+            ArchDebugPrint.DebugLog(DebugCategory.ItemHandling, $"Giving item: {objToGive.name}");
+            LootEngine.SpawnItem(objToGive.gameObject, playerToSpawnOn.CenterPosition, Vector2.zero, 0);
+            return objToGive;
+        }
+    }
+
     #endregion
 
     #region Progression Key Objects

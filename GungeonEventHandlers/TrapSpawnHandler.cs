@@ -21,10 +21,10 @@ namespace ArchiGungeon.GungeonEventHandlers
 
         public static void SpawnTrapByCase(int trapCase)
         {
-            if (IsSpawnValid == false)
-            {
-                return;
-            }
+            //if (IsSpawnValid == false)
+            //{
+            //    return;
+            //}
 
             PlayerController playerToSpawnOn = GungeonPlayerEventListener.GetFirstAlivePlayer();
             if(playerToSpawnOn == null)

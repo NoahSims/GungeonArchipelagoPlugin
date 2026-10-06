@@ -1,25 +1,33 @@
-﻿using System;
+﻿using ArchiGungeon.Character;
+using ArchiGungeon.Data;
+using ArchiGungeon.DebugTools;
+using ArchiGungeon.GungeonEventHandlers;
+using ArchiGungeon.ItemArchipelago;
+using ArchiGungeon.UserInterface;
+using Archipelago.MultiClient.Net.Models;
+using Archipelago.MultiClient.Net.Enums;
+using HutongGames.PlayMaker.Actions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
-using ArchiGungeon.GungeonEventHandlers;
-using ArchiGungeon.ItemArchipelago;
-using ArchiGungeon.DebugTools;
-using ArchiGungeon.Character;
-using ArchiGungeon.Data;
 
 namespace ArchiGungeon.ArchipelagoServer
 {
     public class ArchipelagoGungeonBridge
     {
         #region APWorld Data
-        private static readonly long baseItemID = 8754000;
-        private static readonly long consumableCategoryItemID = 8754100;
-        private static readonly long trapCategoryItemID = 8754200;
-        private static readonly long progressionItemID = 8754300;
-        private static readonly long paradoxCharacterItemID = 8754400;
-        private static readonly long undoCurseItemID = 8754500;
+        private static readonly long _baseItemID = 8754000;
+        private static readonly long _gunAndItemIdRange = 1000;
+        private static readonly long _npcRange = 1100;
+        private static readonly long _fillerRange = 1200;
+
+        //private static readonly long consumableCategoryItemID = 8754100;
+        //private static readonly long trapCategoryItemID = 8754200;
+        //private static readonly long progressionItemID = 8754300;
+        //private static readonly long paradoxCharacterItemID = 8754400;
+        //private static readonly long undoCurseItemID = 8754500;
 
         #endregion
 
@@ -76,11 +84,49 @@ namespace ArchiGungeon.ArchipelagoServer
             return;
         }
 
+        /// <summary>
+        /// Unlocks the item or spawns it if appropriate.
+        /// </summary>
+        /// <param name="receivedItem">Item id from AP of item to give. This is a custom set Id that will match whats set in the APWorld.</param>
+        public static void GiveGungeonItem(ItemInfo receivedItem)
+        {
+            AchripelagoUIHelper.ArchipelagoUINotification("Received " + receivedItem.ItemDisplayName, "Found in " + receivedItem.LocationGame);
+            // TODO: remove this weird id range logic to more defined flags.
+            // Reduce the AP Item Id down to an Id that matches the internal item ids for guns/items.
+            switch (receivedItem.Flags)
+            {
+                case ItemFlags.None:
+                    long adjustedItemId = receivedItem.ItemId - _baseItemID;
+                    if (adjustedItemId < _gunAndItemIdRange)
+                    {
+                        var spawneditem = SpecificItemSpawnHandler.GivePlayerSpecificItem((int)adjustedItemId);
+                        GameStatsManager.Instance.ForceUnlock(spawneditem.GetComponent<EncounterTrackable>()?.EncounterGuid);
+                    }
+                    break;
+                case ItemFlags.Advancement: // TODO not just NPCs
+                    UnlockNPC(receivedItem.ItemId);
+                    break;
+                case ItemFlags.NeverExclude:
+                    break;
+                case ItemFlags.Trap:
+                    long trapId = receivedItem.ItemId - _baseItemID - _npcRange; //TEMP
+                    TrapSpawnHandler.SpawnTrapByCase((int)trapId - (int)_npcRange);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private static void GiveFiller()
+        {
+
+        }
+
+        /* Old giving of items based more on random items than specific ones.
         public static void GiveGungeonItem(long receivedItemID)
         {
-            bool foundSpecificItem = CheckIDForSpecificItem(receivedItemID);
-
-            if(foundSpecificItem)
+            // Is it a curse reverse?
+            if(CheckIDForSpecificItem(receivedItemID))
             {
                 return;
             }
@@ -127,21 +173,53 @@ namespace ArchiGungeon.ArchipelagoServer
 
             return;
         }
+        */
         #endregion
 
         #region Item Spawning
-        private static bool CheckIDForSpecificItem(long itemIdToCheck)
+        
+        //private static bool CheckIDForSpecificItem(long itemIdToCheck)
+        //{
+        //    bool matchedItem = false;
+
+        //    if(itemIdToCheck == undoCurseItemID)
+        //    {
+        //        GiveUndoReverseCurse(1);
+        //        matchedItem = true;
+        //    }
+
+
+        //    return matchedItem;
+        //}
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="NPCId"></param>
+        public static void UnlockNPC(long NPCId)
         {
-            bool matchedItem = false;
-
-            if(itemIdToCheck == undoCurseItemID)
+            ArchDebugPrint.DebugLog(DebugCategory.ServerReceive, "Unlocking NPC: " + NPCId);
+            switch (NPCId)
             {
-                GiveUndoReverseCurse(1);
-                matchedItem = true;
+                case 0: // Ox and Candence
+                    GameStatsManager.Instance.SetFlag(GungeonFlags.META_SHOP_ACTIVE_IN_FOYER, true);
+                    break;
+                case 1: // Prof Goop
+                    GameStatsManager.Instance.SetFlag(GungeonFlags.SHOP_GOOP_ACTIVE, true);
+                    GameStatsManager.Instance.SetFlag(GungeonFlags.SHOP_HAS_MET_GOOP, true);
+                    break;
+                case 2: // Trorc
+                    GameStatsManager.Instance.SetFlag(GungeonFlags.SHOP_TRUCK_ACTIVE, true);
+                    break;
+                case 3: // Doug
+                    GameStatsManager.Instance.SetFlag(GungeonFlags.SHOP_BEETLE_ACTIVE, true);
+                    break;
+                case 4: // Tinker
+                    GameStatsManager.Instance.SetFlag(GungeonFlags.SHERPA_ACTIVE_IN_ELEVATOR_ROOM, true);
+                    GameStatsManager.Instance.SetFlag(GungeonFlags.SHERPA_READY_FOR_UNLOCKS, true);
+                    break;
+                default:
+                    break;
             }
-
-
-            return matchedItem;
         }
 
         public static void SpawnAPItem(int numberToSpawn)
