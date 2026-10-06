@@ -5,6 +5,7 @@ using ArchiGungeon.GungeonEventHandlers;
 using ArchiGungeon.ItemArchipelago;
 using ArchiGungeon.UserInterface;
 using Archipelago.MultiClient.Net.Models;
+using Archipelago.MultiClient.Net.Enums;
 using HutongGames.PlayMaker.Actions;
 using System;
 using System.Collections.Generic;
@@ -92,20 +93,33 @@ namespace ArchiGungeon.ArchipelagoServer
             AchripelagoUIHelper.ArchipelagoUINotification("Received " + receivedItem.ItemDisplayName, "Found in " + receivedItem.LocationGame);
             // TODO: remove this weird id range logic to more defined flags.
             // Reduce the AP Item Id down to an Id that matches the internal item ids for guns/items.
-            long adjustedItemId = receivedItem.ItemId - _baseItemID;
-            if(adjustedItemId < _gunAndItemIdRange)
+            switch (receivedItem.Flags)
             {
-                var spawneditem = SpecificItemSpawnHandler.GivePlayerSpecificItem((int)adjustedItemId);
-                GameStatsManager.Instance.ForceUnlock(spawneditem.GetComponent<EncounterTrackable>()?.EncounterGuid);
+                case ItemFlags.None:
+                    long adjustedItemId = receivedItem.ItemId - _baseItemID;
+                    if (adjustedItemId < _gunAndItemIdRange)
+                    {
+                        var spawneditem = SpecificItemSpawnHandler.GivePlayerSpecificItem((int)adjustedItemId);
+                        GameStatsManager.Instance.ForceUnlock(spawneditem.GetComponent<EncounterTrackable>()?.EncounterGuid);
+                    }
+                    break;
+                case ItemFlags.Advancement: // TODO not just NPCs
+                    UnlockNPC(receivedItem.ItemId);
+                    break;
+                case ItemFlags.NeverExclude:
+                    break;
+                case ItemFlags.Trap:
+                    long trapId = receivedItem.ItemId - _baseItemID - _npcRange; //TEMP
+                    TrapSpawnHandler.SpawnTrapByCase((int)trapId - (int)_npcRange);
+                    break;
+                default:
+                    break;
             }
-            else if(adjustedItemId < _npcRange)
-            {
-                UnlockNPC((int)adjustedItemId - (int)_gunAndItemIdRange);
-            }
-            else if(adjustedItemId < _fillerRange)
-            {
-                TrapSpawnHandler.SpawnTrapByCase((int)adjustedItemId - (int)_npcRange); //I will be changing this.
-            }
+        }
+
+        private static void GiveFiller()
+        {
+
         }
 
         /* Old giving of items based more on random items than specific ones.
@@ -181,7 +195,7 @@ namespace ArchiGungeon.ArchipelagoServer
         /// 
         /// </summary>
         /// <param name="NPCId"></param>
-        public static void UnlockNPC(int NPCId)
+        public static void UnlockNPC(long NPCId)
         {
             ArchDebugPrint.DebugLog(DebugCategory.ServerReceive, "Unlocking NPC: " + NPCId);
             switch (NPCId)

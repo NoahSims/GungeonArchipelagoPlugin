@@ -142,7 +142,8 @@ namespace ArchiGungeon.Data
         PastBullet,
         PastGunslinger,
         PastCoop,
-        ReceiveItem
+        ReceiveItem,
+        EnableNPC
     }
 
     #endregion
