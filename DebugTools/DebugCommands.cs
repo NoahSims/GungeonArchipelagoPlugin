@@ -6,6 +6,7 @@ using ArchiGungeon.ArchipelagoServer;
 using ArchiGungeon.GungeonEventHandlers;
 using ArchiGungeon.UserInterface;
 using ArchiGungeon.Data;
+using Archipelago.MultiClient.Net.Models;
 
 namespace ArchiGungeon.DebugTools
 {
@@ -242,7 +243,14 @@ namespace ArchiGungeon.DebugTools
                     }
                 case AvailableDebugCMD.ReceiveItem:
                     {
-                        ArchipelagoGungeonBridge.GiveGungeonItem((long)Convert.ToDouble(additionalInput));
+                        // TODO: Expand this debug to support different types of items and make testing easier by providing names.
+                        // Create a dummy AP item to serve as the container of the item ID.
+                        NetworkItem debugNetworkItem = new NetworkItem() 
+                        { 
+                            Item = (long)Convert.ToDouble(additionalInput) 
+                        };
+                        ItemInfo debugItem = new ItemInfo(debugNetworkItem, "This game", "Debug Game", null, null);
+                        ArchipelagoGungeonBridge.GiveGungeonItem(debugItem);
                         return;
                     }
                 default:

@@ -9,6 +9,7 @@ using ArchiGungeon.DebugTools;
 using ArchiGungeon.Character;
 using ArchiGungeon.Data;
 using HutongGames.PlayMaker.Actions;
+using Archipelago.MultiClient.Net.Models;
 
 namespace ArchiGungeon.ArchipelagoServer
 {
@@ -84,11 +85,12 @@ namespace ArchiGungeon.ArchipelagoServer
         /// <summary>
         /// Unlocks the item or spawns it if appropriate.
         /// </summary>
-        /// <param name="receivedItemID">Item id from AP of item to give. This is a custom set Id that will match whats set in the APWorld.</param>
-        public static void GiveGungeonItem(long receivedItemID)
+        /// <param name="receivedItem">Item id from AP of item to give. This is a custom set Id that will match whats set in the APWorld.</param>
+        public static void GiveGungeonItem(ItemInfo receivedItem)
         {
+            // TODO: remove this weird id range logic to more defined flags.
             // Reduce the AP Item Id down to an Id that matches the internal item ids for guns/items.
-            long adjustedItemId = receivedItemID - _baseItemID;
+            long adjustedItemId = receivedItem.ItemId - _baseItemID;
             if(adjustedItemId < _gunAndItemIdRange)
             {
                 var spawneditem = SpecificItemSpawnHandler.GivePlayerSpecificItem((int)adjustedItemId);
@@ -100,7 +102,7 @@ namespace ArchiGungeon.ArchipelagoServer
             }
             else if(adjustedItemId < _fillerRange)
             {
-
+                TrapSpawnHandler.SpawnTrapByCase((int)adjustedItemId - (int)_npcRange); //I will be changing this.
             }
         }
 

@@ -25,7 +25,7 @@ namespace ArchiGungeon.DebugTools
             {DebugCategory.EnemyRandomization, false },
             {DebugCategory.InitializingGameState, false },
             {DebugCategory.ItemHandling, false },
-            {DebugCategory.TrapHandling, false },
+            {DebugCategory.TrapHandling, true },
             {DebugCategory.UserInterface, false },
             {DebugCategory.GameCompletion, false },
             {DebugCategory.CharacterSystems, false }

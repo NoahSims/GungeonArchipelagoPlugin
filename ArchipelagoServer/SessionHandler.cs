@@ -50,7 +50,7 @@ namespace ArchiGungeon.ArchipelagoServer
         private static List<ItemInfo> allItemsReceivedFromServer = new List<ItemInfo>();
         private static bool hasRetrievedServerItemsOnce = false;
         private static List<long> itemsHandledThisRun = new List<long>();
-        private static List<long> item_add_queue = new();
+        private static List<ItemInfo> _itemAddQueue = new List<ItemInfo>();
 
         private static bool IsProgressItemsGiven { get; set; } = false;
         public static bool IsValidToSpawnItems { get; private set; } = false;
@@ -424,6 +424,8 @@ namespace ArchiGungeon.ArchipelagoServer
             ArchDebugPrint.DebugLog(DebugCategory.PluginStartup, "Resetting variables for new run");
 
             //SpawnedItemLog.ClearSpawnedItemLog();
+
+            //TODO: These below are from old logic. Either can be removed or repurposed. 
             itemsHandledThisRun.Clear();
             IsReverseCurseSetForRun = false;
             IsProgressItemsGiven = false;
@@ -497,25 +499,26 @@ namespace ArchiGungeon.ArchipelagoServer
         /// <param name="itemInfo"></param>
         public static void AddItemToLocalGungeon(ItemInfo itemInfo)
         {
-            // If traps aren't valid to spawn now, don't ever spawn them.
-            if(TrapSpawnHandler.IsSpawnValid == false)
-            {
-                //Todo: Make the not magic consts
-                if(itemInfo.ItemId >= 8754200 && itemInfo.ItemId < 8754300)
-                {
-                    ArchDebugPrint.DebugLog(DebugCategory.ServerReceive, $"Skipping item on Retrieve command: {itemInfo.ItemName}");
+            // If traps aren't valid to spawn now, don't ever spawn them. Disabling because its funny if they appear in the Breach and for the most part work fine.
+            //if(TrapSpawnHandler.IsSpawnValid == false)
+            //{
+            //    //Todo: Make these not magic consts
+            //    if(itemInfo.Flags == ItemFlags.Trap)
+            //    {
+            //        ArchDebugPrint.DebugLog(DebugCategory.ServerReceive, $"Skipping item on Retrieve command: {itemInfo.ItemName}");
 
-                    itemsHandledThisRun.Add(itemInfo.ItemId);
+            //        itemsHandledThisRun.Add(itemInfo.ItemId);
 
-                    return;
-                }
-            }
+            //        return;
+            //    }
+            //}
 
-            //TODO: add to different queues depending on if its an item that can be added anywhere or only in a run (which would replace trap logic above too)
+            //Consider: add to different queues depending on if its an item that can be added anywhere or only in a run (which would replace trap logic above too)
+            //TODO: Display banner here?
 
             ArchDebugPrint.DebugLog(DebugCategory.ServerReceive, $"Receiving item: {itemInfo.ItemName}");
 
-            item_add_queue.Add(itemInfo.ItemId);
+            _itemAddQueue.Add(itemInfo);
 
             return;
         }
@@ -563,22 +566,23 @@ namespace ArchiGungeon.ArchipelagoServer
         /// </summary>
         public static void TickCheckItemQueue()
         {
-            //TODO split into two queues, one for spawn anywhere and another for spawn in run only. Also consider verifying not on title screen.
-            if (item_add_queue.Count > 0 && IsValidToSpawnItems)
+            // Only spawn queued itmes if in control of a character. 
+            // To consider: if there are any items better to only give in a run. But everything can be given in the Breach and will transfer into the start of a run appropriately. 
+            if (_itemAddQueue.Count > 0 && IsValidToSpawnItems)
             {
-                ArchDebugPrint.DebugLog(DebugCategory.ItemHandling, $"Handling item ID: {item_add_queue[0]}");
+                ArchDebugPrint.DebugLog(DebugCategory.ItemHandling, $"Handling item ID: {_itemAddQueue[0]}");
 
                 try
                 {
-                    ArchipelagoGungeonBridge.GiveGungeonItem(item_add_queue[0]);
-                    itemsHandledThisRun.Add(item_add_queue[0]);
+                    ArchipelagoGungeonBridge.GiveGungeonItem(_itemAddQueue[0]);
+                    itemsHandledThisRun.Add(_itemAddQueue[0].ItemId);
                 }
                 catch (Exception ex)
                 {
                     ArchipelagoGUI.ConsoleLog("Exception caused during handling giving Archipelago item. Please contact dev: " + ex);
                 }
 
-                item_add_queue.RemoveAt(0);
+                _itemAddQueue.RemoveAt(0);
             }
 
             return;
