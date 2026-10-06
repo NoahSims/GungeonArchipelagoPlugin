@@ -405,7 +405,7 @@ namespace ArchiGungeon.ArchipelagoServer
             }
 
             ArchDebugPrint.DebugLog(DebugCategory.InitializingGameState, $"Handling save data initialization");
-            SaveDataManagement.TryPreviousSaveLoad(playerInfo: PlayerServerInfo);
+            ArchipelaGunLocalDataManager.TryPreviousSaveLoad();
 
             return;
         }
@@ -1023,7 +1023,7 @@ namespace ArchiGungeon.ArchipelagoServer
             SessionHandler.InitializeSaveData();
 
             SessionHandler.CheckForSlotDataInstantiation();
-            SaveDataManagement.CheckFullCountStatsForGoals();
+            ArchipelaGunLocalDataManager.CheckFullCountStatsForGoals();
 
             IsRetrieveDataCoroutineRunning = false;
 

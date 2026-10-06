@@ -30,7 +30,7 @@ namespace ArchiGungeon.ItemArchipelago
                 //ETGModConsole.Log("GameStatsManagerPatch: Heartbottle purchased - Location checked. Send item here");
                 //TODO - send items from location check
                 AchripelagoUIHelper.ArchipelagoUINotification("Sent <item> to <example>", "TODO - this is a location");
-                SaveDataManagement.locationsCheckedFlags.Add(flag);
+                ArchipelaGunLocalDataManager.locationsCheckedFlags.Add(flag);
                 return false;
             }
             ETGModConsole.Log("GameStatsManagerPatch: Something has set a save flag: " + flag + " - " + value);
@@ -45,7 +45,7 @@ namespace ArchiGungeon.ItemArchipelago
         [HarmonyPrefix]
         public static bool Patch_GetFlagFromTargetItem(ref GungeonFlags __result, int shopItemId)
         {
-            ETGModConsole.Log("Patch_GetFlagFromTargetItem: " + shopItemId);
+            //ETGModConsole.Log("Patch_GetFlagFromTargetItem: " + shopItemId);
             GungeonFlags flag = GungeonFlags.NONE;
             PickupObject byId = PickupObjectDatabase.GetById(shopItemId);
             foreach (var prereq in byId.encounterTrackable.prerequisites)
@@ -55,7 +55,7 @@ namespace ArchiGungeon.ItemArchipelago
                     flag = prereq.saveFlagToCheck;
                 }
             }
-            if (SaveDataManagement.locationsCheckedFlags.Contains(flag))
+            if (ArchipelaGunLocalDataManager.locationsCheckedFlags.Contains(flag))
             {
                 //ETGModConsole.Log("GameStatsManagerPatch: MetaShopController attempting to put heart bottle in shop");
                 __result = GungeonFlags.BLUEPRINTMETA_MTXGUN;

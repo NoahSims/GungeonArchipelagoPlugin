@@ -1,19 +1,16 @@
-﻿using ArchiGungeon.Data;
-using ArchiGungeon.DebugTools;
-using ArchiGungeon.ItemArchipelago;
+﻿using ArchiGungeon.DebugTools;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using static DungeonTileStampData;
 
 namespace ArchiGungeon.Data
 {
-
     public class CountGoalManager
     {
         #region APWorld Data
 
+        /* TODO - unused? remove?
         public static Dictionary<CountStats, CountGoalServerKeys> CountStatToKeys { get; } = new Dictionary<CountStats, CountGoalServerKeys>()
         {
             { CountStats.ChestsOpened, new CountGoalServerKeys("ChestsOpened")},
@@ -48,6 +45,7 @@ namespace ArchiGungeon.Data
             { CountStats.PastRobot, new CountGoalServerKeys("PastRobot")},
             { CountStats.PastKills, new CountGoalServerKeys("PastKills")},
         };
+        */
 
         #endregion
 
@@ -193,8 +191,6 @@ namespace ArchiGungeon.Data
                     LocationCheckGoals = StandardGoals;
                     break;
             }
-
-            return;
         }
 
         public static List<CountStats> GetListOfStatsWithGoals()
@@ -203,10 +199,10 @@ namespace ArchiGungeon.Data
             List<CountStats> statsWithGoals = LocationCheckGoals.Keys.ToList();
             return statsWithGoals;
         }
-        
+
         public static int GetCountOfStatGoals(CountStats statToCount)
         {
-            if(LocationCheckGoals.ContainsKey(statToCount))
+            if (LocationCheckGoals.ContainsKey(statToCount))
             {
                 ArchDebugPrint.DebugLog(DebugCategory.CountingGoal, $"Counted goals for {statToCount} -- {LocationCheckGoals[statToCount].Count}");
                 return LocationCheckGoals[statToCount].Count;
@@ -217,7 +213,7 @@ namespace ArchiGungeon.Data
                 ArchDebugPrint.DebugLog(DebugCategory.CountingGoal, $"Tried counting stat with no goals: {statToCount}");
                 return 0;
             }
-            
+
         }
 
         public static int GetCountStat(CountStats statToGet)
@@ -231,7 +227,6 @@ namespace ArchiGungeon.Data
         public static void SetCountStat(CountStats statToSet, int count)
         {
             CountSaveDataDict[statToSet] = count;
-            return;
         }
 
         public static Dictionary<CountStats, int> GetFullCountSaveData()
@@ -246,7 +241,7 @@ namespace ArchiGungeon.Data
 
         public static int AddToGoalCount(CountStats statToModify, int addAmount)
         {
-            if(IsCountStatNull(statToModify))
+            if (IsCountStatNull(statToModify))
             {
                 return 0;
             }
@@ -255,7 +250,7 @@ namespace ArchiGungeon.Data
             statCount += addAmount;
             SetCountStat(statToModify, statCount);
 
-            if(!LocationCheckGoals.ContainsKey(statToModify))
+            if (!LocationCheckGoals.ContainsKey(statToModify))
             {
                 return 0;
             }
@@ -265,7 +260,7 @@ namespace ArchiGungeon.Data
             {
                 ArchDebugPrint.DebugLog(DebugCategory.CountingGoal, $"[{statToModify}] New count: {statCount} against goal: {goal}");
 
-                if(statCount >= goal)
+                if (statCount >= goal)
                 {
                     goalsMet++;
                 }
@@ -280,7 +275,7 @@ namespace ArchiGungeon.Data
 
         public static bool RemoveClearedGoals(CountStats statToModify, int goalsCleared)
         {
-            if(IsCountStatNull(statToModify))
+            if (IsCountStatNull(statToModify))
             {
                 return true;
             }
@@ -289,7 +284,7 @@ namespace ArchiGungeon.Data
 
             List<int> goalList = LocationCheckGoals[statToModify];
 
-            if(goalList.Count < 1)
+            if (goalList.Count < 1)
             {
                 ArchDebugPrint.DebugLog(DebugCategory.CountingGoal, statToModify + " goals complete");
                 outOfGoals = true;
@@ -308,7 +303,7 @@ namespace ArchiGungeon.Data
                 outOfGoals = true;
                 ArchDebugPrint.DebugLog(DebugCategory.CountingGoal, statToModify + " goals complete");
             }
-           
+
             return outOfGoals;
         }
 
@@ -316,11 +311,11 @@ namespace ArchiGungeon.Data
         {
             List<string> formatList = new List<string>();
 
-            foreach(CountStats saveCountStats in LocationCheckGoals.Keys)
+            foreach (CountStats saveCountStats in LocationCheckGoals.Keys)
             {
                 List<int> goalCount = LocationCheckGoals[saveCountStats];
 
-                if(goalCount.Count > 1 && GoalsFormattedText.ContainsKey(saveCountStats))
+                if (goalCount.Count > 1 && GoalsFormattedText.ContainsKey(saveCountStats))
                 {
                     formatList.Add(GoalsFormattedText[saveCountStats]);
                 }
@@ -333,108 +328,18 @@ namespace ArchiGungeon.Data
         {
             int statCount = CountSaveDataDict[statToCheck];
 
-            if(statCount == 99999) { return true; }
+            if (statCount == 99999) { return true; }
 
-            else {  return false; }
+            else { return false; }
+        }
+
+        public static void DANGEROUS_ClearData()
+        {
+            foreach (CountStats key in Enum.GetValues(typeof(CountStats)))
+            {
+                CountSaveDataDict[key] = 0;
+            }
         }
         #endregion
-    }
-
-    public class ArchipelaGunData
-    {
-        public Dictionary<CountStats, int> countSaveData;
-        public HashSet<GungeonFlags> locationsCheckedFlagsData;
-
-    }
-
-    public class SaveDataManagement
-    {
-        public static HashSet<GungeonFlags> locationsCheckedFlags = new HashSet<GungeonFlags>(new GungeonFlagsComparer());
-
-        public static void TryPreviousSaveLoad(PlayerConnectionInfo playerInfo)
-        {
-            if(SaveDataWriter.InitSaveFilenameAndCheckPrevious(playerInfo.PlayerName, playerInfo.Seed) == true)
-            {
-                // TODO FUTURE: define other dicts for multiple save data types to consider
-                //Dictionary<CountStats, int> saveData = SaveDataWriter.RetrieveSaveData();
-                ArchipelaGunData data = SaveDataWriter.RetrieveSaveData();
-
-                CountGoalManager.SetFullCountSaveData(data.countSaveData);
-                locationsCheckedFlags = data.locationsCheckedFlagsData;
-                return;
-            }
-            else
-            {
-                return;
-            }
-        }
-
-        private static void HandleSaveValidationAndWrite()
-        {
-            Dictionary<CountStats, int> countSaveDataToWrite = new Dictionary<CountStats, int>();
-
-            foreach (CountStats countStat in (CountStats[])Enum.GetValues(typeof(CountStats)))
-            {
-                int statData = CountGoalManager.GetCountStat(countStat);
-
-                if (statData > 0)
-                {
-                    countSaveDataToWrite[countStat] = statData;
-
-                    ArchDebugPrint.DebugLog(DebugCategory.LocalSaveData, $"Saving count for {countStat}: {statData}");
-                }
-                else
-                {
-                    countSaveDataToWrite[countStat] = 0;
-                }
-
-            }
-            ArchipelaGunData dataToSave = new ArchipelaGunData();
-
-            // TODO does locationsCheckedFlags need to be validated??
-            dataToSave.countSaveData = countSaveDataToWrite;
-            dataToSave.locationsCheckedFlagsData = locationsCheckedFlags;
-
-            SaveDataWriter.WriteSaveFile(dataToSave);
-        }
-
-        public static void SaveCurrentRandomizerProgress()
-        {
-            HandleSaveValidationAndWrite();
-            return;
-        }
-
-        public static void AddToCountSaveDataEntry(CountStats statToAdd, int numberToAdd)
-        {
-            if(numberToAdd > 0)
-            {
-                ArchDebugPrint.DebugLog(DebugCategory.LocalSaveData, $"{statToAdd} goal adding: {numberToAdd}");
-            }
-            int goalsMet = CountGoalManager.AddToGoalCount(statToAdd, numberToAdd);
-
-            if (goalsMet >= 1)
-            {
-                ArchDebugPrint.DebugLog(DebugCategory.CountingGoal, $"[{statToAdd}] Goal handling {goalsMet} completions");
-
-                AchievementLocationCheckHandler.SendStatLocationChecks(statToAdd, goalsMet);
-                CountGoalManager.RemoveClearedGoals(statToAdd, goalsMet);
-
-                SaveCurrentRandomizerProgress();
-            }
-
-            return;
-        }
-
-        public static void CheckFullCountStatsForGoals()
-        {
-            ArchDebugPrint.DebugLog(DebugCategory.CountingGoal, $"Checking save data for cleared goals");
-
-            List<CountStats> countStatList = CountGoalManager.GetFullCountSaveData().Keys.ToList<CountStats>();
-            foreach(CountStats countStat in countStatList)
-            {
-                AddToCountSaveDataEntry(countStat, 0);
-            }
-            return;
-        }
     }
 }

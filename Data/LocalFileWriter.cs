@@ -1,37 +1,37 @@
-﻿using System;
+﻿using ArchiGungeon.DebugTools;
+using ArchiGungeon.UserInterface;
+using BepInEx;
+using HarmonyLib;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
-using BepInEx;
-using System.IO;
-using ArchiGungeon.DebugTools;
-using ArchiGungeon.UserInterface;
-using Newtonsoft.Json.Linq;
-using Newtonsoft.Json;
 
 namespace ArchiGungeon.Data
 {
 
     #region Save Data 
     public class SaveDataWriter
-    {   
-        // using randomizer key as save data key
+    {
         private static string ConfigPath { get; } = Paths.ConfigPath;
-        private const string SAVE_DATA_FILEPREFIX = "SAVE_";
+        private const string SAVE_DATA_FILEPREFIX = "ArchipelagunSlot";
         private static bool isSavePathInitialized = false;
         private static string SaveFilepath { get; set; }
 
-        public static bool InitSaveFilenameAndCheckPrevious(string playerName, string seedString)
+        public static bool InitSaveFilenameAndCheckPrevious()
         {
-            string fileName = SAVE_DATA_FILEPREFIX + playerName + seedString.Substring(0,8) + ".json";
+            string fileName = SAVE_DATA_FILEPREFIX + SaveManager.CurrentSaveSlot + ".json";
             SaveFilepath = Path.Combine(ConfigPath, fileName);
 
             isSavePathInitialized = true;
 
             return File.Exists(SaveFilepath);
         }
-        
-        public static void WriteSaveFile(ArchipelaGunData saveData)
+
+        public static void WriteSaveFile(ArchipelaGunFileData saveData)
         {
             if (!isSavePathInitialized)
             {
@@ -43,21 +43,17 @@ namespace ArchiGungeon.Data
             ArchipelagoGUI.ConsoleLog($"Save data updated: {SaveFilepath}");
 
             ETGModConsole.Log($"SaveDataWriter: Save data updated: {SaveFilepath}");
-            return;
         }
         
-        public static ArchipelaGunData RetrieveSaveData(string playerName = "", string seedString = "")
+        public static ArchipelaGunFileData RetrieveSaveData()
         {
-            if (playerName != "" && seedString != "")
-            {
-                string fileName = SAVE_DATA_FILEPREFIX + playerName + seedString.Substring(0, 8) + ".json";
-                SaveFilepath = Path.Combine(ConfigPath, fileName);
-            }
+            string fileName = SAVE_DATA_FILEPREFIX + SaveManager.CurrentSaveSlot + ".json";
+            SaveFilepath = Path.Combine(ConfigPath, fileName);
 
             if (File.Exists(SaveFilepath))
             {
                 string localData = File.ReadAllText(SaveFilepath);
-                ArchipelaGunData saveData = JsonConvert.DeserializeObject<ArchipelaGunData>(localData);
+                ArchipelaGunFileData saveData = JsonConvert.DeserializeObject<ArchipelaGunFileData>(localData);
 
                 ETGModConsole.Log("SaveDataWriter: Archipelagun data retrieved!");
                 return saveData;
@@ -69,8 +65,19 @@ namespace ArchiGungeon.Data
                 return null;
             }
         }
-    }
 
+        public static void DANGEROUS_DeleteArchipelaGunDataFile()
+        {
+            string fileName = SAVE_DATA_FILEPREFIX + SaveManager.CurrentSaveSlot + ".json";
+            SaveFilepath = Path.Combine(ConfigPath, fileName);
+
+            if (File.Exists(SaveFilepath))
+            {
+                ETGModConsole.Log($"SaveDataWriter: DELETING ARCHIPELAGUN DATA:{SaveFilepath}");
+                File.Delete(SaveFilepath);
+            }
+        }
+    }
     #endregion
 
     #region Connection Data
@@ -89,8 +96,6 @@ namespace ArchiGungeon.Data
 
             ArchDebugPrint.DebugLog(DebugCategory.LocalSaveData, $"Config: {Paths.ConfigPath}");
             ArchDebugPrint.DebugLog(DebugCategory.LocalSaveData, $"SavePath: {SaveManager.SavePath}");
-
-            return;
         }
 
         public static void SaveArchipelagoConnectionSettings(PlayerConnectionInfo connectionSettingsToSave)
@@ -106,19 +111,14 @@ namespace ArchiGungeon.Data
 
             ArchDebugPrint.DebugLog(DebugCategory.LocalSaveData, $"Connection settings: {outputToWrite} \n\n" +
                 $"Written at: {Path.Combine(ArchipelConfigPath, SAVED_CONNECTION_FILENAME)}");
-
-
-            return;
         }
 
         public static bool CheckPreviousConnectionExists()
         {
             if (File.Exists(Path.Combine(ArchipelConfigPath, SAVED_CONNECTION_FILENAME)) == false)
             {
-                
                 return false;
             }
-
 
             SavedConnectionSettings = JsonConvert.DeserializeObject<PlayerConnectionInfo>(File.ReadAllText(Path.Combine(ArchipelConfigPath,
                 SAVED_CONNECTION_FILENAME)));
@@ -156,8 +156,6 @@ namespace ArchiGungeon.Data
             {
                 AppendWriteToFile(newEntry);
             }
-
-            return;
         }
 
         public static void StartWritingDebugToLocal()
@@ -170,8 +168,6 @@ namespace ArchiGungeon.Data
             isWritingText = true;
             ArchipelagoGUI.ConsoleLog($"===** Debug text log at {fileToWrite} **=== \n\n");
             WriteCurrentLogToFile();
-
-            return;
         }
 
         private static void WriteCurrentLogToFile()
@@ -183,8 +179,6 @@ namespace ArchiGungeon.Data
                     outputFile.WriteLine(debugEntry);
                 }
             }
-
-            return;
         }
 
         private static void AppendWriteToFile(string newText)
@@ -193,8 +187,6 @@ namespace ArchiGungeon.Data
             {
                 outputFile.WriteLine(newText);
             }
-
-            return;
         }
 
         public static void ClearLocalOldestFile()
@@ -203,8 +195,6 @@ namespace ArchiGungeon.Data
             {
                 File.Delete(oldestFile);
             }
-            
-            return;
         }
 
         public static void CheckForOldestDebugFile()
@@ -242,8 +232,6 @@ namespace ArchiGungeon.Data
 
             oldestFile = DebugFilename[0];
             fileToWrite = DebugFilename[filenameCount - 1];
-            return;
-
         }
     }
 
