@@ -47,13 +47,13 @@ namespace ArchiGungeon.ArchipelagoServer
         #endregion
 
         #region Item Handling Variables
-        private static List<ItemInfo> allItemsReceivedFromServer = new List<ItemInfo>();
-        private static bool hasRetrievedServerItemsOnce = false;
-        private static List<long> itemsHandledThisRun = new List<long>();
+        private static List<ItemInfo> allItemsReceivedFromServer = new List<ItemInfo>(); //TODO: Remove
+        private static bool hasRetrievedServerItemsOnce = false; //TODO: Remove
+        private static List<long> itemsHandledThisRun = new List<long>(); //TODO: Remove
         private static List<ItemInfo> _itemAddQueue = new List<ItemInfo>();
 
-        private static bool IsProgressItemsGiven { get; set; } = false;
-        public static bool IsValidToSpawnItems { get; private set; } = false;
+        private static bool _isProgressItemsGiven { get; set; } = false; //TODO: Remove
+        public static bool IsValidToSpawnItems { get; set; } = false;
         #endregion
 
         #region Randomizer Parameter Variables
@@ -380,7 +380,8 @@ namespace ArchiGungeon.ArchipelagoServer
                 return;
             }
 
-            CheckToInitializeParadoxMode();
+            // Disabling paradox mode for now.
+            //CheckToInitializeParadoxMode();
 
             if(!TimedServerCalls.IsDelayedItemInitCoroutineRunning)
             {
@@ -428,7 +429,7 @@ namespace ArchiGungeon.ArchipelagoServer
             //TODO: These below are from old logic. Either can be removed or repurposed. 
             itemsHandledThisRun.Clear();
             IsReverseCurseSetForRun = false;
-            IsProgressItemsGiven = false;
+            _isProgressItemsGiven = false;
             IsValidToSpawnItems = false;
             HandlingDeathlinkEvent = false;
 
@@ -437,7 +438,6 @@ namespace ArchiGungeon.ArchipelagoServer
 
         public static void RetrieveItemsFromServer()
         {
-
             TrapSpawnHandler.SetCanSpawn(false);
             ConsumableSpawnHandler.SetCanSpawn(false);
 
@@ -447,23 +447,24 @@ namespace ArchiGungeon.ArchipelagoServer
                 return;
             }
 
-
+            //TODO: Instead just adding all items on the server again, check Session.Items.Index and compare with local index to see if there is any items we need to handle receiving.
             var itemList = Session.Items.AllItemsReceived;
 
             ArchipelagoGUI.ConsoleLog($"Retrieving server items!");
 
-            foreach (var item in itemList)
-            {
-                if(!allItemsReceivedFromServer.Contains(item))
-                {
-                    allItemsReceivedFromServer.Add(item);
+            //TODO: Remove commented out section. No need to add items to gungeon unless we never received it based on index value
+            //foreach (var item in itemList)
+            //{
+            //    if(!allItemsReceivedFromServer.Contains(item))
+            //    {
+            //        allItemsReceivedFromServer.Add(item);
 
-                    if (!itemsHandledThisRun.Contains(item.ItemId))
-                    {
-                        AddItemToLocalGungeon(item);
-                    }
-                }   
-            }
+            //        if (!itemsHandledThisRun.Contains(item.ItemId))
+            //        {
+            //            AddItemToLocalGungeon(item);
+            //        }
+            //    }   
+            //}
 
             hasRetrievedServerItemsOnce = true;
             TrapSpawnHandler.SetCanSpawn(true);
@@ -472,6 +473,9 @@ namespace ArchiGungeon.ArchipelagoServer
             return;
         }
 
+        /// <summary>
+        /// DEPRECIATED: No need to spawn items from AP each run, moving to save data Gungeon flags or special logic for any run start spawns.
+        /// </summary>
         private static void RetrieveItemsFromLocalData()
         {
             TrapSpawnHandler.SetCanSpawn(false);
@@ -525,25 +529,29 @@ namespace ArchiGungeon.ArchipelagoServer
 
         public static void HandleDelayedItemInitialize()
         {
-            if(hasRetrievedServerItemsOnce)
-            {
-                RetrieveItemsFromLocalData();
-            }
-            else
-            {
-                RetrieveItemsFromServer(); 
-            }
+            //TODO if not using remove. Also could condense this function and RetrieveItemsFromServer together at that point.
+            //if(hasRetrievedServerItemsOnce)
+            //{
+            //    RetrieveItemsFromLocalData();
+            //}
+            //else
+            //{
+            //    RetrieveItemsFromServer(); 
+            //}
 
-            CheckForProgressItems();
+            RetrieveItemsFromServer();
+            //CheckForProgressItems();
 
             IsValidToSpawnItems = true;
             //CheckReverseCurse();
         }
 
-
+        /// <summary>
+        /// DEPRECIATED: was used in old logic to spawn progressItems at the start of every run.
+        /// </summary>
         private static void CheckForProgressItems()
         {
-            if (IsProgressItemsGiven)
+            if (_isProgressItemsGiven)
             {
                 return;
             }
@@ -558,7 +566,7 @@ namespace ArchiGungeon.ArchipelagoServer
                 ProgressionItemSpawnHandler.GiveRatNotes();
             }
 
-            IsProgressItemsGiven = true;
+            _isProgressItemsGiven = true;
         }
 
         /// <summary>
@@ -976,6 +984,7 @@ namespace ArchiGungeon.ArchipelagoServer
 
 
             #region Low Priority Receive Calls
+            // Unused section currently
             public static void OnPacketReceived(ArchipelagoPacketBase packet)
             {
 
@@ -1053,7 +1062,7 @@ namespace ArchiGungeon.ArchipelagoServer
             yield return new WaitForSeconds(waitTime);
 
             SessionHandler.HandleDelayedItemInitialize();
-            SessionHandler.ShowGoalsTextbox();
+            //SessionHandler.ShowGoalsTextbox(); TODO: Remove if we don't repurpose the goals textboxes. 
             IsDelayedItemInitCoroutineRunning = false;
         }
 

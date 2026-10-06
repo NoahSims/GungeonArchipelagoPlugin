@@ -88,6 +88,7 @@ namespace ArchiGungeon.ArchipelagoServer
         /// <param name="receivedItem">Item id from AP of item to give. This is a custom set Id that will match whats set in the APWorld.</param>
         public static void GiveGungeonItem(ItemInfo receivedItem)
         {
+            // TODO: Add item recieve banner here.
             // TODO: remove this weird id range logic to more defined flags.
             // Reduce the AP Item Id down to an Id that matches the internal item ids for guns/items.
             long adjustedItemId = receivedItem.ItemId - _baseItemID;

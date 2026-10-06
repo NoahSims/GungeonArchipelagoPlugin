@@ -223,9 +223,9 @@ namespace ArchiGungeon.GungeonEventHandlers
                 PlayerTwo.OnRealPlayerDeath += OnPlayerTwoDeath;
                 ArchipelagoGungeonBridge.SetPlayerTwo(PlayerTwo);
             }
-
             else
             {
+                // TODO remove unused section
                 if(CharSwap.IsParadoxModeOn == true && controller.characterIdentity == PlayableCharacters.Eevee && PickedUpArchipelagun && IsStartOfRun)
                 {
                     CharSwap.HandleLostItemsOnCharacterSwap(controller);
@@ -236,6 +236,7 @@ namespace ArchiGungeon.GungeonEventHandlers
                 PlayerOne = controller;
                 PlayerOne.OnRealPlayerDeath += OnPlayerOneDeath;
                 ArchipelagoGungeonBridge.SetPlayerOne(PlayerOne);
+                SessionHandler.IsValidToSpawnItems = true;
             }
 
             StartPlayerControllerEventListens(controller);
@@ -359,7 +360,7 @@ namespace ArchiGungeon.GungeonEventHandlers
             triggerTwinKills = 0;
             IsStartOfRun = true;
 
-            CharSwap.EndParadoxModeForReset();
+            //CharSwap.EndParadoxModeForReset();
             SessionHandler.ResetVariablesToStartOfRun();
             
 
@@ -567,8 +568,10 @@ namespace ArchiGungeon.GungeonEventHandlers
                     return;
                 }
             }
-            controller.characterIdentity = PlayableCharacters.Pilot;
-            PickedUpArchipelagun = false;
+
+            SessionHandler.IsValidToSpawnItems = false;
+            //controller.characterIdentity = PlayableCharacters.Pilot; TODO remove when confirmed not needed
+            //PickedUpArchipelagun = false;
             SaveDataManagement.SaveCurrentRandomizerProgress();
 
             string deathCause = $"Died to {controller.healthHaver.lastIncurredDamageSource} in the Gungeon";
@@ -580,6 +583,7 @@ namespace ArchiGungeon.GungeonEventHandlers
 
             if(PlayerOne.healthHaver.IsDead )
             {
+                SessionHandler.IsValidToSpawnItems = false;
                 SaveDataManagement.SaveCurrentRandomizerProgress();
                 string deathCause = $"Died to {controller.healthHaver.lastIncurredDamageSource} in the Gungeon";
                 SessionHandler.DataSender.SendDeathlink(causeOfDeath: deathCause);
@@ -627,13 +631,13 @@ namespace ArchiGungeon.GungeonEventHandlers
         private static void OnKilledEnemy(PlayerController playerController, HealthHaver enemy)
         {
             string enemyName = enemy.name;
-            // TODO: add enemy headhunter check
+            // Old (but potentially useful) TODO: add enemy headhunter check
             return;
         }
 
         private static void OnTableFlip(FlippableCover tableFlipped)
         {
-            // TODO: add table flip location
+            // Old TODO: add table flip location
             return;
         }
         #endregion
