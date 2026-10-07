@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace ArchiGungeon.UserInterface
 {
-    public class AchripelagoUIHelper : MonoBehaviour
+    public class ArchipelagoUIHelper : MonoBehaviour
     {
         // Helper method for on screen notifications
         public static void ArchipelagoUINotification(string lineOne, string lineTwo)

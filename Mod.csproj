@@ -65,7 +65,7 @@
     <Compile Include="ItemArchipelago\Archipelagun.cs" />
     <Compile Include="ItemArchipelago\AchievementLocationCheckHandler.cs" />
     <Compile Include="ItemArchipelago\ShopAPItemHandler.cs" />
-    <Compile Include="UserInterface\AchripelagoUIHelper.cs" />
+    <Compile Include="UserInterface\ArchipelagoUIHelper.cs" />
     <Compile Include="UserInterface\ArchipelagoGUI.cs" />
     <Compile Include="GungeonEventHandlers\GungeonPlayerEventListener.cs" />
     <Compile Include="GungeonEventHandlers\SpawningItemsHandler.cs" />
