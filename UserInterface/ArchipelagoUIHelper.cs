@@ -9,10 +9,10 @@ namespace ArchiGungeon.UserInterface
     public class AchripelagoUIHelper : MonoBehaviour
     {
         // Helper method for on screen notifications
-        public static void ArchipelagoUINotification(string bigMessage, string smallMessage)
+        public static void ArchipelagoUINotification(string lineOne, string lineTwo)
         {
             GameUIRoot gameUIRoot = FindObjectOfType<GameUIRoot>();
-            gameUIRoot.notificationController?.DoCustomNotification(bigMessage, smallMessage, new tk2dSpriteCollectionData(), 1);
+            gameUIRoot.notificationController?.DoCustomNotification(lineOne, lineTwo, new tk2dSpriteCollectionData(), 1);
         }
     }
 }

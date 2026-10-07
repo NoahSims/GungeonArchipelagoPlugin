@@ -29,7 +29,7 @@ namespace ArchiGungeon.ItemArchipelago
             {
                 //ETGModConsole.Log("GameStatsManagerPatch: Heartbottle purchased - Location checked. Send item here");
                 //TODO - send items from location check
-                AchripelagoUIHelper.ArchipelagoUINotification("Sent <item> to <example>", "TODO - this is a location");
+                ArchipelagoUIHelper.ArchipelagoUINotification("Sent <item> to <example>", "TODO - this is a location");
                 ArchipelaGunLocalDataManager.locationsCheckedFlags.Add(flag);
                 return false;
             }

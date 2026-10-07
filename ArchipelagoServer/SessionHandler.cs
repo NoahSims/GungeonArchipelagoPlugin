@@ -126,7 +126,7 @@ namespace ArchiGungeon.ArchipelagoServer
             CallRetrieveDataCoroutine();
 
             // Fire confirmation notification
-            AchripelagoUIHelper.ArchipelagoUINotification("Connected to Multiworld", "yippee!");
+            ArchipelagoUIHelper.ArchipelagoUINotification("Connected to Multiworld", "yippee!");
         }
 
         public static void CallRetrieveDataCoroutine()
