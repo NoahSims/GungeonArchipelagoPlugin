@@ -17,20 +17,6 @@ namespace ArchiGungeon.ArchipelagoServer
 {
     public class ArchipelagoGungeonBridge
     {
-        #region APWorld Data
-        private static readonly long _baseItemID = 8754000;
-        private static readonly long _gunAndItemIdRange = 1000;
-        private static readonly long _npcRange = 1100;
-        private static readonly long _fillerRange = 1200;
-
-        //private static readonly long consumableCategoryItemID = 8754100;
-        //private static readonly long trapCategoryItemID = 8754200;
-        //private static readonly long progressionItemID = 8754300;
-        //private static readonly long paradoxCharacterItemID = 8754400;
-        //private static readonly long undoCurseItemID = 8754500;
-
-        #endregion
-
         #region Player References
         private static PlayerController playerOne;
         private static PlayerController playerTwo;
@@ -87,30 +73,35 @@ namespace ArchiGungeon.ArchipelagoServer
         /// <summary>
         /// Unlocks the item or spawns it if appropriate.
         /// </summary>
-        /// <param name="receivedItem">Item id from AP of item to give. This is a custom set Id that will match whats set in the APWorld.</param>
-        public static void GiveGungeonItem(ItemInfo receivedItem)
+        /// <param name="apItem">Item id from AP of item to give. This is a custom set Id that will match whats set in the APWorld.</param>
+        public static void GiveGungeonItem(ItemInfo apItem)
         {
-            ArchipelagoUIHelper.ArchipelagoUINotification("Received " + receivedItem.ItemDisplayName, "Found in " + receivedItem.LocationGame);
-            // TODO: remove this weird id range logic to more defined flags.
-            // Reduce the AP Item Id down to an Id that matches the internal item ids for guns/items.
-            switch (receivedItem.Flags)
+            var receivedItemInfo = ReceivedAPItem.GetReceivedIteminfo(apItem.ItemId);
+            ArchipelagoUIHelper.ArchipelagoUINotification("Received " + receivedItemInfo.DisplayName, "Found in " + apItem.LocationGame);
+
+            switch (receivedItemInfo.Type)
             {
-                case ItemFlags.None:
-                    long adjustedItemId = receivedItem.ItemId - _baseItemID;
-                    if (adjustedItemId < _gunAndItemIdRange)
-                    {
-                        var spawneditem = SpecificItemSpawnHandler.GivePlayerSpecificItem((int)adjustedItemId);
-                        GameStatsManager.Instance.ForceUnlock(spawneditem.GetComponent<EncounterTrackable>()?.EncounterGuid);
-                    }
+                case ReceivedItemType.ETGBaseItemFiller:
+                    // TODO refactor this now that we get the pickup obj earlier
+                    var spawneditem = SpecificItemSpawnHandler.GivePlayerSpecificItem(receivedItemInfo.PickupObj.PickupObjectId);
+                    GameStatsManager.Instance.ForceUnlock(spawneditem.GetComponent<EncounterTrackable>()?.EncounterGuid);
                     break;
-                case ItemFlags.Advancement: // TODO not just NPCs
-                    UnlockNPC(receivedItem.ItemId);
+                case ReceivedItemType.MetaShop:
+                    UnlockNPC(receivedItemInfo.ItemId); //Rename and won't work with IDs quite yet
                     break;
-                case ItemFlags.NeverExclude:
+                case ReceivedItemType.NPC:
                     break;
-                case ItemFlags.Trap:
-                    long trapId = receivedItem.ItemId - _baseItemID - _npcRange; //TEMP
-                    TrapSpawnHandler.SpawnTrapByCase((int)trapId - (int)_npcRange);
+                case ReceivedItemType.CustomProgressive:
+                    break;
+                case ReceivedItemType.ConsumableFiller:
+                    break;
+                case ReceivedItemType.CharacterUnlock:
+                    break;
+                case ReceivedItemType.CosmeticFiller:
+                    break;
+                case ReceivedItemType.CoreProgression:
+                    break;
+                case ReceivedItemType.Trap:
                     break;
                 default:
                     break;
