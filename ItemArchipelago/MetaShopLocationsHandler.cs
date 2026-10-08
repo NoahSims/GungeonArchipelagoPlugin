@@ -172,6 +172,29 @@ namespace ArchiGungeon.ItemArchipelago
             return false;
         }
 
+        /*
+         * Patch - EncounterTrackable.PrerequisitesMet
+         * Controls whether to add items to meta shops (but not ox and cadence).
+         * Needed for tracking locations purchased from shops but not unlocked as items yet.
+         */
+        [HarmonyPatch(typeof(EncounterTrackable), nameof(EncounterTrackable.PrerequisitesMet))]
+        [HarmonyPrefix]
+        public static bool Patch_PrerequisitesMet(EncounterTrackable __instance, ref bool __result)
+        {
+            if (GameManager.Instance.CurrentLevelOverrideState == GameManager.LevelOverrideState.FOYER)
+            {
+                for (int i = 0; i < __instance.m_prerequisites.Length; i++)
+                {
+                    if (__instance.m_prerequisites[i].prerequisiteType == DungeonPrerequisite.PrerequisiteType.FLAG)
+                    {
+                        __result = ArchipelaGunLocalDataManager.locationsCheckedFlags.Contains(__instance.m_prerequisites[i].saveFlagToCheck);
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
         // This function will trigger any time the game tries to generate the loot pool and read what it thinks are in the pool. Could be useful for debugging.
         // I don't know where else to put this, so this can hang out here for now. Uncomment if you want, I guess
         /*
