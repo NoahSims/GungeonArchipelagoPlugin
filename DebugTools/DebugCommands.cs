@@ -1,13 +1,14 @@
-﻿using System;
+﻿using ArchiGungeon.ArchipelagoServer;
+using ArchiGungeon.Data;
+using ArchiGungeon.GungeonEventHandlers;
+using ArchiGungeon.UserInterface;
+using Archipelago.MultiClient.Net.DataPackage;
+using Archipelago.MultiClient.Net.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ArchiGungeon.ArchipelagoServer;
-using ArchiGungeon.GungeonEventHandlers;
-using ArchiGungeon.UserInterface;
-using ArchiGungeon.Data;
-using Archipelago.MultiClient.Net.Models;
-using Archipelago.MultiClient.Net.DataPackage;
+using static dfAtlas;
 
 namespace ArchiGungeon.DebugTools
 {
@@ -160,6 +161,25 @@ namespace ArchiGungeon.DebugTools
 
             return;
         }
+
+        private static void ReceiveAPItem(long itemId)
+        {
+            try
+            {
+                if (itemId < ReceivedAPItem.BaseItemId)
+                {
+                    // assume a gungeon id was provided instead. Increase to the base id.
+                    itemId += ReceivedAPItem.BaseItemId;
+                }
+
+                var debugItem = ReceivedAPItem.GetReceivedAPItem(itemId);
+                ArchipelagoGungeonBridge.GiveGungeonItem(debugItem);
+            }
+            catch (Exception ex)
+            {
+                ArchipelagoGUI.ConsoleLog("Something went wrong receiving that AP item. Double check your input! Error: " + ex.Message);
+            }
+        }
         #endregion
 
         #region Command Handling
@@ -245,51 +265,34 @@ namespace ArchiGungeon.DebugTools
                     }
                 case AvailableDebugCMD.ReceiveItem:
                     {
-                        // TODO: Expand this debug to support different types of items and make testing easier by providing names.
-                        // Create a dummy AP item to serve as the container of the item ID.
-                        NetworkItem debugNetworkItem = new NetworkItem() 
-                        { 
-                            Item = (long)Convert.ToDouble(additionalInput),
-                            Flags = Archipelago.MultiClient.Net.Enums.ItemFlags.None
-                        };
-                        DebugItemInfoResolver itemInfoResolver = new DebugItemInfoResolver();
-                        ItemInfo debugItem = new ItemInfo(debugNetworkItem, "This game", "Debug Game", itemInfoResolver, null);
-                        ArchipelagoGungeonBridge.GiveGungeonItem(debugItem);
+                        ReceiveAPItem((long)Convert.ToDouble(additionalInput));
                         return;
                     }
                 case AvailableDebugCMD.EnableNPC:
                     {
-                        // TODO come up with a more defined list of NPC and ids to use.
                         long npcId = -1;
                         switch (additionalInput.ToLower())
                         {
                             case "meta":
-                                npcId = 0;
+                                npcId = ReceivedAPItem.PickupObjectIdRange;
                                 break;
                             case "goop":
-                                npcId = 1;
+                                npcId = ReceivedAPItem.PickupObjectIdRange + 1;
                                 break;
                             case "trorc":
-                                npcId = 2;
+                                npcId = ReceivedAPItem.PickupObjectIdRange + 2;
                                 break;
                             case "doug":
-                                npcId = 3;
+                                npcId = ReceivedAPItem.PickupObjectIdRange + 3;
                                 break;
                             case "tinker":
-                                npcId = 4;
+                                npcId = ReceivedAPItem.PickupObjectIdRange + 4;
                                 break;
                             default:
                                 break;
                         }
 
-                        NetworkItem debugNetworkItem = new NetworkItem()
-                        {
-                            Item = npcId,
-                            Flags = Archipelago.MultiClient.Net.Enums.ItemFlags.Advancement
-                        };
-                        DebugItemInfoResolver itemInfoResolver = new DebugItemInfoResolver();
-                        ItemInfo debugItem = new ItemInfo(debugNetworkItem, "This game", "Debug Game", itemInfoResolver, null);
-                        ArchipelagoGungeonBridge.GiveGungeonItem(debugItem);
+                        ReceiveAPItem(npcId);
                         return;
                     }
                 default:
@@ -301,26 +304,5 @@ namespace ArchiGungeon.DebugTools
 
         }
         #endregion
-    }
-}
-
-/// <summary>
-/// Test class, we can remove this later if more elegant solution.
-/// </summary>
-public class DebugItemInfoResolver : IItemInfoResolver
-{
-    public string GetItemName(long itemId, string game = null)
-    {
-        return itemId.ToString() + " " + game;
-    }
-
-    public long GetLocationId(string locationName, string game = null)
-    {
-        return 0;
-    }
-
-    public string GetLocationName(long locationId, string game = null)
-    {
-        return locationId.ToString() + " " + game;
     }
 }

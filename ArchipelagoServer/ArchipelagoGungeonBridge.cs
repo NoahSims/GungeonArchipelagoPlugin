@@ -74,22 +74,20 @@ namespace ArchiGungeon.ArchipelagoServer
         /// Unlocks the item or spawns it if appropriate.
         /// </summary>
         /// <param name="apItem">Item id from AP of item to give. This is a custom set Id that will match whats set in the APWorld.</param>
-        public static void GiveGungeonItem(ItemInfo apItem)
+        public static void GiveGungeonItem(ReceivedAPItem apItem)
         {
-            var receivedItemInfo = ReceivedAPItem.GetReceivedIteminfo(apItem.ItemId);
-            ArchipelagoUIHelper.ArchipelagoUINotification("Received " + receivedItemInfo.DisplayName, "Found in " + apItem.LocationGame);
+            ArchipelagoUIHelper.ArchipelagoUINotification("Received " + apItem.DisplayName, "Found in " + apItem.LocationDisplayName);
 
-            switch (receivedItemInfo.Type)
+            switch (apItem.Type)
             {
                 case ReceivedItemType.ETGBaseItemFiller:
                     // TODO refactor this now that we get the pickup obj earlier
-                    var spawneditem = SpecificItemSpawnHandler.GivePlayerSpecificItem(receivedItemInfo.PickupObj.PickupObjectId);
+                    var spawneditem = SpecificItemSpawnHandler.GivePlayerSpecificItem(apItem.PickupObj.PickupObjectId);
                     GameStatsManager.Instance.ForceUnlock(spawneditem.GetComponent<EncounterTrackable>()?.EncounterGuid);
                     break;
                 case ReceivedItemType.MetaShop:
-                    UnlockNPC(receivedItemInfo.ItemId); //Rename and won't work with IDs quite yet
-                    break;
                 case ReceivedItemType.NPC:
+                    UnlockNPC(apItem.ItemId);
                     break;
                 case ReceivedItemType.CustomProgressive:
                     break;
@@ -188,8 +186,9 @@ namespace ArchiGungeon.ArchipelagoServer
         /// <param name="NPCId"></param>
         public static void UnlockNPC(long NPCId)
         {
+            var simplifiedId = NPCId - ReceivedAPItem.PickupObjectIdRange;
             ArchDebugPrint.DebugLog(DebugCategory.ServerReceive, "Unlocking NPC: " + NPCId);
-            switch (NPCId)
+            switch (simplifiedId)
             {
                 case 0: // Ox and Candence
                     GameStatsManager.Instance.SetFlag(GungeonFlags.META_SHOP_ACTIVE_IN_FOYER, true);
