@@ -47,6 +47,7 @@ namespace ArchiGungeon.Data
         /// </summary>
         public const long PickupObjectIdRange = 8755000;
 
+        // Note if you change the Id or name of any of these please besure to double check ArchipelagoGungeonBridge.cs and DebugCommands.cs use the updated values.
         private static Dictionary<long, ReceivedAPItem> _fullCustomItemDictionary = new Dictionary<long, ReceivedAPItem>()
         {
             { PickupObjectIdRange, new ReceivedAPItem(PickupObjectIdRange, "Ox and Cadence", ReceivedItemType.MetaShop) },
@@ -95,6 +96,10 @@ namespace ArchiGungeon.Data
             { PickupObjectIdRange + 43, new ReceivedAPItem(PickupObjectIdRange + 43, "Boss Rush", ReceivedItemType.KeyUnlock) },
             { PickupObjectIdRange + 44, new ReceivedAPItem(PickupObjectIdRange + 44, "Payday Items Available to Steal", ReceivedItemType.KeyUnlock) },
             { PickupObjectIdRange + 45, new ReceivedAPItem(PickupObjectIdRange + 45, "Vampire", ReceivedItemType.NPC) },
+            { PickupObjectIdRange + 46, new ReceivedAPItem(PickupObjectIdRange + 46, "Prime Primer", ReceivedItemType.CoreProgression) },
+            { PickupObjectIdRange + 47, new ReceivedAPItem(PickupObjectIdRange + 47, "Planar Lead", ReceivedItemType.CoreProgression) },
+            { PickupObjectIdRange + 48, new ReceivedAPItem(PickupObjectIdRange + 48, "Obsidian Shell Casing", ReceivedItemType.CoreProgression) },
+            { PickupObjectIdRange + 49, new ReceivedAPItem(PickupObjectIdRange + 49, "Arcane Powder", ReceivedItemType.CoreProgression) },
         };
 
         /// <summary>

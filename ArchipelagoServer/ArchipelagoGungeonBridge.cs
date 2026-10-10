@@ -97,7 +97,9 @@ namespace ArchiGungeon.ArchipelagoServer
                     break;
                 case ReceivedItemType.CosmeticFiller:
                     break;
+                case ReceivedItemType.KeyUnlock:
                 case ReceivedItemType.CoreProgression:
+                    UnlockProgressFlag(apItem);
                     break;
                 case ReceivedItemType.Trap:
                     break;
@@ -250,6 +252,36 @@ namespace ArchiGungeon.ArchipelagoServer
                     break;
                 case 45: // Vampire
                     GameStatsManager.Instance.SetFlag(GungeonFlags.VAMPIRE_RELEASED, true);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// All non-npc progress items that are unlocked just through setting GameStatsMangager flags.
+        /// </summary>
+        /// <param name="item"></param>
+        public static void UnlockProgressFlag(ReceivedAPItem item)
+        {
+            ArchDebugPrint.DebugLog(DebugCategory.ServerReceive, "Unlocking Core Progression: " + item.DisplayName);
+            switch (item.DisplayName)
+            {
+                case "Prime Primer":
+                    GameStatsManager.Instance.SetFlag(GungeonFlags.BLACKSMITH_ELEMENT1, true);
+                    GameStatsManager.Instance.SetFlag(GungeonFlags.BLACKSMITH_MET_PREVIOUSLY, true);
+                    break;
+                case "Planar Lead":
+                    GameStatsManager.Instance.SetFlag(GungeonFlags.BLACKSMITH_ELEMENT2, true);
+                    GameStatsManager.Instance.SetFlag(GungeonFlags.BLACKSMITH_MET_PREVIOUSLY, true);
+                    break;
+                case "Obsidian Shell Casing":
+                    GameStatsManager.Instance.SetFlag(GungeonFlags.BLACKSMITH_ELEMENT3, true);
+                    GameStatsManager.Instance.SetFlag(GungeonFlags.BLACKSMITH_MET_PREVIOUSLY, true);
+                    break;
+                case "Arcane Powder":
+                    GameStatsManager.Instance.SetFlag(GungeonFlags.BLACKSMITH_ELEMENT4, true);
+                    GameStatsManager.Instance.SetFlag(GungeonFlags.BLACKSMITH_MET_PREVIOUSLY, true);
                     break;
                 default:
                     break;
