@@ -283,6 +283,24 @@ namespace ArchiGungeon.ArchipelagoServer
                     GameStatsManager.Instance.SetFlag(GungeonFlags.BLACKSMITH_ELEMENT4, true);
                     GameStatsManager.Instance.SetFlag(GungeonFlags.BLACKSMITH_MET_PREVIOUSLY, true);
                     break;
+                case "Shortcut elevator - Level 2":
+                    GameStatsManager.Instance.SetFlag(GungeonFlags.SHERPA_UNLOCK1_COMPLETE, true);
+                    break;
+                case "Shortcut elevator - Level 3":
+                    GameStatsManager.Instance.SetFlag(GungeonFlags.SHERPA_UNLOCK2_COMPLETE, true);
+                    break;
+                case "Shortcut elevator - Level 4":
+                    GameStatsManager.Instance.SetFlag(GungeonFlags.SHERPA_UNLOCK3_COMPLETE, true);
+                    break;
+                case "Shortcut elevator - Level 5":
+                    GameStatsManager.Instance.SetFlag(GungeonFlags.SHERPA_UNLOCK4_COMPLETE, true);
+                    break;
+                case "Boss Rush":
+                    GameStatsManager.Instance.SetFlag(GungeonFlags.SHERPA_HAS_UNLOCKED_BOSSRUSH, true);
+                    break;
+                case "Payday Items Available to Steal":
+                    GameStatsManager.Instance.SetFlag(GungeonFlags.ACHIEVEMENT_BIGGEST_WALLET, true);
+                    break;
                 default:
                     break;
             }
