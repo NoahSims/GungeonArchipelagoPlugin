@@ -211,6 +211,46 @@ namespace ArchiGungeon.ArchipelagoServer
                     GameStatsManager.Instance.SetFlag(GungeonFlags.SHERPA_ACTIVE_IN_ELEVATOR_ROOM, true);
                     GameStatsManager.Instance.SetFlag(GungeonFlags.SHERPA_READY_FOR_UNLOCKS, true);
                     break;
+                case 5: // Sorceress
+                    GameStatsManager.Instance.SetFlag(GungeonFlags.SORCERESS_ACTIVE_IN_FOYER, true);
+                    break;
+                case 6: // Daisuke
+                    GameStatsManager.Instance.SetFlag(GungeonFlags.DAISUKE_ACTIVE_IN_FOYER, true);
+                    break;
+                case 7: // Frifle and the Grey Mauser
+                    GameStatsManager.Instance.SetFlag(GungeonFlags.FRIFLE_ACTIVE_IN_FOYER, true);
+                    break;
+                case 8: // Gunsling King and Manservantes
+                    GameStatsManager.Instance.SetFlag(GungeonFlags.GUNSLING_KING_RESCUED_FROM_CELL, true);
+                    GameStatsManager.Instance.SetFlag(GungeonFlags.GUNSLING_KING_ACTIVE_IN_FOYER, true);
+                    break;
+                case 9: // The Lost Adventurer
+                    GameStatsManager.Instance.SetFlag(GungeonFlags.LOST_ADVENTURER_RESCUED_FROM_CELL, true);
+                    break;
+                case 10: // Ledge Goblin
+                    GameStatsManager.Instance.SetFlag(GungeonFlags.LEDGEGOBLIN_ACTIVE_IN_FOYER, true);
+                    break;
+                case 11: // Tonic
+                    GameStatsManager.Instance.SetFlag(GungeonFlags.TONIC_ACTIVE_IN_FOYER, true);
+                    break;
+                case 12: // Bowler
+                    GameStatsManager.Instance.SetFlag(GungeonFlags.BOWLER_ACTIVE_IN_FOYER, true);
+                    break;
+                case 13: // Old Red
+                    GameStatsManager.Instance.SetFlag(GungeonFlags.SHOP_BLANK_ACTIVE, true);
+                    break;
+                case 14: // Flynt
+                    GameStatsManager.Instance.SetFlag(GungeonFlags.SHOP_KEY_ACTIVE, true);
+                    break;
+                case 15: // Cursula
+                    GameStatsManager.Instance.SetFlag(GungeonFlags.SHOP_CURSE_ACTIVE, true);
+                    break;
+                case 16: // Synergrace
+                    GameStatsManager.Instance.SetFlag(GungeonFlags.SYNERGRACE_UNLOCKED, true);
+                    break;
+                case 45: // Vampire
+                    GameStatsManager.Instance.SetFlag(GungeonFlags.VAMPIRE_RELEASED, true);
+                    break;
                 default:
                     break;
             }

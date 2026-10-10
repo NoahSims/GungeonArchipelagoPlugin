@@ -65,7 +65,36 @@ namespace ArchiGungeon.Data
             { PickupObjectIdRange + 13, new ReceivedAPItem(PickupObjectIdRange + 13, "Old Red", ReceivedItemType.NPC) },
             { PickupObjectIdRange + 14, new ReceivedAPItem(PickupObjectIdRange + 14, "Flynt", ReceivedItemType.NPC) },
             { PickupObjectIdRange + 15, new ReceivedAPItem(PickupObjectIdRange + 15, "Cursula", ReceivedItemType.NPC) },
-            { PickupObjectIdRange + 16, new ReceivedAPItem(PickupObjectIdRange + 16, "Synergrace", ReceivedItemType.NPC) }
+            { PickupObjectIdRange + 16, new ReceivedAPItem(PickupObjectIdRange + 16, "Synergrace", ReceivedItemType.NPC) },
+            { PickupObjectIdRange + 17, new ReceivedAPItem(PickupObjectIdRange + 17, "Progressive Cassing Multiplier", ReceivedItemType.CustomProgressive) },
+            { PickupObjectIdRange + 18, new ReceivedAPItem(PickupObjectIdRange + 18, "Progressive Hedgemony Multiplier", ReceivedItemType.CustomProgressive) },
+            { PickupObjectIdRange + 19, new ReceivedAPItem(PickupObjectIdRange + 19, "Progressive Curse Reduction", ReceivedItemType.CustomProgressive) },
+            { PickupObjectIdRange + 20, new ReceivedAPItem(PickupObjectIdRange + 20, "Progressive Coolness", ReceivedItemType.CustomProgressive) },
+            { PickupObjectIdRange + 21, new ReceivedAPItem(PickupObjectIdRange + 21, "Progressive Start Chest", ReceivedItemType.CustomProgressive) },
+            { PickupObjectIdRange + 22, new ReceivedAPItem(PickupObjectIdRange + 22, "5 Hedgemoney Credits", ReceivedItemType.ConsumableFiller) }, // Consider one object to represent all numbers of consumables that can vary.
+            { PickupObjectIdRange + 23, new ReceivedAPItem(PickupObjectIdRange + 23, "50 Casings", ReceivedItemType.ConsumableFiller) },
+            { PickupObjectIdRange + 24, new ReceivedAPItem(PickupObjectIdRange + 24, "2 Keys", ReceivedItemType.ConsumableFiller) },
+            { PickupObjectIdRange + 25, new ReceivedAPItem(PickupObjectIdRange + 25, "Alt Costume - Knight", ReceivedItemType.CosmeticFiller) },
+            { PickupObjectIdRange + 26, new ReceivedAPItem(PickupObjectIdRange + 26, "Alt Costume - Beastmaster", ReceivedItemType.CosmeticFiller) },
+            { PickupObjectIdRange + 27, new ReceivedAPItem(PickupObjectIdRange + 27, "Alt Costume - Jailbird", ReceivedItemType.CosmeticFiller) },
+            { PickupObjectIdRange + 28, new ReceivedAPItem(PickupObjectIdRange + 28, "Alt Costume - Rogue", ReceivedItemType.CosmeticFiller) },
+            { PickupObjectIdRange + 29, new ReceivedAPItem(PickupObjectIdRange + 29, "Alt Costume - Termbot", ReceivedItemType.CosmeticFiller) },
+            { PickupObjectIdRange + 30, new ReceivedAPItem(PickupObjectIdRange + 30, "Alt Costume - Rabbit", ReceivedItemType.CosmeticFiller) },
+            { PickupObjectIdRange + 31, new ReceivedAPItem(PickupObjectIdRange + 31, "Alt Costume - Shell", ReceivedItemType.CosmeticFiller) },
+            { PickupObjectIdRange + 32, new ReceivedAPItem(PickupObjectIdRange + 32, "Playable Character - The Pilot", ReceivedItemType.CharacterUnlock) },
+            { PickupObjectIdRange + 33, new ReceivedAPItem(PickupObjectIdRange + 33, "Playable Character - The Marine", ReceivedItemType.CharacterUnlock) },
+            { PickupObjectIdRange + 34, new ReceivedAPItem(PickupObjectIdRange + 34, "Playable Character - The Convict", ReceivedItemType.CharacterUnlock) },
+            { PickupObjectIdRange + 35, new ReceivedAPItem(PickupObjectIdRange + 35, "Playable Character - The Hunter", ReceivedItemType.CharacterUnlock) },
+            { PickupObjectIdRange + 36, new ReceivedAPItem(PickupObjectIdRange + 36, "Playable Character - The Robot", ReceivedItemType.CharacterUnlock) },
+            { PickupObjectIdRange + 37, new ReceivedAPItem(PickupObjectIdRange + 37, "Playable Character - The Bullet", ReceivedItemType.CharacterUnlock) },
+            { PickupObjectIdRange + 38, new ReceivedAPItem(PickupObjectIdRange + 38, "Playable Character - The Gunslinger", ReceivedItemType.CharacterUnlock) },
+            { PickupObjectIdRange + 39, new ReceivedAPItem(PickupObjectIdRange + 39, "Shortcut elevator - Level 2", ReceivedItemType.KeyUnlock) },
+            { PickupObjectIdRange + 40, new ReceivedAPItem(PickupObjectIdRange + 40, "Shortcut elevator - Level 3", ReceivedItemType.KeyUnlock) },
+            { PickupObjectIdRange + 41, new ReceivedAPItem(PickupObjectIdRange + 41, "Shortcut elevator - Level 4", ReceivedItemType.KeyUnlock) },
+            { PickupObjectIdRange + 42, new ReceivedAPItem(PickupObjectIdRange + 42, "Shortcut elevator - Level 5", ReceivedItemType.KeyUnlock) },
+            { PickupObjectIdRange + 43, new ReceivedAPItem(PickupObjectIdRange + 43, "Boss Rush", ReceivedItemType.KeyUnlock) },
+            { PickupObjectIdRange + 44, new ReceivedAPItem(PickupObjectIdRange + 44, "Payday Items Available to Steal", ReceivedItemType.KeyUnlock) },
+            { PickupObjectIdRange + 45, new ReceivedAPItem(PickupObjectIdRange + 45, "Vampire", ReceivedItemType.NPC) },
         };
 
         /// <summary>
@@ -137,6 +166,10 @@ namespace ArchiGungeon.Data
         /// <summary>
         /// Will spawn a trap.
         /// </summary>
-        Trap
+        Trap,
+        /// <summary>
+        /// Items that set flags allowing access to goals, new areas, npc quest progression, etc.
+        /// </summary>
+        KeyUnlock
     }
 }

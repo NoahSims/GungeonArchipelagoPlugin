@@ -177,7 +177,7 @@ namespace ArchiGungeon.DebugTools
             }
             catch (Exception ex)
             {
-                ArchipelagoGUI.ConsoleLog("Something went wrong receiving that AP item. Double check your input! Error: " + ex.Message);
+                ArchipelagoGUI.ConsoleLog($"Something went wrong receiving AP item of id {itemId}. Double check your input! Error: {ex.Message}");
             }
         }
         #endregion
@@ -287,6 +287,45 @@ namespace ArchiGungeon.DebugTools
                                 break;
                             case "tinker":
                                 npcId = ReceivedAPItem.PickupObjectIdRange + 4;
+                                break;
+                            case "sorceress":
+                                npcId = ReceivedAPItem.PickupObjectIdRange + 5;
+                                break;
+                            case "daisuke":
+                                npcId = ReceivedAPItem.PickupObjectIdRange + 6;
+                                break;
+                            case "frifle":
+                                npcId = ReceivedAPItem.PickupObjectIdRange + 7;
+                                break;
+                            case "king":
+                                npcId = ReceivedAPItem.PickupObjectIdRange + 8;
+                                break;
+                            case "adventurer":
+                                npcId = ReceivedAPItem.PickupObjectIdRange + 9;
+                                break;
+                            case "goblin":
+                                npcId = ReceivedAPItem.PickupObjectIdRange + 10;
+                                break;
+                            case "tonic":
+                                npcId = ReceivedAPItem.PickupObjectIdRange + 11;
+                                break;
+                            case "bowler":
+                                npcId = ReceivedAPItem.PickupObjectIdRange + 12;
+                                break;
+                            case "red":
+                                npcId = ReceivedAPItem.PickupObjectIdRange + 13;
+                                break;
+                            case "flynt":
+                                npcId = ReceivedAPItem.PickupObjectIdRange + 14;
+                                break;
+                            case "cursula":
+                                npcId = ReceivedAPItem.PickupObjectIdRange + 15;
+                                break;
+                            case "synergrace":
+                                npcId = ReceivedAPItem.PickupObjectIdRange + 16;
+                                break;
+                            case "vampire":
+                                npcId = ReceivedAPItem.PickupObjectIdRange + 45;
                                 break;
                             default:
                                 break;
