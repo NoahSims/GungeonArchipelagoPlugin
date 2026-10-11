@@ -23,7 +23,7 @@ namespace ArchiGungeon.ArchipelagoServer
 
         public static void SetPlayerOne(PlayerController controller)
         {
-            ArchDebugPrint.DebugLog(DebugCategory.PlayerEventListener, "Setting palyer One");
+            ArchDebugPrint.DebugLog(DebugCategory.PlayerEventListener, "Setting player One");
             playerOne = controller;
             return;
         }
@@ -90,6 +90,7 @@ namespace ArchiGungeon.ArchipelagoServer
                     UnlockNPC(apItem.ItemId);
                     break;
                 case ReceivedItemType.CustomProgressive:
+                    CustomProgressiveUnlocks(apItem);
                     break;
                 case ReceivedItemType.ConsumableFiller:
                     break;
@@ -300,6 +301,57 @@ namespace ArchiGungeon.ArchipelagoServer
                     break;
                 case "Payday Items Available to Steal":
                     GameStatsManager.Instance.SetFlag(GungeonFlags.ACHIEVEMENT_BIGGEST_WALLET, true);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        public static void CustomProgressiveUnlocks(ReceivedAPItem unlockItem)
+        {
+            switch (unlockItem.DisplayName)
+            {
+                case "Shortcut Progressive Unlock":
+                    // Go in reverse order and set the next flag true
+                    if (GameStatsManager.Instance.GetFlag(GungeonFlags.SHERPA_UNLOCK4_COMPLETE))
+                    {
+                        GameStatsManager.Instance.SetFlag(GungeonFlags.SHERPA_HAS_UNLOCKED_BOSSRUSH, true);
+                    }
+                    else if (GameStatsManager.Instance.GetFlag(GungeonFlags.SHERPA_UNLOCK3_COMPLETE))
+                    {
+                        GameStatsManager.Instance.SetFlag(GungeonFlags.SHERPA_UNLOCK4_COMPLETE, true);
+                    }
+                    else if (GameStatsManager.Instance.GetFlag(GungeonFlags.SHERPA_UNLOCK2_COMPLETE))
+                    {
+                        GameStatsManager.Instance.SetFlag(GungeonFlags.SHERPA_UNLOCK3_COMPLETE, true);
+                    }
+                    else if (GameStatsManager.Instance.GetFlag(GungeonFlags.SHERPA_UNLOCK1_COMPLETE))
+                    {
+                        GameStatsManager.Instance.SetFlag(GungeonFlags.SHERPA_UNLOCK2_COMPLETE, true);
+                    }
+                    else if (GameStatsManager.Instance.GetFlag(GungeonFlags.SHERPA_ACTIVE_IN_ELEVATOR_ROOM))
+                    {
+                        GameStatsManager.Instance.SetFlag(GungeonFlags.SHERPA_UNLOCK1_COMPLETE, true);
+                    }
+                    else // Do we want tinker unlock to be first? Or just go to the first shortcut?
+                    {
+                        GameStatsManager.Instance.SetFlag(GungeonFlags.SHERPA_ACTIVE_IN_ELEVATOR_ROOM, true);
+                    }
+                    break;
+                case "Progressive Cassing Multiplier":
+                    //ArchipelaGunLocalDataManager.locationsCheckedFlags.Add(null);
+                    break;
+                case "Progressive Hedgemony Multiplier":
+                    //ArchipelaGunLocalDataManager.locationsCheckedFlags.Add(null);
+                    break;
+                case "Progressive Curse Reduction":
+                    //ArchipelaGunLocalDataManager.locationsCheckedFlags.Add(null);
+                    break;
+                case "Progressive Coolness":
+                    //ArchipelaGunLocalDataManager.locationsCheckedFlags.Add(null);
+                    break;
+                case "Progressive Start Chest":
+                    //ArchipelaGunLocalDataManager.locationsCheckedFlags.Add(null);
                     break;
                 default:
                     break;
