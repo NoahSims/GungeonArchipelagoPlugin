@@ -1,4 +1,5 @@
-﻿using ArchiGungeon.ArchipelagoServer;
+﻿using Alexandria.DungeonAPI;
+using ArchiGungeon.ArchipelagoServer;
 using ArchiGungeon.Character;
 using ArchiGungeon.Data;
 using ArchiGungeon.DebugTools;
@@ -7,6 +8,7 @@ using ArchiGungeon.GungeonEventHandlers;
 using ArchiGungeon.ItemArchipelago;
 using ArchiGungeon.UserInterface;
 using BepInEx;
+using Dungeonator;
 using HarmonyLib;
 using UnityEngine;
 
@@ -47,10 +49,13 @@ namespace ArchiGungeon
 
             
             ETGModMainBehaviour.WaitForGameManagerStart(GMStart);
-            
+            //DungeonHooks.OnPreDungeonGeneration += PredungeonGen;
         }
 
-
+        public void PredungeonGen(LoopDungeonGenerator generator, Dungeon dungeon, DungeonFlow flow, int dungeonSeed)
+        {
+            ArchDebugPrint.DebugLog(DebugCategory.PlayerEventListener, "Gungeon pregen: " + dungeon.lockedDoorObjects.ToString());
+        }
 
         public void GMStart(GameManager g)
         {
@@ -111,6 +116,31 @@ namespace ArchiGungeon
             //LocalSaveDataHandler.TDD_PrintAllPathsDirectory();
 
             InitExceptionCatcher();
+
+            // TODO - Move this to a proper implementation elsewhere. But this is a (jank) example of how you could disable a character on selection by providing a prereq they can't complete.
+            // Seemed to only work on initial foyer load. Reloads they returned.
+
+            //FoyerCharacterSelectFlag[] array = UnityEngine.Object.FindObjectsOfType<FoyerCharacterSelectFlag>();
+            //foreach (var charSelect in array)
+            //{
+            //    ArchDebugPrint.DebugLog(DebugCategory.ItemHandling, "Character select named: " + charSelect.name);
+            //    if (charSelect.name.Contains("convict", true))
+            //    {
+            //        ArchDebugPrint.DebugLog(DebugCategory.ItemHandling, "Disabling Convict from character select");
+            //        foreach (var prerequisite in charSelect.prerequisites)
+            //        {
+            //            ArchDebugPrint.DebugLog(DebugCategory.ItemHandling, "Has prereq of type: " + prerequisite.prerequisiteType.ToString());
+            //        }
+            //        var boogeyPrereq = new DungeonPrerequisite();
+            //        boogeyPrereq.prerequisiteType = DungeonPrerequisite.PrerequisiteType.COMPARISON;
+            //        boogeyPrereq.comparisonValue = -1;
+            //        var boogeyPrereq2 = new DungeonPrerequisite();
+            //        boogeyPrereq2.prerequisiteType = DungeonPrerequisite.PrerequisiteType.FLAG;
+            //        boogeyPrereq2.requireFlag = true;
+            //        boogeyPrereq2.saveFlagToCheck = GungeonFlags.ACHIEVEMENT_COMPLETE_FOUR_PASTS;
+            //        charSelect.prerequisites = new DungeonPrerequisite[2] { boogeyPrereq, boogeyPrereq2 };
+            //    }
+            //}
 
             return;
         }

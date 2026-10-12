@@ -2,6 +2,7 @@
 using ArchiGungeon.Data;
 using ArchiGungeon.UserInterface;
 using HarmonyLib;
+using HutongGames.PlayMaker.Actions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -117,8 +118,49 @@ namespace ArchiGungeon.ItemArchipelago
             GungeonFlags.BLUEPRINTBEETLE_ORBITALBULLETS,
             GungeonFlags.BLUEPRINTBEETLE_SCOUTER,
             GungeonFlags.BLUEPRINTBEETLE_CONTROLLER,
-            GungeonFlags.BLUEPRINTBEETLE_GUNNER
+            GungeonFlags.BLUEPRINTBEETLE_GUNNER,
+            // Sherpa/Tinker flags - move elsewhere if we want to keep this to shop only
+            GungeonFlags.SHERPA_ACTIVE_IN_ELEVATOR_ROOM,
+            GungeonFlags.SHERPA_UNLOCK1_COMPLETE,
+            GungeonFlags.SHERPA_UNLOCK2_COMPLETE,
+            GungeonFlags.SHERPA_UNLOCK3_COMPLETE,
+            GungeonFlags.SHERPA_UNLOCK4_COMPLETE,
+            GungeonFlags.SHERPA_HAS_UNLOCKED_BOSSRUSH,
+            GungeonFlags.SHERPA_UNLOCK1_ELEMENT1,
+            GungeonFlags.SHERPA_UNLOCK1_ELEMENT2,
+            GungeonFlags.SHERPA_UNLOCK1_ELEMENT3,
+            GungeonFlags.SHERPA_UNLOCK1_ELEMENT4,
+            GungeonFlags.SHERPA_UNLOCK2_ELEMENT1,
+            GungeonFlags.SHERPA_UNLOCK2_ELEMENT2,
+            GungeonFlags.SHERPA_UNLOCK2_ELEMENT3,
+            GungeonFlags.SHERPA_UNLOCK2_ELEMENT4,
+            GungeonFlags.SHERPA_UNLOCK3_ELEMENT1,
+            GungeonFlags.SHERPA_UNLOCK3_ELEMENT2,
+            GungeonFlags.SHERPA_UNLOCK3_ELEMENT3,
+            GungeonFlags.SHERPA_UNLOCK3_ELEMENT4,
+            GungeonFlags.SHERPA_UNLOCK4_ELEMENT1,
+            GungeonFlags.SHERPA_UNLOCK4_ELEMENT2,
+            GungeonFlags.SHERPA_UNLOCK4_ELEMENT3,
+            GungeonFlags.SHERPA_UNLOCK4_ELEMENT4,
         };
+
+        // TODO: Discuss if we want to make this file/class an overall 'flag handler' or split out into seperate files for each type of expected flags to be set and leave this as just for shops.
+
+        /// <summary>
+        /// Flag that we are setting ourselves, so if it gets picked up by our interjection of SetFlag(), let it through.
+        /// </summary>
+        private static GungeonFlags _expectedSetFlag = GungeonFlags.NONE;
+
+        /// <summary>
+        /// Sets a Gungeon flag without it getting caught by a Harmony Prefix injection. Use instead of GameStatsManager.Instance.SetFlag().
+        /// </summary>
+        /// <param name="flag">Gungeon flag to set</param>
+        /// <param name="value">Set flag to true or false</param>
+        public static void SafelySetGungeonFlag(GungeonFlags flag, bool value)
+        {
+            _expectedSetFlag = flag;
+            GameStatsManager.Instance.SetFlag(flag, value);
+        }
 
         /*
          * Patch - GameStatsManager.SetFlag
@@ -132,7 +174,7 @@ namespace ArchiGungeon.ItemArchipelago
         public static bool CaptureMetaShopLocationChecks(GungeonFlags flag, bool value)
         {
             //TODO make collection of all meta shop flags to compare against.
-            if (metaShopLocationFlags.Contains(flag))
+            if (metaShopLocationFlags.Contains(flag) && flag != _expectedSetFlag)
             {
                 ETGModConsole.Log("GameStatsManagerPatch: Location checked - Send item here: " + flag);
                 //TODO - send items from location check
@@ -140,7 +182,18 @@ namespace ArchiGungeon.ItemArchipelago
                 ArchipelaGunLocalDataManager.locationsCheckedFlags.Add(flag);
                 return false;
             }
-            ETGModConsole.Log("GameStatsManagerPatch: Something has set a save flag: " + flag + " - " + value);
+
+            if (flag == _expectedSetFlag)
+            {
+                // Now that the flag has beened bypassed, reset the var
+                _expectedSetFlag = GungeonFlags.NONE;
+                ETGModConsole.Log("GameStatsManagerPatch: Expected flag was set: " + flag + " - " + value);
+            }
+            else
+            {
+                ETGModConsole.Log("GameStatsManagerPatch: Something has set a save flag: " + flag + " - " + value);
+            }
+            
             return true;
         }
 

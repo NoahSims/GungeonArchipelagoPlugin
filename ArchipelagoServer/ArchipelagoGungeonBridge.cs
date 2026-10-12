@@ -311,31 +311,32 @@ namespace ArchiGungeon.ArchipelagoServer
         {
             switch (unlockItem.DisplayName)
             {
-                case "Shortcut Progressive Unlock":
+                case "Tinker Progressive":
                     // Go in reverse order and set the next flag true
                     if (GameStatsManager.Instance.GetFlag(GungeonFlags.SHERPA_UNLOCK4_COMPLETE))
                     {
-                        GameStatsManager.Instance.SetFlag(GungeonFlags.SHERPA_HAS_UNLOCKED_BOSSRUSH, true);
+                        MetaShopLocationsHandler.SafelySetGungeonFlag(GungeonFlags.SHERPA_HAS_UNLOCKED_BOSSRUSH, true);
                     }
                     else if (GameStatsManager.Instance.GetFlag(GungeonFlags.SHERPA_UNLOCK3_COMPLETE))
                     {
-                        GameStatsManager.Instance.SetFlag(GungeonFlags.SHERPA_UNLOCK4_COMPLETE, true);
+                        MetaShopLocationsHandler.SafelySetGungeonFlag(GungeonFlags.SHERPA_UNLOCK4_COMPLETE, true);
                     }
                     else if (GameStatsManager.Instance.GetFlag(GungeonFlags.SHERPA_UNLOCK2_COMPLETE))
                     {
-                        GameStatsManager.Instance.SetFlag(GungeonFlags.SHERPA_UNLOCK3_COMPLETE, true);
+                        MetaShopLocationsHandler.SafelySetGungeonFlag(GungeonFlags.SHERPA_UNLOCK3_COMPLETE, true);
                     }
                     else if (GameStatsManager.Instance.GetFlag(GungeonFlags.SHERPA_UNLOCK1_COMPLETE))
                     {
-                        GameStatsManager.Instance.SetFlag(GungeonFlags.SHERPA_UNLOCK2_COMPLETE, true);
+                        MetaShopLocationsHandler.SafelySetGungeonFlag(GungeonFlags.SHERPA_UNLOCK2_COMPLETE, true);
                     }
                     else if (GameStatsManager.Instance.GetFlag(GungeonFlags.SHERPA_ACTIVE_IN_ELEVATOR_ROOM))
                     {
-                        GameStatsManager.Instance.SetFlag(GungeonFlags.SHERPA_UNLOCK1_COMPLETE, true);
+                        MetaShopLocationsHandler.SafelySetGungeonFlag(GungeonFlags.SHERPA_UNLOCK1_COMPLETE, true);
                     }
                     else // Do we want tinker unlock to be first? Or just go to the first shortcut?
                     {
-                        GameStatsManager.Instance.SetFlag(GungeonFlags.SHERPA_ACTIVE_IN_ELEVATOR_ROOM, true);
+                       MetaShopLocationsHandler.SafelySetGungeonFlag(GungeonFlags.SHERPA_ACTIVE_IN_ELEVATOR_ROOM, true);
+                       MetaShopLocationsHandler.SafelySetGungeonFlag(GungeonFlags.SHERPA_READY_FOR_UNLOCKS, true);
                     }
                     break;
                 case "Progressive Cassing Multiplier":

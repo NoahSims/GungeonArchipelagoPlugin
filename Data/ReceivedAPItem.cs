@@ -100,7 +100,7 @@ namespace ArchiGungeon.Data
             { PickupObjectIdRange + 47, new ReceivedAPItem(PickupObjectIdRange + 47, "Planar Lead", ReceivedItemType.CoreProgression) },
             { PickupObjectIdRange + 48, new ReceivedAPItem(PickupObjectIdRange + 48, "Obsidian Shell Casing", ReceivedItemType.CoreProgression) },
             { PickupObjectIdRange + 49, new ReceivedAPItem(PickupObjectIdRange + 49, "Arcane Powder", ReceivedItemType.CoreProgression) },
-            { PickupObjectIdRange + 50, new ReceivedAPItem(PickupObjectIdRange + 50, "Shortcut Progressive Unlock", ReceivedItemType.CustomProgressive) },
+            { PickupObjectIdRange + 50, new ReceivedAPItem(PickupObjectIdRange + 50, "Tinker Progressive", ReceivedItemType.CustomProgressive) },
         };
 
         /// <summary>
