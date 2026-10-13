@@ -85,7 +85,7 @@ namespace ArchiGungeon.ArchipelagoServer
                     var spawneditem = SpecificItemSpawnHandler.GivePlayerSpecificItem(apItem.PickupObj.PickupObjectId);
                     GameStatsManager.Instance.ForceUnlock(spawneditem.GetComponent<EncounterTrackable>()?.EncounterGuid);
                     break;
-                case ReceivedItemType.MetaShop:
+                case ReceivedItemType.FoyerShop:
                 case ReceivedItemType.NPC:
                     UnlockNPC(apItem.ItemId);
                     break;
@@ -93,16 +93,20 @@ namespace ArchiGungeon.ArchipelagoServer
                     CustomProgressiveUnlocks(apItem);
                     break;
                 case ReceivedItemType.ConsumableFiller:
+                    // TODO
                     break;
                 case ReceivedItemType.CharacterUnlock:
+                    // TODO
                     break;
                 case ReceivedItemType.CosmeticFiller:
+                    // TODO
                     break;
                 case ReceivedItemType.KeyUnlock:
                 case ReceivedItemType.CoreProgression:
                     UnlockProgressFlag(apItem);
                     break;
                 case ReceivedItemType.Trap:
+                    // TODO
                     break;
                 default:
                     break;
@@ -194,65 +198,65 @@ namespace ArchiGungeon.ArchipelagoServer
             switch (simplifiedId)
             {
                 case 0: // Ox and Candence
-                    GameStatsManager.Instance.SetFlag(GungeonFlags.META_SHOP_ACTIVE_IN_FOYER, true);
+                    GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.META_SHOP_ACTIVE_IN_FOYER, true);
                     break;
                 case 1: // Prof Goop
-                    GameStatsManager.Instance.SetFlag(GungeonFlags.SHOP_GOOP_ACTIVE, true);
-                    GameStatsManager.Instance.SetFlag(GungeonFlags.SHOP_HAS_MET_GOOP, true);
+                    GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.SHOP_GOOP_ACTIVE, true);
+                    GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.SHOP_HAS_MET_GOOP, true);
                     // Goopton needs a special flag set on any character that they purchased at least once from the in run shop.
                     GameStats goopStats = new GameStats();
                     goopStats.SetStat(TrackedStats.MERCHANT_PURCHASES_GOOP, 1);
                     GameStatsManager.Instance.m_characterStats[PlayableCharacters.Pilot].AddStats(goopStats);
                     break;
                 case 2: // Trorc
-                    GameStatsManager.Instance.SetFlag(GungeonFlags.SHOP_TRUCK_ACTIVE, true);
+                    GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.SHOP_TRUCK_ACTIVE, true);
                     break;
                 case 3: // Doug
-                    GameStatsManager.Instance.SetFlag(GungeonFlags.SHOP_BEETLE_ACTIVE, true);
+                    GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.SHOP_BEETLE_ACTIVE, true);
                     break;
                 case 4: // Tinker
-                    GameStatsManager.Instance.SetFlag(GungeonFlags.SHERPA_ACTIVE_IN_ELEVATOR_ROOM, true);
-                    GameStatsManager.Instance.SetFlag(GungeonFlags.SHERPA_READY_FOR_UNLOCKS, true);
+                    GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.SHERPA_ACTIVE_IN_ELEVATOR_ROOM, true);
+                    GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.SHERPA_READY_FOR_UNLOCKS, true);
                     break;
                 case 5: // Sorceress
-                    GameStatsManager.Instance.SetFlag(GungeonFlags.SORCERESS_ACTIVE_IN_FOYER, true);
+                    GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.SORCERESS_ACTIVE_IN_FOYER, true);
                     break;
                 case 6: // Daisuke
-                    GameStatsManager.Instance.SetFlag(GungeonFlags.DAISUKE_ACTIVE_IN_FOYER, true);
+                    GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.DAISUKE_ACTIVE_IN_FOYER, true);
                     break;
                 case 7: // Frifle and the Grey Mauser
-                    GameStatsManager.Instance.SetFlag(GungeonFlags.FRIFLE_ACTIVE_IN_FOYER, true);
+                    GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.FRIFLE_ACTIVE_IN_FOYER, true);
                     break;
                 case 8: // Gunsling King and Manservantes
-                    GameStatsManager.Instance.SetFlag(GungeonFlags.GUNSLING_KING_RESCUED_FROM_CELL, true);
-                    GameStatsManager.Instance.SetFlag(GungeonFlags.GUNSLING_KING_ACTIVE_IN_FOYER, true);
+                    GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.GUNSLING_KING_RESCUED_FROM_CELL, true);
+                    GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.GUNSLING_KING_ACTIVE_IN_FOYER, true);
                     break;
                 case 9: // The Lost Adventurer
-                    GameStatsManager.Instance.SetFlag(GungeonFlags.LOST_ADVENTURER_RESCUED_FROM_CELL, true);
+                    GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.LOST_ADVENTURER_RESCUED_FROM_CELL, true);
                     break;
                 case 10: // Ledge Goblin
-                    GameStatsManager.Instance.SetFlag(GungeonFlags.LEDGEGOBLIN_ACTIVE_IN_FOYER, true);
+                    GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.LEDGEGOBLIN_ACTIVE_IN_FOYER, true);
                     break;
                 case 11: // Tonic
-                    GameStatsManager.Instance.SetFlag(GungeonFlags.TONIC_ACTIVE_IN_FOYER, true);
+                    GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.TONIC_ACTIVE_IN_FOYER, true);
                     break;
                 case 12: // Bowler
-                    GameStatsManager.Instance.SetFlag(GungeonFlags.BOWLER_ACTIVE_IN_FOYER, true);
+                    GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.BOWLER_ACTIVE_IN_FOYER, true);
                     break;
                 case 13: // Old Red
-                    GameStatsManager.Instance.SetFlag(GungeonFlags.SHOP_BLANK_ACTIVE, true);
+                    GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.SHOP_BLANK_ACTIVE, true);
                     break;
                 case 14: // Flynt
-                    GameStatsManager.Instance.SetFlag(GungeonFlags.SHOP_KEY_ACTIVE, true);
+                    GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.SHOP_KEY_ACTIVE, true);
                     break;
                 case 15: // Cursula
-                    GameStatsManager.Instance.SetFlag(GungeonFlags.SHOP_CURSE_ACTIVE, true);
+                    GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.SHOP_CURSE_ACTIVE, true);
                     break;
                 case 16: // Synergrace
-                    GameStatsManager.Instance.SetFlag(GungeonFlags.SYNERGRACE_UNLOCKED, true);
+                    GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.SYNERGRACE_UNLOCKED, true);
                     break;
                 case 45: // Vampire
-                    GameStatsManager.Instance.SetFlag(GungeonFlags.VAMPIRE_RELEASED, true);
+                    GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.VAMPIRE_RELEASED, true);
                     break;
                 default:
                     break;
@@ -269,38 +273,38 @@ namespace ArchiGungeon.ArchipelagoServer
             switch (item.DisplayName)
             {
                 case "Prime Primer":
-                    GameStatsManager.Instance.SetFlag(GungeonFlags.BLACKSMITH_ELEMENT1, true);
-                    GameStatsManager.Instance.SetFlag(GungeonFlags.BLACKSMITH_MET_PREVIOUSLY, true);
+                    GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.BLACKSMITH_ELEMENT1, true);
+                    GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.BLACKSMITH_MET_PREVIOUSLY, true);
                     break;
                 case "Planar Lead":
-                    GameStatsManager.Instance.SetFlag(GungeonFlags.BLACKSMITH_ELEMENT2, true);
-                    GameStatsManager.Instance.SetFlag(GungeonFlags.BLACKSMITH_MET_PREVIOUSLY, true);
+                    GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.BLACKSMITH_ELEMENT2, true);
+                    GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.BLACKSMITH_MET_PREVIOUSLY, true);
                     break;
                 case "Obsidian Shell Casing":
-                    GameStatsManager.Instance.SetFlag(GungeonFlags.BLACKSMITH_ELEMENT3, true);
-                    GameStatsManager.Instance.SetFlag(GungeonFlags.BLACKSMITH_MET_PREVIOUSLY, true);
+                    GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.BLACKSMITH_ELEMENT3, true);
+                    GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.BLACKSMITH_MET_PREVIOUSLY, true);
                     break;
                 case "Arcane Powder":
-                    GameStatsManager.Instance.SetFlag(GungeonFlags.BLACKSMITH_ELEMENT4, true);
-                    GameStatsManager.Instance.SetFlag(GungeonFlags.BLACKSMITH_MET_PREVIOUSLY, true);
+                    GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.BLACKSMITH_ELEMENT4, true);
+                    GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.BLACKSMITH_MET_PREVIOUSLY, true);
                     break;
                 case "Shortcut elevator - Level 2":
-                    GameStatsManager.Instance.SetFlag(GungeonFlags.SHERPA_UNLOCK1_COMPLETE, true);
+                    GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.SHERPA_UNLOCK1_COMPLETE, true);
                     break;
                 case "Shortcut elevator - Level 3":
-                    GameStatsManager.Instance.SetFlag(GungeonFlags.SHERPA_UNLOCK2_COMPLETE, true);
+                    GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.SHERPA_UNLOCK2_COMPLETE, true);
                     break;
                 case "Shortcut elevator - Level 4":
-                    GameStatsManager.Instance.SetFlag(GungeonFlags.SHERPA_UNLOCK3_COMPLETE, true);
+                    GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.SHERPA_UNLOCK3_COMPLETE, true);
                     break;
                 case "Shortcut elevator - Level 5":
-                    GameStatsManager.Instance.SetFlag(GungeonFlags.SHERPA_UNLOCK4_COMPLETE, true);
+                    GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.SHERPA_UNLOCK4_COMPLETE, true);
                     break;
                 case "Boss Rush":
-                    GameStatsManager.Instance.SetFlag(GungeonFlags.SHERPA_HAS_UNLOCKED_BOSSRUSH, true);
+                    GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.SHERPA_HAS_UNLOCKED_BOSSRUSH, true);
                     break;
                 case "Payday Items Available to Steal":
-                    GameStatsManager.Instance.SetFlag(GungeonFlags.ACHIEVEMENT_BIGGEST_WALLET, true);
+                    GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.ACHIEVEMENT_BIGGEST_WALLET, true);
                     break;
                 default:
                     break;
@@ -315,28 +319,28 @@ namespace ArchiGungeon.ArchipelagoServer
                     // Go in reverse order and set the next flag true
                     if (GameStatsManager.Instance.GetFlag(GungeonFlags.SHERPA_UNLOCK4_COMPLETE))
                     {
-                        MetaShopLocationsHandler.SafelySetGungeonFlag(GungeonFlags.SHERPA_HAS_UNLOCKED_BOSSRUSH, true);
+                        GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.SHERPA_HAS_UNLOCKED_BOSSRUSH, true);
                     }
                     else if (GameStatsManager.Instance.GetFlag(GungeonFlags.SHERPA_UNLOCK3_COMPLETE))
                     {
-                        MetaShopLocationsHandler.SafelySetGungeonFlag(GungeonFlags.SHERPA_UNLOCK4_COMPLETE, true);
+                        GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.SHERPA_UNLOCK4_COMPLETE, true);
                     }
                     else if (GameStatsManager.Instance.GetFlag(GungeonFlags.SHERPA_UNLOCK2_COMPLETE))
                     {
-                        MetaShopLocationsHandler.SafelySetGungeonFlag(GungeonFlags.SHERPA_UNLOCK3_COMPLETE, true);
+                        GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.SHERPA_UNLOCK3_COMPLETE, true);
                     }
                     else if (GameStatsManager.Instance.GetFlag(GungeonFlags.SHERPA_UNLOCK1_COMPLETE))
                     {
-                        MetaShopLocationsHandler.SafelySetGungeonFlag(GungeonFlags.SHERPA_UNLOCK2_COMPLETE, true);
+                        GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.SHERPA_UNLOCK2_COMPLETE, true);
                     }
                     else if (GameStatsManager.Instance.GetFlag(GungeonFlags.SHERPA_ACTIVE_IN_ELEVATOR_ROOM))
                     {
-                        MetaShopLocationsHandler.SafelySetGungeonFlag(GungeonFlags.SHERPA_UNLOCK1_COMPLETE, true);
+                        GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.SHERPA_UNLOCK1_COMPLETE, true);
                     }
                     else // Do we want tinker unlock to be first? Or just go to the first shortcut?
                     {
-                       MetaShopLocationsHandler.SafelySetGungeonFlag(GungeonFlags.SHERPA_ACTIVE_IN_ELEVATOR_ROOM, true);
-                       MetaShopLocationsHandler.SafelySetGungeonFlag(GungeonFlags.SHERPA_READY_FOR_UNLOCKS, true);
+                       GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.SHERPA_ACTIVE_IN_ELEVATOR_ROOM, true);
+                       GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.SHERPA_READY_FOR_UNLOCKS, true);
                     }
                     break;
                 case "Progressive Cassing Multiplier":

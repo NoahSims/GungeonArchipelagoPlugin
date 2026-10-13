@@ -12,9 +12,10 @@ using System.Text;
 namespace ArchiGungeon.ItemArchipelago
 {
     [HarmonyPatch]
-    internal class MetaShopLocationsHandler
+    internal class GungeonFlagHandler
     {
-        public static HashSet<GungeonFlags> metaShopLocationFlags = new HashSet<GungeonFlags>(new GungeonFlagsComparer()) {
+        public static HashSet<GungeonFlags> APLocationFlags = new HashSet<GungeonFlags>(new GungeonFlagsComparer()) {
+            // Shop flags
             GungeonFlags.BLUEPRINTMETA_THOMPSON,
             GungeonFlags.BLUEPRINTMETA_HEARTBOTTLE,
             GungeonFlags.BLUEPRINTMETA_GAMMARAY,
@@ -119,7 +120,7 @@ namespace ArchiGungeon.ItemArchipelago
             GungeonFlags.BLUEPRINTBEETLE_SCOUTER,
             GungeonFlags.BLUEPRINTBEETLE_CONTROLLER,
             GungeonFlags.BLUEPRINTBEETLE_GUNNER,
-            // Sherpa/Tinker flags - move elsewhere if we want to keep this to shop only
+            // Sherpa/Tinker flags
             GungeonFlags.SHERPA_ACTIVE_IN_ELEVATOR_ROOM,
             GungeonFlags.SHERPA_UNLOCK1_COMPLETE,
             GungeonFlags.SHERPA_UNLOCK2_COMPLETE,
@@ -142,9 +143,12 @@ namespace ArchiGungeon.ItemArchipelago
             GungeonFlags.SHERPA_UNLOCK4_ELEMENT2,
             GungeonFlags.SHERPA_UNLOCK4_ELEMENT3,
             GungeonFlags.SHERPA_UNLOCK4_ELEMENT4,
+            // Bullet Parts
+            GungeonFlags.BLACKSMITH_ELEMENT1,
+            GungeonFlags.BLACKSMITH_ELEMENT2,
+            GungeonFlags.BLACKSMITH_ELEMENT3,
+            GungeonFlags.BLACKSMITH_ELEMENT4
         };
-
-        // TODO: Discuss if we want to make this file/class an overall 'flag handler' or split out into seperate files for each type of expected flags to be set and leave this as just for shops.
 
         /// <summary>
         /// Flag that we are setting ourselves, so if it gets picked up by our interjection of SetFlag(), let it through.
@@ -164,17 +168,18 @@ namespace ArchiGungeon.ItemArchipelago
 
         /*
          * Patch - GameStatsManager.SetFlag
-         * For meta shops, capture location check without unlocking associated item.
+         * Interject when a Gungeon Flag is set, if its in APLocationFlags don't have it set.
+         * For example with meta shops, capture location check without unlocking associated item.
          * Any time an item is purchased from the metashop, the associated flag is set for the save file.
          * This patch takes over that SetFlag function, checks if the flag being set is a metashop location,
          * then captures that flag as an archipelago location without unlocking the item.
          */
         [HarmonyPatch(typeof(GameStatsManager), nameof(GameStatsManager.SetFlag))]
         [HarmonyPrefix]
-        public static bool CaptureMetaShopLocationChecks(GungeonFlags flag, bool value)
+        public static bool CaptureGungeonFlagSet(GungeonFlags flag, bool value)
         {
             //TODO make collection of all meta shop flags to compare against.
-            if (metaShopLocationFlags.Contains(flag) && flag != _expectedSetFlag)
+            if (APLocationFlags.Contains(flag) && flag != _expectedSetFlag)
             {
                 ETGModConsole.Log("GameStatsManagerPatch: Location checked - Send item here: " + flag);
                 //TODO - send items from location check

@@ -50,10 +50,10 @@ namespace ArchiGungeon.Data
         // Note if you change the Id or name of any of these please besure to double check ArchipelagoGungeonBridge.cs and DebugCommands.cs use the updated values.
         private static Dictionary<long, ReceivedAPItem> _fullCustomItemDictionary = new Dictionary<long, ReceivedAPItem>()
         {
-            { PickupObjectIdRange, new ReceivedAPItem(PickupObjectIdRange, "Ox and Cadence", ReceivedItemType.MetaShop) },
-            { PickupObjectIdRange + 1, new ReceivedAPItem(PickupObjectIdRange + 1, "Professor Goopton", ReceivedItemType.MetaShop) },
-            { PickupObjectIdRange + 2, new ReceivedAPItem(PickupObjectIdRange + 2, "Professor Trorc", ReceivedItemType.MetaShop) },
-            { PickupObjectIdRange + 3, new ReceivedAPItem(PickupObjectIdRange + 3, "Doug", ReceivedItemType.MetaShop) },
+            { PickupObjectIdRange, new ReceivedAPItem(PickupObjectIdRange, "Ox and Cadence", ReceivedItemType.FoyerShop) },
+            { PickupObjectIdRange + 1, new ReceivedAPItem(PickupObjectIdRange + 1, "Professor Goopton", ReceivedItemType.FoyerShop) },
+            { PickupObjectIdRange + 2, new ReceivedAPItem(PickupObjectIdRange + 2, "Professor Trorc", ReceivedItemType.FoyerShop) },
+            { PickupObjectIdRange + 3, new ReceivedAPItem(PickupObjectIdRange + 3, "Doug", ReceivedItemType.FoyerShop) },
             { PickupObjectIdRange + 4, new ReceivedAPItem(PickupObjectIdRange + 4, "Tinker", ReceivedItemType.NPC) },
             { PickupObjectIdRange + 5, new ReceivedAPItem(PickupObjectIdRange + 5, "Sorceress", ReceivedItemType.NPC) },
             { PickupObjectIdRange + 6, new ReceivedAPItem(PickupObjectIdRange + 6, "Daisuke", ReceivedItemType.NPC) },
@@ -144,7 +144,7 @@ namespace ArchiGungeon.Data
         /// <summary>
         /// Unlocks access to a shop in the foyer or new stock for an existing shop.
         /// </summary>
-        MetaShop,
+        FoyerShop,
         /// <summary>
         /// Non-foyer shop NPCs either unlocked or progress in their quests.
         /// </summary>
