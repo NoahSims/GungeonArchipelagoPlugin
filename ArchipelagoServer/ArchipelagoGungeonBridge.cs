@@ -17,27 +17,13 @@ namespace ArchiGungeon.ArchipelagoServer
 {
     public class ArchipelagoGungeonBridge
     {
-        #region APWorld Data
-        private static readonly long _baseItemID = 8754000;
-        private static readonly long _gunAndItemIdRange = 1000;
-        private static readonly long _npcRange = 1100;
-        private static readonly long _fillerRange = 1200;
-
-        //private static readonly long consumableCategoryItemID = 8754100;
-        //private static readonly long trapCategoryItemID = 8754200;
-        //private static readonly long progressionItemID = 8754300;
-        //private static readonly long paradoxCharacterItemID = 8754400;
-        //private static readonly long undoCurseItemID = 8754500;
-
-        #endregion
-
         #region Player References
         private static PlayerController playerOne;
         private static PlayerController playerTwo;
 
         public static void SetPlayerOne(PlayerController controller)
         {
-            ArchDebugPrint.DebugLog(DebugCategory.PlayerEventListener, "Setting palyer One");
+            ArchDebugPrint.DebugLog(DebugCategory.PlayerEventListener, "Setting player One");
             playerOne = controller;
             return;
         }
@@ -87,30 +73,40 @@ namespace ArchiGungeon.ArchipelagoServer
         /// <summary>
         /// Unlocks the item or spawns it if appropriate.
         /// </summary>
-        /// <param name="receivedItem">Item id from AP of item to give. This is a custom set Id that will match whats set in the APWorld.</param>
-        public static void GiveGungeonItem(ItemInfo receivedItem)
+        /// <param name="apItem">Item id from AP of item to give. This is a custom set Id that will match whats set in the APWorld.</param>
+        public static void GiveGungeonItem(ReceivedAPItem apItem)
         {
-            ArchipelagoUIHelper.ArchipelagoUINotification("Received " + receivedItem.ItemDisplayName, "Found in " + receivedItem.LocationGame);
-            // TODO: remove this weird id range logic to more defined flags.
-            // Reduce the AP Item Id down to an Id that matches the internal item ids for guns/items.
-            switch (receivedItem.Flags)
+            ArchipelagoUIHelper.ArchipelagoUINotification("Received " + apItem.DisplayName, "Found in " + apItem.LocationDisplayName);
+
+            switch (apItem.Type)
             {
-                case ItemFlags.None:
-                    long adjustedItemId = receivedItem.ItemId - _baseItemID;
-                    if (adjustedItemId < _gunAndItemIdRange)
-                    {
-                        var spawneditem = SpecificItemSpawnHandler.GivePlayerSpecificItem((int)adjustedItemId);
-                        GameStatsManager.Instance.ForceUnlock(spawneditem.GetComponent<EncounterTrackable>()?.EncounterGuid);
-                    }
+                case ReceivedItemType.ETGBaseItemFiller:
+                    // TODO refactor this now that we get the pickup obj earlier
+                    var spawneditem = SpecificItemSpawnHandler.GivePlayerSpecificItem(apItem.PickupObj.PickupObjectId);
+                    GameStatsManager.Instance.ForceUnlock(spawneditem.GetComponent<EncounterTrackable>()?.EncounterGuid);
                     break;
-                case ItemFlags.Advancement: // TODO not just NPCs
-                    UnlockNPC(receivedItem.ItemId);
+                case ReceivedItemType.FoyerShop:
+                case ReceivedItemType.NPC:
+                    UnlockNPC(apItem.ItemId);
                     break;
-                case ItemFlags.NeverExclude:
+                case ReceivedItemType.CustomProgressive:
+                    CustomProgressiveUnlocks(apItem);
                     break;
-                case ItemFlags.Trap:
-                    long trapId = receivedItem.ItemId - _baseItemID - _npcRange; //TEMP
-                    TrapSpawnHandler.SpawnTrapByCase((int)trapId - (int)_npcRange);
+                case ReceivedItemType.ConsumableFiller:
+                    // TODO
+                    break;
+                case ReceivedItemType.CharacterUnlock:
+                    // TODO
+                    break;
+                case ReceivedItemType.CosmeticFiller:
+                    // TODO
+                    break;
+                case ReceivedItemType.KeyUnlock:
+                case ReceivedItemType.CoreProgression:
+                    UnlockProgressFlag(apItem);
+                    break;
+                case ReceivedItemType.Trap:
+                    // TODO
                     break;
                 default:
                     break;
@@ -197,29 +193,170 @@ namespace ArchiGungeon.ArchipelagoServer
         /// <param name="NPCId"></param>
         public static void UnlockNPC(long NPCId)
         {
+            var simplifiedId = NPCId - ReceivedAPItem.PickupObjectIdRange;
             ArchDebugPrint.DebugLog(DebugCategory.ServerReceive, "Unlocking NPC: " + NPCId);
-            switch (NPCId)
+            switch (simplifiedId)
             {
                 case 0: // Ox and Candence
-                    GameStatsManager.Instance.SetFlag(GungeonFlags.META_SHOP_ACTIVE_IN_FOYER, true);
+                    GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.META_SHOP_ACTIVE_IN_FOYER, true);
                     break;
                 case 1: // Prof Goop
-                    GameStatsManager.Instance.SetFlag(GungeonFlags.SHOP_GOOP_ACTIVE, true);
-                    GameStatsManager.Instance.SetFlag(GungeonFlags.SHOP_HAS_MET_GOOP, true);
+                    GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.SHOP_GOOP_ACTIVE, true);
+                    GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.SHOP_HAS_MET_GOOP, true);
                     // Goopton needs a special flag set on any character that they purchased at least once from the in run shop.
                     GameStats goopStats = new GameStats();
                     goopStats.SetStat(TrackedStats.MERCHANT_PURCHASES_GOOP, 1);
                     GameStatsManager.Instance.m_characterStats[PlayableCharacters.Pilot].AddStats(goopStats);
                     break;
                 case 2: // Trorc
-                    GameStatsManager.Instance.SetFlag(GungeonFlags.SHOP_TRUCK_ACTIVE, true);
+                    GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.SHOP_TRUCK_ACTIVE, true);
                     break;
                 case 3: // Doug
-                    GameStatsManager.Instance.SetFlag(GungeonFlags.SHOP_BEETLE_ACTIVE, true);
+                    GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.SHOP_BEETLE_ACTIVE, true);
                     break;
                 case 4: // Tinker
-                    GameStatsManager.Instance.SetFlag(GungeonFlags.SHERPA_ACTIVE_IN_ELEVATOR_ROOM, true);
-                    GameStatsManager.Instance.SetFlag(GungeonFlags.SHERPA_READY_FOR_UNLOCKS, true);
+                    GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.SHERPA_ACTIVE_IN_ELEVATOR_ROOM, true);
+                    GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.SHERPA_READY_FOR_UNLOCKS, true);
+                    break;
+                case 5: // Sorceress
+                    GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.SORCERESS_ACTIVE_IN_FOYER, true);
+                    break;
+                case 6: // Daisuke
+                    GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.DAISUKE_ACTIVE_IN_FOYER, true);
+                    break;
+                case 7: // Frifle and the Grey Mauser
+                    GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.FRIFLE_ACTIVE_IN_FOYER, true);
+                    break;
+                case 8: // Gunsling King and Manservantes
+                    GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.GUNSLING_KING_RESCUED_FROM_CELL, true);
+                    GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.GUNSLING_KING_ACTIVE_IN_FOYER, true);
+                    break;
+                case 9: // The Lost Adventurer
+                    GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.LOST_ADVENTURER_RESCUED_FROM_CELL, true);
+                    break;
+                case 10: // Ledge Goblin
+                    GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.LEDGEGOBLIN_ACTIVE_IN_FOYER, true);
+                    break;
+                case 11: // Tonic
+                    GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.TONIC_ACTIVE_IN_FOYER, true);
+                    break;
+                case 12: // Bowler
+                    GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.BOWLER_ACTIVE_IN_FOYER, true);
+                    break;
+                case 13: // Old Red
+                    GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.SHOP_BLANK_ACTIVE, true);
+                    break;
+                case 14: // Flynt
+                    GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.SHOP_KEY_ACTIVE, true);
+                    break;
+                case 15: // Cursula
+                    GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.SHOP_CURSE_ACTIVE, true);
+                    break;
+                case 16: // Synergrace
+                    GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.SYNERGRACE_UNLOCKED, true);
+                    break;
+                case 45: // Vampire
+                    GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.VAMPIRE_RELEASED, true);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// All non-npc progress items that are unlocked just through setting GameStatsMangager flags.
+        /// </summary>
+        /// <param name="item"></param>
+        public static void UnlockProgressFlag(ReceivedAPItem item)
+        {
+            ArchDebugPrint.DebugLog(DebugCategory.ServerReceive, "Unlocking Core Progression: " + item.DisplayName);
+            switch (item.DisplayName)
+            {
+                case "Prime Primer":
+                    GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.BLACKSMITH_ELEMENT1, true);
+                    GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.BLACKSMITH_MET_PREVIOUSLY, true);
+                    break;
+                case "Planar Lead":
+                    GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.BLACKSMITH_ELEMENT2, true);
+                    GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.BLACKSMITH_MET_PREVIOUSLY, true);
+                    break;
+                case "Obsidian Shell Casing":
+                    GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.BLACKSMITH_ELEMENT3, true);
+                    GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.BLACKSMITH_MET_PREVIOUSLY, true);
+                    break;
+                case "Arcane Powder":
+                    GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.BLACKSMITH_ELEMENT4, true);
+                    GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.BLACKSMITH_MET_PREVIOUSLY, true);
+                    break;
+                case "Shortcut elevator - Level 2":
+                    GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.SHERPA_UNLOCK1_COMPLETE, true);
+                    break;
+                case "Shortcut elevator - Level 3":
+                    GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.SHERPA_UNLOCK2_COMPLETE, true);
+                    break;
+                case "Shortcut elevator - Level 4":
+                    GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.SHERPA_UNLOCK3_COMPLETE, true);
+                    break;
+                case "Shortcut elevator - Level 5":
+                    GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.SHERPA_UNLOCK4_COMPLETE, true);
+                    break;
+                case "Boss Rush":
+                    GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.SHERPA_HAS_UNLOCKED_BOSSRUSH, true);
+                    break;
+                case "Payday Items Available to Steal":
+                    GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.ACHIEVEMENT_BIGGEST_WALLET, true);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        public static void CustomProgressiveUnlocks(ReceivedAPItem unlockItem)
+        {
+            switch (unlockItem.DisplayName)
+            {
+                case "Tinker Progressive":
+                    // Go in reverse order and set the next flag true
+                    if (GameStatsManager.Instance.GetFlag(GungeonFlags.SHERPA_UNLOCK4_COMPLETE))
+                    {
+                        GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.SHERPA_HAS_UNLOCKED_BOSSRUSH, true);
+                    }
+                    else if (GameStatsManager.Instance.GetFlag(GungeonFlags.SHERPA_UNLOCK3_COMPLETE))
+                    {
+                        GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.SHERPA_UNLOCK4_COMPLETE, true);
+                    }
+                    else if (GameStatsManager.Instance.GetFlag(GungeonFlags.SHERPA_UNLOCK2_COMPLETE))
+                    {
+                        GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.SHERPA_UNLOCK3_COMPLETE, true);
+                    }
+                    else if (GameStatsManager.Instance.GetFlag(GungeonFlags.SHERPA_UNLOCK1_COMPLETE))
+                    {
+                        GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.SHERPA_UNLOCK2_COMPLETE, true);
+                    }
+                    else if (GameStatsManager.Instance.GetFlag(GungeonFlags.SHERPA_ACTIVE_IN_ELEVATOR_ROOM))
+                    {
+                        GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.SHERPA_UNLOCK1_COMPLETE, true);
+                    }
+                    else // Do we want tinker unlock to be first? Or just go to the first shortcut?
+                    {
+                       GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.SHERPA_ACTIVE_IN_ELEVATOR_ROOM, true);
+                       GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.SHERPA_READY_FOR_UNLOCKS, true);
+                    }
+                    break;
+                case "Progressive Cassing Multiplier":
+                    //ArchipelaGunLocalDataManager.locationsCheckedFlags.Add(null);
+                    break;
+                case "Progressive Hedgemony Multiplier":
+                    //ArchipelaGunLocalDataManager.locationsCheckedFlags.Add(null);
+                    break;
+                case "Progressive Curse Reduction":
+                    //ArchipelaGunLocalDataManager.locationsCheckedFlags.Add(null);
+                    break;
+                case "Progressive Coolness":
+                    //ArchipelaGunLocalDataManager.locationsCheckedFlags.Add(null);
+                    break;
+                case "Progressive Start Chest":
+                    //ArchipelaGunLocalDataManager.locationsCheckedFlags.Add(null);
                     break;
                 default:
                     break;

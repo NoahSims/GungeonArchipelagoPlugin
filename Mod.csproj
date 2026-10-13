@@ -53,13 +53,14 @@
     <Compile Include="CustomItemClass\CustomBlankModItem.cs" />
     <Compile Include="CustomItemClass\CustomOrbital.cs" />
     <Compile Include="Data\DataDefinitions.cs" />
+    <Compile Include="Data\ReceivedAPItem.cs" />
     <Compile Include="DebugTools\DebugCommands.cs" />
     <Compile Include="DebugTools\ArchDebugPrint.cs" />
     <Compile Include="Data\EnemyGuidDatabase.cs" />
     <Compile Include="DebugTools\UnitTests.cs" />
     <Compile Include="EnemyHandlers\EnemySwapping.cs" />
     <Compile Include="GungeonEventHandlers\EffectsController.cs" />
-    <Compile Include="ItemArchipelago\MetaShopLocationsHandler.cs" />
+    <Compile Include="ItemArchipelago\GungeonFlagHandler.cs" />
     <Compile Include="ItemArchipelago\ReverseCurseItems.cs" />
     <Compile Include="ItemArchipelago\APPickUpItem.cs" />
     <Compile Include="ItemArchipelago\Archipelagun.cs" />

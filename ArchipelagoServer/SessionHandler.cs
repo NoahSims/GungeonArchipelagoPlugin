@@ -50,7 +50,7 @@ namespace ArchiGungeon.ArchipelagoServer
         private static List<ItemInfo> allItemsReceivedFromServer = new List<ItemInfo>(); //TODO: Remove
         private static bool hasRetrievedServerItemsOnce = false; //TODO: Remove
         private static List<long> itemsHandledThisRun = new List<long>(); //TODO: Remove
-        private static List<ItemInfo> _itemAddQueue = new List<ItemInfo>();
+        private static Queue<ReceivedAPItem> _itemAddQueue = new Queue<ReceivedAPItem>();
 
         private static bool _isProgressItemsGiven { get; set; } = false; //TODO: Remove
         public static bool IsValidToSpawnItems { get; set; } = false;
@@ -500,26 +500,9 @@ namespace ArchiGungeon.ArchipelagoServer
         /// <param name="itemInfo"></param>
         public static void AddItemToLocalGungeon(ItemInfo itemInfo)
         {
-            // If traps aren't valid to spawn now, don't ever spawn them. Disabling because its funny if they appear in the Breach and for the most part work fine.
-            //if(TrapSpawnHandler.IsSpawnValid == false)
-            //{
-            //    //Todo: Make these not magic consts
-            //    if(itemInfo.Flags == ItemFlags.Trap)
-            //    {
-            //        ArchDebugPrint.DebugLog(DebugCategory.ServerReceive, $"Skipping item on Retrieve command: {itemInfo.ItemName}");
-
-            //        itemsHandledThisRun.Add(itemInfo.ItemId);
-
-            //        return;
-            //    }
-            //}
-
-            //Consider: add to different queues depending on if its an item that can be added anywhere or only in a run (which would replace trap logic above too)
-            //TODO: Display banner here?
-
             ArchDebugPrint.DebugLog(DebugCategory.ServerReceive, $"Receiving item: {itemInfo.ItemName}");
-
-            _itemAddQueue.Add(itemInfo);
+            var receivedAPItem = ReceivedAPItem.GetReceivedAPItem(itemInfo.ItemId);
+            _itemAddQueue.Enqueue(receivedAPItem);
 
             return;
         }
@@ -575,19 +558,18 @@ namespace ArchiGungeon.ArchipelagoServer
             // To consider: if there are any items better to only give in a run. But everything can be given in the Breach and will transfer into the start of a run appropriately. 
             if (_itemAddQueue.Count > 0 && IsValidToSpawnItems)
             {
-                ArchDebugPrint.DebugLog(DebugCategory.ItemHandling, $"Handling item ID: {_itemAddQueue[0]}");
+                var item = _itemAddQueue.Dequeue();
+                ArchDebugPrint.DebugLog(DebugCategory.ItemHandling, $"Handling item ID: {item.ItemId}");
 
                 try
                 {
-                    ArchipelagoGungeonBridge.GiveGungeonItem(_itemAddQueue[0]);
-                    itemsHandledThisRun.Add(_itemAddQueue[0].ItemId);
+                    ArchipelagoGungeonBridge.GiveGungeonItem(item);
+                    itemsHandledThisRun.Add(item.ItemId);
                 }
                 catch (Exception ex)
                 {
                     ArchipelagoGUI.ConsoleLog("Exception caused during handling giving Archipelago item. Please contact dev: " + ex);
                 }
-
-                _itemAddQueue.RemoveAt(0);
             }
 
             return;
