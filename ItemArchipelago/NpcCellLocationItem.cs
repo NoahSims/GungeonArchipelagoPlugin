@@ -72,7 +72,7 @@ namespace ArchiGungeon.ItemArchipelago
             }
             else
             {
-                SessionHandler.DataSender.SendFoundLocationCheck(SessionHandler.DataSender.APLocations.NPCCell + CountGoalManager.GetCountStat(CountStats.NpcCellsOpened));
+                SessionHandler.DataSender.SendFoundLocationCheck(APLocations.NPCCell + CountGoalManager.GetCountStat(CountStats.NpcCellsOpened));
             }
             ArchipelaGunLocalDataManager.AddToCountSaveDataEntry(CountStats.NpcCellsOpened, 1);
         }
