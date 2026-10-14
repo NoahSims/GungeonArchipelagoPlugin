@@ -18,6 +18,7 @@ using ArchiGungeon.EnemyHandlers;
 using ArchiGungeon.DebugTools;
 using ArchiGungeon.Character;
 using ArchiGungeon.Data;
+using System.Collections.ObjectModel;
 
 namespace ArchiGungeon.ArchipelagoServer
 {
@@ -322,6 +323,7 @@ namespace ArchiGungeon.ArchipelagoServer
             // binds
 
             Session.Items.ItemReceived += DataReceiver.OnItemReceived;
+            Session.Locations.CheckedLocationsUpdated += DataReceiver.OnLocationUpdated;
 
             //Session.Socket.PacketReceived += DataReceiver.OnPacketReceived;
             //Session.MessageLog.OnMessageReceived += DataReceiver.OnMessageReceived;
@@ -814,21 +816,56 @@ namespace ArchiGungeon.ArchipelagoServer
 
         public class DataSender
         {
+            public enum APLocations
+            {
+                NULL = 0,
+                NPCCell = 8755200,
+                RunShopPurchase = 8755300,
+                Floor1Complete = 8755400,
+                Floor2Complete = 8755600,
+                Floor3Complete = 8755700,
+                Floor4Complete = 8755720,
+                Floor5Complete = 8755740,
+                GatlingGullDefeated = 8755760,
+                BulletKingDefeated = 8755780
+            }
 
             #region High Priority Send Functions
             // High priority generally meaning, randomizer hard stops if these fail communication
-            public static void SendFoundLocationCheck(long idToSend)
+            /// <summary>
+            /// Sends the AP Location Id to the server for it to be marked as found. Will scout what item was in that location to display to the user.
+            /// </summary>
+            /// <param name="location">Ap Location enum to send</param>
+            public static void SendFoundLocationCheck(APLocations location)
             {
-                //ScoutFoundLocationCheck(idToSend);
-                Session.Locations.CompleteLocationChecks(idToSend);
-
-                return;
+                SendFoundLocationCheck((long)location);
             }
 
+            /// <summary>
+            /// Sends the AP Location Id to the server for it to be marked as found. Will scout what item was in that location to display to the user.
+            /// </summary>
+            /// <param name="idToSend">Id of location to send</param>
+            public static void SendFoundLocationCheck(long idToSend)
+            {
+                SendFoundLocationCheck(new long[1] { idToSend });
+            }
+
+            /// <summary>
+            /// Sends the AP Location Id to the server for it to be marked as found. Will scout what item was in that location to display to the user.
+            /// </summary>
+            /// <param name="idArray">Ids of locations</param>
             public static void SendFoundLocationCheck(long[] idArray)
             {
-                Session.Locations.CompleteLocationChecks(idArray);
-                return;
+                try
+                {
+                    //TODO: locally store all locations that should have been sent incase we can't send here.
+                    Session.Locations.CompleteLocationChecks(idArray);
+                    ScoutFoundLocationCheck(idArray);
+                }
+                catch (Exception e)
+                {
+                    ArchDebugPrint.DebugLog(DebugCategory.ServerSend, $"Error sending location checks: {e.Message}" );
+                }
             }
 
             public static void SendDeathlink(string playerName = "Gungeoneer", string causeOfDeath = "Died to Gungeon")
@@ -898,18 +935,19 @@ namespace ArchiGungeon.ArchipelagoServer
                 });
             }
 
-            public static void ScoutFoundLocationCheck(long locationID)
+            public static void ScoutFoundLocationCheck(long[] locationIDs)
             {
-                ArchDebugPrint.DebugLog(DebugCategory.ServerReceive, $"Scouting location check: {locationID}");
+                ArchDebugPrint.DebugLog(DebugCategory.ServerReceive, $"Scouting location check: {locationIDs}");
 
                 Session.Locations.ScoutLocationsAsync(locationInfoPacket =>
                 {
                     foreach (long key in locationInfoPacket.Keys)
                     {
                         ArchDebugPrint.DebugLog(DebugCategory.ServerReceive, $"Item ID: {locationInfoPacket[key].ItemId} Item: {locationInfoPacket[key].Player}'s + {locationInfoPacket[key].ItemName} from {locationInfoPacket[key].ItemGame}");
+                        ArchipelagoUIHelper.ArchipelagoUINotification($"Found {locationInfoPacket[key].Player}'s {locationInfoPacket[key].ItemDisplayName}!", "");
                     }
                 },
-                locationID);
+                locationIDs);
                 return;
             }
             #endregion
@@ -957,6 +995,13 @@ namespace ArchiGungeon.ArchipelagoServer
                 ArchDebugPrint.DebugLog(DebugCategory.ServerReceive, $"Queue item: - {nextQueueItem.ItemId} -- {nextQueueItem.ItemName}");
 
                 return;
+            }
+
+            public static void OnLocationUpdated(ReadOnlyCollection<long> newCheckedLocations)
+            {
+                // To Implement
+                // If we have any locations that should update if they remotely get checked, handle it here
+                // ie. shop location gets auto-bought.
             }
 
             #endregion

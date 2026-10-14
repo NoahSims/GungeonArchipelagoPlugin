@@ -53,6 +53,7 @@ namespace ArchiGungeon.DebugTools
 
             {"receive", AvailableDebugCMD.ReceiveItem },
             {"npc", AvailableDebugCMD.EnableNPC },
+            {"sendLocation", AvailableDebugCMD.SendLocation },
         };
 
         private static Dictionary<AvailableDebugCMD, string> CommandToLevel { get; } = new Dictionary<AvailableDebugCMD, string>()
@@ -332,6 +333,12 @@ namespace ArchiGungeon.DebugTools
                         }
 
                         ReceiveAPItem(npcId);
+                        return;
+                    }
+                case AvailableDebugCMD.SendLocation:
+                    {
+                        SessionHandler.DataSender.APLocations location = (SessionHandler.DataSender.APLocations) Enum.Parse(typeof(SessionHandler.DataSender.APLocations), additionalInput);
+                        SessionHandler.DataSender.SendFoundLocationCheck(location);
                         return;
                     }
                 default:
