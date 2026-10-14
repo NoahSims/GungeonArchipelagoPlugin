@@ -28,7 +28,8 @@ namespace ArchiGungeon.DebugTools
             {DebugCategory.TrapHandling, true },
             {DebugCategory.UserInterface, false },
             {DebugCategory.GameCompletion, false },
-            {DebugCategory.CharacterSystems, false }
+            {DebugCategory.CharacterSystems, false },
+            {DebugCategory.Error, true }
         };
 
         public static void InitDebugLog()
