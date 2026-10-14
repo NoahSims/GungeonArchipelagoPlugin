@@ -26,10 +26,8 @@ namespace ArchiGungeon.RoomManagement
         [HarmonyPrefix]
         public static bool Patch_PedestalSetter(ref int __result, PedestalSetter __instance)
         {
-            ETGModConsole.Log("NpcCellReplacer: item test");
             if (__instance.myLootType == LootType.N_A)
             {
-                ETGModConsole.Log("NpcCellReplacer: item test 2");
                 __result = NpcCellLocationItem.SpawnItemID;
                 return false;
             }
