@@ -38,6 +38,7 @@
   <ItemGroup>
     <Compile Include="ArchipelagoServer\ArchipelagoGungeonBridge.cs" />
     <Compile Include="ArchipelagoServer\ArchipelagoCompletion.cs" />
+    <Compile Include="Data\APLocations.cs" />
     <Compile Include="Data\CountGoalManager.cs" />
     <Compile Include="Data\LocalFileWriter.cs" />
     <Compile Include="Data\ArchipelaGunLocalDataManager.cs" />

@@ -816,20 +816,6 @@ namespace ArchiGungeon.ArchipelagoServer
 
         public class DataSender
         {
-            public enum APLocations
-            {
-                NULL = 0,
-                NPCCell = 8755200,
-                RunShopPurchase = 8755300,
-                Floor1Complete = 8755400,
-                Floor2Complete = 8755600,
-                Floor3Complete = 8755700,
-                Floor4Complete = 8755720,
-                Floor5Complete = 8755740,
-                GatlingGullDefeated = 8755760,
-                BulletKingDefeated = 8755780
-            }
-
             #region High Priority Send Functions
             // High priority generally meaning, randomizer hard stops if these fail communication
             /// <summary>
@@ -838,7 +824,12 @@ namespace ArchiGungeon.ArchipelagoServer
             /// <param name="location">Ap Location enum to send</param>
             public static void SendFoundLocationCheck(APLocations location)
             {
-                SendFoundLocationCheck((long)location);
+                //TODO: Add special logic for the APLocations with multiple of the same location.
+                //TODO: Do we need to verify if a location has already been checked to prevent repeat UI pop ups?
+                if (location != APLocations.NULL)
+                {
+                    SendFoundLocationCheck((long)location);
+                }
             }
 
             /// <summary>
@@ -858,7 +849,7 @@ namespace ArchiGungeon.ArchipelagoServer
             {
                 try
                 {
-                    //TODO: locally store all locations that should have been sent incase we can't send here.
+                    //TODO: locally store all locations that should have been sent incase we fail to send
                     Session.Locations.CompleteLocationChecks(idArray);
                     ScoutFoundLocationCheck(idArray);
                 }
@@ -944,7 +935,7 @@ namespace ArchiGungeon.ArchipelagoServer
                     foreach (long key in locationInfoPacket.Keys)
                     {
                         ArchDebugPrint.DebugLog(DebugCategory.ServerReceive, $"Item ID: {locationInfoPacket[key].ItemId} Item: {locationInfoPacket[key].Player}'s + {locationInfoPacket[key].ItemName} from {locationInfoPacket[key].ItemGame}");
-                        ArchipelagoUIHelper.ArchipelagoUINotification($"Found {locationInfoPacket[key].Player}'s {locationInfoPacket[key].ItemDisplayName}!", "");
+                        ArchipelagoUIHelper.ArchipelagoUINotification($"Found {locationInfoPacket[key].Player}'s", $"{locationInfoPacket[key].ItemDisplayName}!");
                     }
                 },
                 locationIDs);

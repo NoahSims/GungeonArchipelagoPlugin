@@ -123,6 +123,49 @@ namespace ArchiGungeon.GungeonEventHandlers
             { "41ee1c8538e8474a82a74c4aff99c712", CountStats.FloorDeptClears },
             
         };
+        private static Dictionary<string, APLocations> BossGUIDToLocation { get; } = new Dictionary<string, APLocations>
+        {
+
+            //floor 1
+            { "ffca09398635467da3b1f4a54bcfda80", APLocations.Floor1Complete },
+            { "ec6b674e0acd4553b47ee94493d66422", APLocations.Floor1Complete },
+
+            //floor 2
+            { "da797878d215453abba824ff902e21b4", APLocations.Floor2Complete },
+            { "4b992de5b4274168a8878ef9bf7ea36b", APLocations.Floor2Complete },
+            { "c367f00240a64d5d9f3c26484dc35833", APLocations.Floor2Complete },
+
+            //floor 3
+            { "5e0af7f7d9de4755a68d2fd3bbc15df4", APLocations.Floor3Complete },
+            { "fa76c8cfdf1c4a88b55173666b4bc7fb", APLocations.Floor3Complete },
+            { "8b0dd96e2fe74ec7bebc1bc689c0008a", APLocations.Floor3Complete },
+            { "9189f46c47564ed588b9108965f975c9", APLocations.Floor3Complete },
+
+            //floor 4
+            { "f3b04a067a65492f8b279130323b41f0", APLocations.Floor4Complete },
+            { "6c43fddfd401456c916089fdd1c99b1c", APLocations.Floor4Complete },
+
+  
+            //floor 5
+            { "b98b10fca77d469e80fb45f3c5badec5", APLocations.Floor5Complete },
+            { "880bbe4ce1014740ba6b4e2ea521e49d", APLocations.Floor5Complete },
+
+            //hell
+            //{ "7c5d5f09911e49b78ae644d2b50ff3bf", CountStats.FloorHellClears},
+
+            ////oublie
+            //{ "1b5810fafbec445d89921a4efb4e42b7", CountStats.FloorGoopClears },
+
+            ////abbey
+            //{ "5729c8b5ffa7415bb3d01205663a33ef", CountStats.FloorAbbeyClears },
+
+            ////rat
+            //{ "4d164ba3f62648809a4a82c90fc22cae", CountStats.FloorRatClears },
+
+            ////dept
+            //{ "41ee1c8538e8474a82a74c4aff99c712", CountStats.FloorDeptClears },
+
+        };
 
         private static List<string> TriggerTwinGuids { get; } = new List<string>
         {
@@ -385,12 +428,13 @@ namespace ArchiGungeon.GungeonEventHandlers
 
             if(PastKillsGuids.Contains(enemyGuid))
             {
-                ArchipelaGunLocalDataManager.AddToCountSaveDataEntry(CountStats.PastKills, 1);
+                //ArchipelaGunLocalDataManager.AddToCountSaveDataEntry(CountStats.PastKills, 1);
             }
             
-            if(BossGUIDToStat.ContainsKey(enemyGuid))
+            if(BossGUIDToLocation.ContainsKey(enemyGuid))
             {
-                ArchipelaGunLocalDataManager.AddToCountSaveDataEntry(BossGUIDToStat[enemyGuid], 1);
+                // ArchipelaGunLocalDataManager.AddToCountSaveDataEntry(BossGUIDToStat[enemyGuid], 1);
+                SessionHandler.DataSender.SendFoundLocationCheck(BossGUIDToLocation[enemyGuid]);
             }
 
             else if(TriggerTwinGuids.Contains(enemyGuid))
@@ -399,7 +443,9 @@ namespace ArchiGungeon.GungeonEventHandlers
 
                 if(triggerTwinKills == 2)
                 {
-                    ArchipelaGunLocalDataManager.AddToCountSaveDataEntry(CountStats.Floor1Clears, 1);
+                    //ArchipelaGunLocalDataManager.AddToCountSaveDataEntry(CountStats.Floor1Clears, 1);
+                    SessionHandler.DataSender.SendFoundLocationCheck(APLocations.Floor1Complete);
+                    SessionHandler.DataSender.SendFoundLocationCheck(APLocations.TriggerTwinsDefeated);
                 }
             }
 
@@ -409,19 +455,21 @@ namespace ArchiGungeon.GungeonEventHandlers
 
                 if (killPillarKills == 4)
                 {
-                    ArchipelaGunLocalDataManager.AddToCountSaveDataEntry(CountStats.Floor4Clears, 1);
+                    //ArchipelaGunLocalDataManager.AddToCountSaveDataEntry(CountStats.Floor4Clears, 1);
+                    SessionHandler.DataSender.SendFoundLocationCheck(APLocations.Floor4Complete);
+                    SessionHandler.DataSender.SendFoundLocationCheck(APLocations.KillPillarsDefeated);
                 }
             }
 
-            if(GameCompletionGUIds.ContainsKey(enemyGuid))
-            {
-                ArchDebugPrint.DebugLog(DebugCategory.PlayerEventListener, $"Possible completion boss: {haver.name}");
-                ArchipelaGunLocalDataManager.AddToCountSaveDataEntry(GameCompletionGUIds[enemyGuid], 1);
+            //if(GameCompletionGUIds.ContainsKey(enemyGuid))
+            //{
+            //    ArchDebugPrint.DebugLog(DebugCategory.PlayerEventListener, $"Possible completion boss: {haver.name}");
+            //    ArchipelaGunLocalDataManager.AddToCountSaveDataEntry(GameCompletionGUIds[enemyGuid], 1);
 
-                ArchipelaGunLocalDataManager.SaveCurrentRandomizerProgress();
-                SessionHandler.DataSender.CheckForGameCompletion();
+            //    ArchipelaGunLocalDataManager.SaveCurrentRandomizerProgress();
+            //    SessionHandler.DataSender.CheckForGameCompletion();
 
-            }
+            //}
 
 
             return;

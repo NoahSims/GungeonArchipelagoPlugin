@@ -337,7 +337,7 @@ namespace ArchiGungeon.DebugTools
                     }
                 case AvailableDebugCMD.SendLocation:
                     {
-                        SessionHandler.DataSender.APLocations location = (SessionHandler.DataSender.APLocations) Enum.Parse(typeof(SessionHandler.DataSender.APLocations), additionalInput);
+                        APLocations location = (APLocations) Enum.Parse(typeof(APLocations), additionalInput);
                         SessionHandler.DataSender.SendFoundLocationCheck(location);
                         return;
                     }
