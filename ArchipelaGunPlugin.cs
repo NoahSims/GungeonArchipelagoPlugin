@@ -1,4 +1,5 @@
-﻿using Alexandria.DungeonAPI;
+using Alexandria.DungeonAPI;
+﻿using Alexandria.Misc;
 using ArchiGungeon.ArchipelagoServer;
 using ArchiGungeon.Character;
 using ArchiGungeon.Data;
@@ -10,6 +11,7 @@ using ArchiGungeon.UserInterface;
 using BepInEx;
 using Dungeonator;
 using HarmonyLib;
+using System;
 using UnityEngine;
 
 namespace ArchiGungeon
@@ -49,6 +51,7 @@ namespace ArchiGungeon
 
             
             ETGModMainBehaviour.WaitForGameManagerStart(GMStart);
+
             //DungeonHooks.OnPreDungeonGeneration += PredungeonGen;
         }
 
@@ -72,6 +75,9 @@ namespace ArchiGungeon
 
             StartPostInitializationSetup();
 
+            //Load custom rooms
+            RoomManagement.RoomHandler.Init();
+
             return;
         }
 
@@ -84,6 +90,7 @@ namespace ArchiGungeon
         {
             //Archipelagun.Register();
             APPickUpItem.RegisterItemBase();
+            NpcCellLocationItem.RegisterItemBase();
             ReverseCurse.RegisterItem();
             ReverseCurseReversal.RegisterItem();
             

@@ -49,7 +49,9 @@ namespace ArchiGungeon.Data
         PastHunter,
         PastRobot,
         PastBullet,
-        PastKills
+        PastKills,
+
+        NpcCellsOpened
     }
     #endregion
 
@@ -110,7 +112,8 @@ namespace ArchiGungeon.Data
         TrapHandling,
         UserInterface,
         GameCompletion,
-        CharacterSystems
+        CharacterSystems,
+        Error
     }
 
     public enum AvailableDebugCMD

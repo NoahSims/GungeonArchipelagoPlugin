@@ -218,9 +218,14 @@ namespace ArchiGungeon.Data
 
         public static int GetCountStat(CountStats statToGet)
         {
-            int statData = CountSaveDataDict[statToGet];
+            if (!CountSaveDataDict.ContainsKey(statToGet))
+            {
+                // This can happen the first time you load the game after adding a new stat to save data
+                ArchDebugPrint.DebugLog(DebugCategory.Error, $"Tried getting stat that hasn't been set: {statToGet}");
+                return -1;
+            }
 
-            return statData;
+            return CountSaveDataDict[statToGet];
         }
 
 

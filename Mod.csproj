@@ -60,12 +60,15 @@
     <Compile Include="DebugTools\UnitTests.cs" />
     <Compile Include="EnemyHandlers\EnemySwapping.cs" />
     <Compile Include="GungeonEventHandlers\EffectsController.cs" />
+    <Compile Include="ItemArchipelago\NpcCellLocationItem.cs" />
     <Compile Include="ItemArchipelago\GungeonFlagHandler.cs" />
     <Compile Include="ItemArchipelago\ReverseCurseItems.cs" />
     <Compile Include="ItemArchipelago\APPickUpItem.cs" />
     <Compile Include="ItemArchipelago\Archipelagun.cs" />
     <Compile Include="ItemArchipelago\AchievementLocationCheckHandler.cs" />
     <Compile Include="ItemArchipelago\ShopAPItemHandler.cs" />
+    <Compile Include="RoomManagement\NpcCellReplacer.cs" />
+    <Compile Include="RoomManagement\RoomHandler.cs" />
     <Compile Include="UserInterface\ArchipelagoUIHelper.cs" />
     <Compile Include="UserInterface\ArchipelagoGUI.cs" />
     <Compile Include="GungeonEventHandlers\GungeonPlayerEventListener.cs" />
