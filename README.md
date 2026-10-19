@@ -33,7 +33,7 @@ https://enter-the-gungeon.thunderstore.io/
  ![image](https://github.com/user-attachments/assets/1dd46d36-5831-4f91-a232-85cecce09111)
 
 > [!NOTE]
-> This version of the mod is designed to be played from a new save of gungeon. Make sure to **back up your save slots** and make a **new save** before connecting.
+> This version of the mod is designed to be played from a new save of gungeon. Make sure to ___**BACK UP YOUR SAVE SLOTS**___ and make a ___**NEW SAVE**___ before connecting.
 > To connect to the archipelago server, press F4 to open the debug console and connect using the command: 
 > ```connect <server-url> <port> <slot-Name>```
 
