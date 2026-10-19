@@ -1,9 +1,13 @@
 # Archipelago Mod -- Enter the Gungeon
 Archipelago Multiworld Randomizer mod for **Enter the Gungeon**. 
 
+> [!WARNING]
+> The Current version, v0.2.0, is not in a state that we recommend playing. This is mostly a proof of concept build of a new implementation of the mod and is still a work in progress.
+
 ## APWorld Dependency
-APWorld releases found here (https://github.com/MaoBoulve/ArchipelaGunAPWorld/releases)
-- **v0.1.1 - current**: Enter the Gungeon APWorld v0.1.1
+APWorld releases found here (https://github.com/arsylvester/EtG-AP/releases)
+- **v0.2.0 - current**: Enter the Gungeon APWorld v0.2.0
+- **v0.1.1 - v0.1.7**: Enter the Gungeon APWorld v0.1.1 (https://github.com/MaoBoulve/ArchipelaGunAPWorld/releases)
 - **v0.0.4 - v0.0.8**: Enter the Gungeon APWorld v0.0.1
 - **v0.0.1 - 0.0.3**: KinTheInfinite Gungeon APWorld (https://github.com/KinTheInfinite/Archipelago/releases)
 
@@ -11,8 +15,8 @@ APWorld releases found here (https://github.com/MaoBoulve/ArchipelaGunAPWorld/re
 Easiest to handle through a mod loader like R2ModMan or Thunderstore.
 https://enter-the-gungeon.thunderstore.io/
 
- - EtG.Alexandria version **0.4.18**
- - ModTheGungeon version **1.9.1**
+ - EtG.Alexandria version **0.5.10**
+ - ModTheGungeon version **1.9.2**
  - BepInEx version **5.4.21**
 
  ## Setup
@@ -28,10 +32,9 @@ https://enter-the-gungeon.thunderstore.io/
  
  ![image](https://github.com/user-attachments/assets/1dd46d36-5831-4f91-a232-85cecce09111)
 
-Once a run is started, the **Archipelagun** will spawn. Use the 'connect' command with server & slot data to connect.
-Currently, location checks are handled by a simple progression of chests. Improvements are a work in progress!
+> [!NOTE]
+> This version of the mod is designed to be played from a new save of gungeon. Make sure to **back up your save slots** and make a **new save** before connecting.
+> To connect to the archipelago server, press F4 to open the debug console and connect using the command: 
+> ```connect <server-url> <port> <slot-Name>```
 
-![2025-04-01 21-01-03 - frame at 0m12s](https://github.com/user-attachments/assets/c11813ad-db62-4c87-a7e6-9d3f7de07ed0)
 ![2025-04-01 21-01-03 - frame at 0m14s](https://github.com/user-attachments/assets/293226a0-f645-4b03-bcb2-64ceeb34478c)
-![2025-04-01 21-01-03 - frame at 1m52s](https://github.com/user-attachments/assets/8aa1f866-58aa-405c-9774-cb7cf6968e09)
-
