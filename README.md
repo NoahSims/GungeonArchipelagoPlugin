@@ -1,11 +1,13 @@
 # Archipelago Mod -- Enter the Gungeon
 Archipelago Multiworld Randomizer mod for **Enter the Gungeon**. 
 
+More info about setup can be found at https://github.com/arsylvester/EtG-AP
+
 > [!WARNING]
 > The Current version, v0.2.0, is not in a state that we recommend playing. This is mostly a proof of concept build of a new implementation of the mod and is still a work in progress.
 
 ## APWorld Dependency
-APWorld releases found here (https://github.com/arsylvester/EtG-AP/releases)
+APWorld releases found here (https://github.com/arsylvester/EtG-AP)
 - **v0.2.0 - current**: Enter the Gungeon APWorld v0.2.0
 - **v0.1.1 - v0.1.7**: Enter the Gungeon APWorld v0.1.1 (https://github.com/MaoBoulve/ArchipelaGunAPWorld/releases)
 - **v0.0.4 - v0.0.8**: Enter the Gungeon APWorld v0.0.1
@@ -36,7 +38,9 @@ https://enter-the-gungeon.thunderstore.io/
 > This version of the mod is designed to be played from a new save of gungeon. Make sure to ___**BACK UP YOUR SAVE SLOTS**___ and make a ___**NEW SAVE**___ before connecting.
 
 To connect to the archipelago server, press F4 to open the debug console and connect using the commands:
+
 ```set password <password>``` (if using a password)
+
 ```connect <server-url> <port> <slot-name>```
 
 ![2025-04-01 21-01-03 - frame at 0m14s](https://github.com/user-attachments/assets/293226a0-f645-4b03-bcb2-64ceeb34478c)
