@@ -199,7 +199,7 @@ namespace ArchiGungeon.ItemArchipelago
             { GungeonFlags.ACHIEVEMENT_TABLES_FLIPPED, APLocations.ACHIEVEMENT_TABLES_FLIPPED },
             { GungeonFlags.ACHIEVEMENT_SURPRISE_MIMIC, APLocations.ACHIEVEMENT_SURPRISE_MIMIC },
             { GungeonFlags.ACHIEVEMENT_KILL_JAMMED_BOSS, APLocations.ACHIEVEMENT_KILL_JAMMED_BOSS },
-            { GungeonFlags.ACHIEVEMENT_BIGGEST_WALLET, APLocations.ACHIEVEMENT_BIGGEST_WALLET },
+            { GungeonFlags.ACHIEVEMENT_BIGGEST_WALLET, APLocations.ACHIEVEMENT_BIGGEST_WALLET }
 
         };
 

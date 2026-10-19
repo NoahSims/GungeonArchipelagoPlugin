@@ -66,6 +66,7 @@ namespace ArchiGungeon.ItemArchipelago
         {
             base.Pickup(player);
 
+            /*
             if (CountGoalManager.GetCountStat(CountStats.NpcCellsOpened) == TotalNpcCells - 1)
             {
                 // TODO unlock ledge goblin
@@ -74,7 +75,12 @@ namespace ArchiGungeon.ItemArchipelago
             {
                 SessionHandler.DataSender.SendFoundLocationCheck(APLocations.NPCCell + CountGoalManager.GetCountStat(CountStats.NpcCellsOpened));
             }
-            ArchipelaGunLocalDataManager.AddToCountSaveDataEntry(CountStats.NpcCellsOpened, 1);
+            */
+            if (CountGoalManager.GetCountStat(CountStats.NpcCellsOpened) < TotalNpcCells)
+            {
+                SessionHandler.DataSender.SendFoundLocationCheck(APLocations.NPCCell + CountGoalManager.GetCountStat(CountStats.NpcCellsOpened));
+                ArchipelaGunLocalDataManager.AddToCountSaveDataEntry(CountStats.NpcCellsOpened, 1);
+            }
         }
 
         public static bool HasAPItemChecksRemaining()
