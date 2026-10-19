@@ -16,7 +16,7 @@ namespace ArchiGungeon.ItemArchipelago
     {
         #region Item Init
         public static int SpawnItemID = -1;
-        public static int TotalNpcCells = 19;
+        public static int TotalNpcCells = 15;
 
         private static string displayName = "NPC Cell Item";
         private static string spriteDirectory = "ArchiGungeon/Resources/archipelago.png";

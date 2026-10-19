@@ -223,19 +223,7 @@ namespace ArchiGungeon.ItemArchipelago
             GungeonFlags.ACHIEVEMENT_NOBOSSDAMAGE_GUNGEON,
             GungeonFlags.ACHIEVEMENT_NOBOSSDAMAGE_MINES,
             GungeonFlags.ACHIEVEMENT_NOBOSSDAMAGE_HOLLOW,
-            GungeonFlags.ACHIEVEMENT_NOBOSSDAMAGE_FORGE,
-            GungeonFlags.ACHIEVEMENT_CASTLE_MANYTIMES,
-            GungeonFlags.ACHIEVEMENT_GUNGEON_MANYTIMES,
-            GungeonFlags.ACHIEVEMENT_MINES_MANYTIMES,
-            GungeonFlags.ACHIEVEMENT_HOLLOW_MANYTIMES,
-            GungeonFlags.ACHIEVEMENT_FORGE_MANYTIMES,
-            GungeonFlags.ACHIEVEMENT_STEAL_THINGS,
-            GungeonFlags.ACHIEVEMENT_TABLE_PIT,
-            GungeonFlags.ACHIEVEMENT_BEASTMODE,
-            GungeonFlags.ACHIEVEMENT_TABLES_FLIPPED,
-            GungeonFlags.ACHIEVEMENT_SURPRISE_MIMIC,
-            GungeonFlags.ACHIEVEMENT_KILL_JAMMED_BOSS,
-            GungeonFlags.ACHIEVEMENT_BIGGEST_WALLET
+            GungeonFlags.ACHIEVEMENT_NOBOSSDAMAGE_FORGE
         };
 
         public static HashSet<GungeonFlags> _pastKilledFlags = new HashSet<GungeonFlags>{

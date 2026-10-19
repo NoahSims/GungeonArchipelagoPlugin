@@ -8,7 +8,7 @@ namespace ArchiGungeon.Data
     public enum APLocations
     {
         NULL = 0,
-        NPCCell = 8755200,
+        NPCCell = 400001,
         RunShopPurchase = 8755300,
         Floor1Complete = 8755400,
         Floor2Complete = 8755600,
