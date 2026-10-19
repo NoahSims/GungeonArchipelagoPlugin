@@ -431,8 +431,6 @@ namespace ArchiGungeon.ArchipelagoServer
             _isProgressItemsGiven = false;
             IsValidToSpawnItems = false;
             HandlingDeathlinkEvent = false;
-
-            return;
         }
 
         public static void RetrieveItemsFromServer()
@@ -468,8 +466,6 @@ namespace ArchiGungeon.ArchipelagoServer
             hasRetrievedServerItemsOnce = true;
             TrapSpawnHandler.SetCanSpawn(true);
             ConsumableSpawnHandler.SetCanSpawn(true);
-
-            return;
         }
 
         /// <summary>
@@ -492,8 +488,6 @@ namespace ArchiGungeon.ArchipelagoServer
 
             TrapSpawnHandler.SetCanSpawn(true);
             ConsumableSpawnHandler.SetCanSpawn(true);
-
-            return;
         }
 
         /// <summary>
@@ -505,8 +499,6 @@ namespace ArchiGungeon.ArchipelagoServer
             ArchDebugPrint.DebugLog(DebugCategory.ServerReceive, $"Receiving item: {itemInfo.ItemName}");
             var receivedAPItem = ReceivedAPItem.GetReceivedAPItem(itemInfo.ItemId);
             _itemAddQueue.Enqueue(receivedAPItem);
-
-            return;
         }
 
         public static void HandleDelayedItemInitialize()
@@ -573,8 +565,6 @@ namespace ArchiGungeon.ArchipelagoServer
                     ArchipelagoGUI.ConsoleLog("Exception caused during handling giving Archipelago item. Please contact dev: " + ex);
                 }
             }
-
-            return;
         }
 
         #endregion
@@ -773,8 +763,6 @@ namespace ArchiGungeon.ArchipelagoServer
             }
 
             DataSender.CheckForGameCompletion();
-
-            return;
         }
 
         public static void ShowGoalsTextbox()
@@ -796,15 +784,12 @@ namespace ArchiGungeon.ArchipelagoServer
             TextBoxHandler.ShowArchipelagoLetterBox(GungeonPlayerEventListener.GetFirstAlivePlayer(), textboxOutput);
             IsGoalsTextBoxOpen = true;
 
-            return;
-
         }
 
         public static void HideGoalsTextbox()
         {
             IsGoalsTextBoxOpen = false;
             TextBoxHandler.ClearAllTextboxes();
-            return;
         }
 
         #endregion
@@ -902,15 +887,13 @@ namespace ArchiGungeon.ArchipelagoServer
 
                     SendGameCompletion();
                 }
-                return;
             }
 
-            private static void SendGameCompletion()
+            public static void SendGameCompletion()
             {
                 StatusUpdatePacket statusUpdatePacket = new StatusUpdatePacket();
                 statusUpdatePacket.Status = ArchipelagoClientState.ClientGoal;
                 Session?.Socket.SendPacket(statusUpdatePacket);
-                return;
             }
 
             #endregion

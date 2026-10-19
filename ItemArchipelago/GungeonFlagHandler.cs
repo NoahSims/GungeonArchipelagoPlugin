@@ -145,14 +145,107 @@ namespace ArchiGungeon.ItemArchipelago
             { GungeonFlags.SHERPA_UNLOCK4_ELEMENT3, APLocations.ShortcutUnlock4Element3 },
             { GungeonFlags.SHERPA_UNLOCK4_ELEMENT4, APLocations.ShortcutUnlock4Element4 },
             // Bullet Parts
-            { GungeonFlags.BLACKSMITH_ELEMENT1, APLocations.NULL },
-            { GungeonFlags.BLACKSMITH_ELEMENT2, APLocations.NULL },
-            { GungeonFlags.BLACKSMITH_ELEMENT3, APLocations.NULL },
-            { GungeonFlags.BLACKSMITH_ELEMENT4, APLocations.NULL },
+            { GungeonFlags.BLACKSMITH_ELEMENT1, APLocations.BLACKSMITH_ELEMENT1 },
+            { GungeonFlags.BLACKSMITH_ELEMENT2, APLocations.BLACKSMITH_ELEMENT2 },
+            { GungeonFlags.BLACKSMITH_ELEMENT3, APLocations.BLACKSMITH_ELEMENT3 },
+            { GungeonFlags.BLACKSMITH_ELEMENT4, APLocations.BLACKSMITH_ELEMENT4 },
+            { GungeonFlags.BLACKSMITH_BULLET_COMPLETE, APLocations.BLACKSMITH_BULLET_COMPLETE },
             // Bosses
-            { GungeonFlags.BOSSKILLED_GATLING_GULL, APLocations.GatlingGullDefeated },
-            { GungeonFlags.BOSSKILLED_BULLET_KING, APLocations.BulletKingDefeated },
-            { GungeonFlags.BOSSKILLED_BULLET_BROS, APLocations.TriggerTwinsDefeated },
+            { GungeonFlags.BOSSKILLED_GATLING_GULL, APLocations.BOSSKILLED_GATLING_GULL },
+            { GungeonFlags.BOSSKILLED_BULLET_KING, APLocations.BOSSKILLED_BULLET_KING },
+            { GungeonFlags.BOSSKILLED_BULLET_BROS, APLocations.BOSSKILLED_BULLET_BROS },
+            { GungeonFlags.BOSSKILLED_MEDUZI, APLocations.BOSSKILLED_MEDUZI },
+            { GungeonFlags.BOSSKILLED_BASHELLISK, APLocations.BOSSKILLED_BASHELLISK },
+            { GungeonFlags.BOSSKILLED_BEHOLSTER, APLocations.BOSSKILLED_BEHOLSTER },
+            { GungeonFlags.BOSSKILLED_TANK, APLocations.BOSSKILLED_TANK },
+            { GungeonFlags.BOSSKILLED_POWDERSKULL, APLocations.BOSSKILLED_POWDERSKULL },
+            { GungeonFlags.BOSSKILLED_MINEFLAYER, APLocations.BOSSKILLED_MINEFLAYER },
+            { GungeonFlags.BOSSKILLED_HIGH_PRIEST, APLocations.BOSSKILLED_HIGH_PRIEST },
+            { GungeonFlags.BOSSKILLED_STATUES, APLocations.BOSSKILLED_STATUES },
+            { GungeonFlags.BOSSKILLED_DEMONWALL, APLocations.BOSSKILLED_DEMONWALL },
+            { GungeonFlags.BOSSKILLED_DOORMIMIC, APLocations.BOSSKILLED_DOORMIMIC },
+            { GungeonFlags.BOSSKILLED_DRAGUN, APLocations.BOSSKILLED_DRAGUN },
+            { GungeonFlags.BOSSKILLED_MINI_FUSELIER, APLocations.BOSSKILLED_MINI_FUSELIER },
+            { GungeonFlags.BOSSKILLED_BLOBULORD, APLocations.BOSSKILLED_BLOBULORD },
+            { GungeonFlags.BOSSKILLED_OLDKING, APLocations.BOSSKILLED_OLDKING },
+            { GungeonFlags.BOSSKILLED_RESOURCEFULRAT, APLocations.BOSSKILLED_RESOURCEFULRAT },
+            { GungeonFlags.BOSSKILLED_HELICOPTER, APLocations.BOSSKILLED_HELICOPTER },
+            { GungeonFlags.BOSSKILLED_LICH, APLocations.BOSSKILLED_LICH },
+            { GungeonFlags.BOSSKILLED_HIGHDRAGUN, APLocations.BOSSKILLED_HIGHDRAGUN },
+            { GungeonFlags.TUTORIAL_KILLED_MANFREDS_RIVAL, APLocations.TUTORIAL_KILLED_MANFREDS_RIVAL },
+            // Pasts
+            { GungeonFlags.BOSSKILLED_ROGUE_PAST, APLocations.BOSSKILLED_ROGUE_PAST },
+            { GungeonFlags.BOSSKILLED_CONVICT_PAST, APLocations.BOSSKILLED_CONVICT_PAST },
+            { GungeonFlags.BOSSKILLED_SOLDIER_PAST, APLocations.BOSSKILLED_SOLDIER_PAST },
+            { GungeonFlags.BOSSKILLED_GUIDE_PAST, APLocations.BOSSKILLED_GUIDE_PAST },
+            { GungeonFlags.BOSSKILLED_ROBOT_PAST, APLocations.BOSSKILLED_ROBOT_PAST },
+            { GungeonFlags.BOSSKILLED_BULLET_PAST, APLocations.BOSSKILLED_BULLET_PAST },
+            { GungeonFlags.GUNSLINGER_PAST_KILLED, APLocations.GUNSLINGER_PAST_KILLED },
+            // Master Rounds
+            { GungeonFlags.ACHIEVEMENT_NOBOSSDAMAGE_CASTLE, APLocations.ACHIEVEMENT_NOBOSSDAMAGE_CASTLE },
+            { GungeonFlags.ACHIEVEMENT_NOBOSSDAMAGE_GUNGEON, APLocations.ACHIEVEMENT_NOBOSSDAMAGE_GUNGEON },
+            { GungeonFlags.ACHIEVEMENT_NOBOSSDAMAGE_MINES, APLocations.ACHIEVEMENT_NOBOSSDAMAGE_MINES },
+            { GungeonFlags.ACHIEVEMENT_NOBOSSDAMAGE_HOLLOW, APLocations.ACHIEVEMENT_NOBOSSDAMAGE_HOLLOW },
+            { GungeonFlags.ACHIEVEMENT_NOBOSSDAMAGE_FORGE, APLocations.ACHIEVEMENT_NOBOSSDAMAGE_FORGE },
+            // Achievements
+            { GungeonFlags.ACHIEVEMENT_CASTLE_MANYTIMES, APLocations.ACHIEVEMENT_CASTLE_MANYTIMES },
+            { GungeonFlags.ACHIEVEMENT_GUNGEON_MANYTIMES, APLocations.ACHIEVEMENT_GUNGEON_MANYTIMES },
+            { GungeonFlags.ACHIEVEMENT_MINES_MANYTIMES, APLocations.ACHIEVEMENT_MINES_MANYTIMES },
+            { GungeonFlags.ACHIEVEMENT_HOLLOW_MANYTIMES, APLocations.ACHIEVEMENT_HOLLOW_MANYTIMES },
+            { GungeonFlags.ACHIEVEMENT_FORGE_MANYTIMES, APLocations.ACHIEVEMENT_FORGE_MANYTIMES },
+            { GungeonFlags.ACHIEVEMENT_STEAL_THINGS, APLocations.ACHIEVEMENT_STEAL_THINGS },
+            { GungeonFlags.ACHIEVEMENT_TABLE_PIT, APLocations.ACHIEVEMENT_TABLE_PIT },
+            { GungeonFlags.ACHIEVEMENT_BEASTMODE, APLocations.ACHIEVEMENT_BEASTMODE },
+            { GungeonFlags.ACHIEVEMENT_TABLES_FLIPPED, APLocations.ACHIEVEMENT_TABLES_FLIPPED },
+            { GungeonFlags.ACHIEVEMENT_SURPRISE_MIMIC, APLocations.ACHIEVEMENT_SURPRISE_MIMIC },
+            { GungeonFlags.ACHIEVEMENT_KILL_JAMMED_BOSS, APLocations.ACHIEVEMENT_KILL_JAMMED_BOSS },
+            { GungeonFlags.ACHIEVEMENT_BIGGEST_WALLET, APLocations.ACHIEVEMENT_BIGGEST_WALLET },
+
+        };
+
+        // Used to determine if a flag should be checked for locations, but still set like a typical gungeon flag
+        // TODO this is fine for MVP, but I'd like to redo this at some point
+        public static HashSet<GungeonFlags> _flagsToNotCapture = new HashSet<GungeonFlags>{
+            GungeonFlags.BOSSKILLED_GATLING_GULL,
+            GungeonFlags.BOSSKILLED_BULLET_KING,
+            GungeonFlags.BOSSKILLED_BULLET_BROS,
+            GungeonFlags.BOSSKILLED_MEDUZI,
+            GungeonFlags.BOSSKILLED_BASHELLISK,
+            GungeonFlags.BOSSKILLED_BEHOLSTER,
+            GungeonFlags.BOSSKILLED_TANK,
+            GungeonFlags.BOSSKILLED_POWDERSKULL,
+            GungeonFlags.BOSSKILLED_MINEFLAYER,
+            GungeonFlags.BOSSKILLED_HIGH_PRIEST,
+            GungeonFlags.BOSSKILLED_STATUES,
+            GungeonFlags.BOSSKILLED_DEMONWALL,
+            GungeonFlags.BOSSKILLED_DOORMIMIC,
+            GungeonFlags.ACHIEVEMENT_NOBOSSDAMAGE_CASTLE,
+            GungeonFlags.ACHIEVEMENT_NOBOSSDAMAGE_GUNGEON,
+            GungeonFlags.ACHIEVEMENT_NOBOSSDAMAGE_MINES,
+            GungeonFlags.ACHIEVEMENT_NOBOSSDAMAGE_HOLLOW,
+            GungeonFlags.ACHIEVEMENT_NOBOSSDAMAGE_FORGE,
+            GungeonFlags.ACHIEVEMENT_CASTLE_MANYTIMES,
+            GungeonFlags.ACHIEVEMENT_GUNGEON_MANYTIMES,
+            GungeonFlags.ACHIEVEMENT_MINES_MANYTIMES,
+            GungeonFlags.ACHIEVEMENT_HOLLOW_MANYTIMES,
+            GungeonFlags.ACHIEVEMENT_FORGE_MANYTIMES,
+            GungeonFlags.ACHIEVEMENT_STEAL_THINGS,
+            GungeonFlags.ACHIEVEMENT_TABLE_PIT,
+            GungeonFlags.ACHIEVEMENT_BEASTMODE,
+            GungeonFlags.ACHIEVEMENT_TABLES_FLIPPED,
+            GungeonFlags.ACHIEVEMENT_SURPRISE_MIMIC,
+            GungeonFlags.ACHIEVEMENT_KILL_JAMMED_BOSS,
+            GungeonFlags.ACHIEVEMENT_BIGGEST_WALLET
+        };
+
+        public static HashSet<GungeonFlags> _pastKilledFlags = new HashSet<GungeonFlags>{
+            GungeonFlags.BOSSKILLED_ROGUE_PAST,
+            GungeonFlags.BOSSKILLED_CONVICT_PAST,
+            GungeonFlags.BOSSKILLED_SOLDIER_PAST,
+            GungeonFlags.BOSSKILLED_GUIDE_PAST,
+            GungeonFlags.BOSSKILLED_ROBOT_PAST,
+            GungeonFlags.BOSSKILLED_BULLET_PAST,
+            GungeonFlags.GUNSLINGER_PAST_KILLED
         };
 
         /// <summary>
@@ -183,18 +276,29 @@ namespace ArchiGungeon.ItemArchipelago
         [HarmonyPrefix]
         public static bool CaptureGungeonFlagSet(GungeonFlags flag, bool value)
         {
+            // TODO - this is just for MVP, remove this once we implement other win conditions
+            if (_pastKilledFlags.Contains(flag)) {
+                ETGModConsole.Log("GameStatsManager: Sending game completion!!: " + flag);
+                SessionHandler.DataSender.SendGameCompletion();
+                return false;
+            }
+
             //TODO make collection of all meta shop flags to compare against.
             if (GungeonFlagsToAPLocations.ContainsKey(flag) && flag != _expectedSetFlag)
             {
                 ETGModConsole.Log("GameStatsManagerPatch: Location checked - Send item here: " + flag);
                 SessionHandler.DataSender.SendFoundLocationCheck(GungeonFlagsToAPLocations[flag]);
                 ArchipelaGunLocalDataManager.locationsCheckedFlags.Add(flag); // TODO update this for all location checks probably
+                if (_flagsToNotCapture.Contains(flag)) // TODO This is kind of ugly jank, but it's fine for mvp
+                {
+                    return true;
+                }
                 return false;
             }
 
             if (flag == _expectedSetFlag)
             {
-                // Now that the flag has beened bypassed, reset the var
+                // Now that the flag has been bypassed, reset the var
                 _expectedSetFlag = GungeonFlags.NONE;
                 ETGModConsole.Log("GameStatsManagerPatch: Expected flag was set: " + flag + " - " + value);
             }
