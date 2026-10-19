@@ -343,10 +343,10 @@ namespace ArchiGungeon.ArchipelagoServer
                        GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.SHERPA_READY_FOR_UNLOCKS, true);
                     }
                     break;
-                case "Progressive Cassing Multiplier":
+                case "Progressive Casing Multiplier":
                     //ArchipelaGunLocalDataManager.locationsCheckedFlags.Add(null);
                     break;
-                case "Progressive Hedgemony Multiplier":
+                case "Progressive Hegemony Multiplier":
                     //ArchipelaGunLocalDataManager.locationsCheckedFlags.Add(null);
                     break;
                 case "Progressive Curse Reduction":

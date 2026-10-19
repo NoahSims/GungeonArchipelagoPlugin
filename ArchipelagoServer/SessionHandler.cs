@@ -109,13 +109,14 @@ namespace ArchiGungeon.ArchipelagoServer
 
             BindToArchipelagoEvents();
             CheckToCreateDeathlink();
-            CheckToRandomizeEnemies();
+            // TODO add back in Random enemies
+            //CheckToRandomizeEnemies();
 
 
             PlayerServerInfo = new PlayerConnectionInfo(ip, port, name, password, RoomSeed);
             ConnectionDataWriter.SaveArchipelagoConnectionSettings(PlayerServerInfo);
 
-            InitializeAPLocationChecks();
+            //InitializeAPLocationChecks();
 
             TrapSpawnHandler.SetCanSpawn(true);
             ConsumableSpawnHandler.SetCanSpawn(true);
@@ -187,7 +188,7 @@ namespace ArchiGungeon.ArchipelagoServer
 
             PlayerSlotSettings = Session.DataStorage.GetSlotData();
             RoomSeed = Session.RoomState.Seed;
-            SetPlayerCompletionGoalsDataFromSlotData();
+            //SetPlayerCompletionGoalsDataFromSlotData();
 
             foreach (string key in PlayerSlotSettings.Keys)
             {
