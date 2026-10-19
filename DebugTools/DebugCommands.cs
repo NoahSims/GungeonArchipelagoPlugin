@@ -179,6 +179,7 @@ namespace ArchiGungeon.DebugTools
             catch (Exception ex)
             {
                 ArchipelagoGUI.ConsoleLog($"Something went wrong receiving AP item of id {itemId}. Double check your input! Error: {ex.Message}");
+                ArchipelagoGUI.ConsoleLog($"Stack Trace: {ex.StackTrace}");
             }
         }
         #endregion

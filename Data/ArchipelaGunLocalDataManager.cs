@@ -13,6 +13,7 @@ namespace ArchiGungeon.Data
     public class ArchipelaGunLocalDataManager
     {
         public static HashSet<GungeonFlags> locationsCheckedFlags = new HashSet<GungeonFlags>(new GungeonFlagsComparer());
+        public static int RecievedItemsIndex = 0;
 
         public static void TryPreviousSaveLoad()
         {
@@ -23,6 +24,7 @@ namespace ArchiGungeon.Data
 
                 CountGoalManager.SetFullCountSaveData(data.countSaveData);
                 locationsCheckedFlags = data.locationsCheckedFlagsData;
+                RecievedItemsIndex = data.RecievedItemsIndex;
             }
         }
 
@@ -51,6 +53,7 @@ namespace ArchiGungeon.Data
             // TODO does locationsCheckedFlags need to be validated??
             dataToSave.countSaveData = countSaveDataToWrite;
             dataToSave.locationsCheckedFlagsData = locationsCheckedFlags;
+            dataToSave.RecievedItemsIndex = RecievedItemsIndex;
 
             SaveDataWriter.WriteSaveFile(dataToSave);
         }
@@ -128,6 +131,7 @@ namespace ArchiGungeon.Data
                 SaveDataWriter.DANGEROUS_DeleteArchipelaGunDataFile();
                 CountGoalManager.DANGEROUS_ClearData();
                 locationsCheckedFlags.Clear();
+                RecievedItemsIndex = 0;
             }
         }
         #endregion
@@ -137,6 +141,6 @@ namespace ArchiGungeon.Data
     {
         public Dictionary<CountStats, int> countSaveData;
         public HashSet<GungeonFlags> locationsCheckedFlagsData;
-
+        public int RecievedItemsIndex;
     }
 }

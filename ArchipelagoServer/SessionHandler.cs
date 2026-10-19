@@ -1,24 +1,25 @@
-﻿using Archipelago.MultiClient.Net;
+﻿using ArchiGungeon.Character;
+using ArchiGungeon.Data;
+using ArchiGungeon.DebugTools;
+using ArchiGungeon.EnemyHandlers;
+using ArchiGungeon.GungeonEventHandlers;
+using ArchiGungeon.ItemArchipelago;
+using ArchiGungeon.UserInterface;
+using Archipelago.MultiClient.Net;
+using Archipelago.MultiClient.Net.BounceFeatures.DeathLink;
 using Archipelago.MultiClient.Net.Enums;
 using Archipelago.MultiClient.Net.Helpers;
 using Archipelago.MultiClient.Net.MessageLog.Messages;
 using Archipelago.MultiClient.Net.Models;
 using Archipelago.MultiClient.Net.Packets;
-using Archipelago.MultiClient.Net.BounceFeatures.DeathLink;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
+using System.Runtime.Remoting.Messaging;
 using System.Text;
 using UnityEngine;
-using System.Collections;
-using ArchiGungeon.ItemArchipelago;
-using ArchiGungeon.GungeonEventHandlers;
-using ArchiGungeon.UserInterface;
-using ArchiGungeon.EnemyHandlers;
-using ArchiGungeon.DebugTools;
-using ArchiGungeon.Character;
-using ArchiGungeon.Data;
-using System.Collections.ObjectModel;
 
 namespace ArchiGungeon.ArchipelagoServer
 {
@@ -430,7 +431,7 @@ namespace ArchiGungeon.ArchipelagoServer
             itemsHandledThisRun.Clear();
             IsReverseCurseSetForRun = false;
             _isProgressItemsGiven = false;
-            IsValidToSpawnItems = false;
+            IsValidToSpawnItems = true;
             HandlingDeathlinkEvent = false;
         }
 
@@ -450,6 +451,8 @@ namespace ArchiGungeon.ArchipelagoServer
 
             ArchipelagoGUI.ConsoleLog($"Retrieving server items!");
 
+            AddItemsMissingItems(itemList, Session.Items.Index);
+
             //TODO: Remove commented out section. No need to add items to gungeon unless we never received it based on index value
             //foreach (var item in itemList)
             //{
@@ -467,6 +470,24 @@ namespace ArchiGungeon.ArchipelagoServer
             hasRetrievedServerItemsOnce = true;
             TrapSpawnHandler.SetCanSpawn(true);
             ConsumableSpawnHandler.SetCanSpawn(true);
+        }
+
+        /// <summary>
+        /// Adds any items that have not been spawned/unlocked in game yet from the AP remote list.
+        /// </summary>
+        /// <param name="remoteItems">collection of ItemInfo received from the AP Session</param>
+        /// <param name="sentIndex">The index the AP server says we are at. This should be the size remoteItems.</param>
+        private static void AddItemsMissingItems(ReadOnlyCollection<ItemInfo> remoteItems, int sentIndex)
+        {
+            int localIndex = ArchipelaGunLocalDataManager.RecievedItemsIndex;
+            ArchDebugPrint.DebugLog(DebugCategory.ServerReceive, $"AddItemsMissingItems - Adding any missing items from difference of local index: {localIndex} to remote index: {sentIndex}");
+            while (localIndex < sentIndex)
+            {
+                AddItemToLocalGungeon(remoteItems[localIndex]);
+                localIndex++;
+            }
+
+            ArchipelaGunLocalDataManager.RecievedItemsIndex = localIndex;
         }
 
         /// <summary>
@@ -958,18 +979,8 @@ namespace ArchiGungeon.ArchipelagoServer
             /// <param name="helper"></param>
             public static void OnItemReceived(ReceivedItemsHelper helper)
             {
-                ItemInfo itemInfo = helper.PeekItem();
-                ArchDebugPrint.DebugLog(DebugCategory.ServerReceive, $"OnItemReceived - {itemInfo.ItemId} -- {itemInfo.ItemName}");
-
-                allItemsReceivedFromServer.Add(itemInfo);
-
-                AddItemToLocalGungeon(itemInfo);
-
-                ItemInfo nextQueueItem = helper.DequeueItem();
-
-                ArchDebugPrint.DebugLog(DebugCategory.ServerReceive, $"Queue item: - {nextQueueItem.ItemId} -- {nextQueueItem.ItemName}");
-
-                return;
+                ArchDebugPrint.DebugLog(DebugCategory.ServerReceive, $"OnItemReceived - New item received!");
+                AddItemsMissingItems(helper.AllItemsReceived, helper.Index);
             }
 
             public static void OnLocationUpdated(ReadOnlyCollection<long> newCheckedLocations)
