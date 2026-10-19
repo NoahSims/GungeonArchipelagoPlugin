@@ -193,7 +193,7 @@ namespace ArchiGungeon.GungeonEventHandlers
 
             
             CustomActions.OnRunStart += OnRunStarted;
-            //CustomActions.OnBossKilled += OnBossKilled;
+            CustomActions.OnBossKilled += OnBossKilled;
             CustomActions.OnNewPlayercontrollerSpawned += OnPlayerControllerSpawned;
             CustomActions.OnRewardPedestalSpawned += OnRewardPedestalSpawn;
             CustomActions.OnRewardPedestalDetermineContents += OnRewardPedestalDetermineContent;
@@ -441,7 +441,7 @@ namespace ArchiGungeon.GungeonEventHandlers
                 {
                     //ArchipelaGunLocalDataManager.AddToCountSaveDataEntry(CountStats.Floor1Clears, 1);
                     SessionHandler.DataSender.SendFoundLocationCheck(APLocations.Floor1Complete);
-                    SessionHandler.DataSender.SendFoundLocationCheck(APLocations.BOSSKILLED_BULLET_BROS);
+                    //SessionHandler.DataSender.SendFoundLocationCheck(APLocations.BOSSKILLED_BULLET_BROS);
                 }
             }
 
@@ -453,7 +453,7 @@ namespace ArchiGungeon.GungeonEventHandlers
                 {
                     //ArchipelaGunLocalDataManager.AddToCountSaveDataEntry(CountStats.Floor4Clears, 1);
                     SessionHandler.DataSender.SendFoundLocationCheck(APLocations.Floor4Complete);
-                    SessionHandler.DataSender.SendFoundLocationCheck(APLocations.BOSSKILLED_STATUES);
+                    //SessionHandler.DataSender.SendFoundLocationCheck(APLocations.BOSSKILLED_STATUES);
                 }
             }
 
