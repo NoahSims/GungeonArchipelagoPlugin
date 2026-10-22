@@ -206,7 +206,7 @@ namespace ArchiGungeon.ArchipelagoServer
                     // Goopton needs a special flag set on any character that they purchased at least once from the in run shop.
                     GameStats goopStats = new GameStats();
                     goopStats.SetStat(TrackedStats.MERCHANT_PURCHASES_GOOP, 1);
-                    GameStatsManager.Instance.m_characterStats[PlayableCharacters.Pilot].AddStats(goopStats);
+                    GameStatsManager.Instance.m_characterStats.GetFirst().Value.AddStats(goopStats);
                     break;
                 case 2: // Trorc
                     GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.SHOP_TRUCK_ACTIVE, true);
