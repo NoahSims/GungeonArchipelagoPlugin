@@ -398,7 +398,4 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
-_DLLRepack/ArchipelagoGungeon - Shortcut.lnk
-_DLLRepack/command.txt
-_DLLRepack
-.vscode
+
