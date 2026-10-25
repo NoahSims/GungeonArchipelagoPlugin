@@ -42,7 +42,6 @@ namespace ArchiGungeon.RoomManagement
         [HarmonyPrefix]
         public static bool Patch_HandleNodeInjection(BuilderFlowNode root, RuntimeInjectionMetadata sourceMetadata, RuntimeInjectionFlags injectionFlags, FlowCompositeMetastructure metastructure)
         {
-            string temp = "";
             SharedInjectionData injectionData = sourceMetadata.injectionData;
             if (injectionData != null)
             {
