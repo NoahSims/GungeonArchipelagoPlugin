@@ -23,7 +23,7 @@ namespace ArchiGungeon.Data
         /// <summary>
         /// The object sent from the multiworld server with details on the item. Will be null on locally spawned items.
         /// </summary>
-        public ItemInfo NetworkItemInfo { get; private set; }
+        public ItemInfo NetworkItemInfo { get; set; }
         /// <summary>
         /// Name of the location the item was found in the multiworld.
         /// </summary>

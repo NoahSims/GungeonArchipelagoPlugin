@@ -519,6 +519,7 @@ namespace ArchiGungeon.ArchipelagoServer
         {
             ArchDebugPrint.DebugLog(DebugCategory.ServerReceive, $"Receiving item: {itemInfo.ItemName}");
             var receivedAPItem = ReceivedAPItem.GetReceivedAPItem(itemInfo.ItemId);
+            receivedAPItem.NetworkItemInfo = itemInfo;
             _itemAddQueue.Enqueue(receivedAPItem);
         }
 

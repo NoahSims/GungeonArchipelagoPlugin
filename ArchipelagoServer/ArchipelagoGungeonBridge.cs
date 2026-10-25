@@ -76,7 +76,7 @@ namespace ArchiGungeon.ArchipelagoServer
         /// <param name="apItem">Item id from AP of item to give. This is a custom set Id that will match whats set in the APWorld.</param>
         public static void GiveGungeonItem(ReceivedAPItem apItem)
         {
-            ArchipelagoUIHelper.ArchipelagoUINotification("Received " + apItem.DisplayName, "Found in " + apItem.LocationDisplayName);
+            ArchipelagoUIHelper.ArchipelagoUINotification("Received " + apItem.DisplayName, "Found in " + apItem.NetworkItemInfo.LocationGame);
 
             switch (apItem.Type)
             {
