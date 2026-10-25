@@ -14,6 +14,7 @@ namespace ArchiGungeon.Data
     {
         public static HashSet<GungeonFlags> locationsCheckedFlags = new HashSet<GungeonFlags>(new GungeonFlagsComparer());
         public static int RecievedItemsIndex = 0;
+        public static HashSet<long> FoundLocationsAPIds = new HashSet<long>();
 
         public static void TryPreviousSaveLoad()
         {
@@ -25,6 +26,20 @@ namespace ArchiGungeon.Data
                 CountGoalManager.SetFullCountSaveData(data.countSaveData);
                 locationsCheckedFlags = data.locationsCheckedFlagsData;
                 RecievedItemsIndex = data.RecievedItemsIndex;
+                FoundLocationsAPIds = data.FoundLocationsAPIds;
+            }
+        }
+
+        public static void AddFoundLocationIds(long[] ids)
+        {
+            if(FoundLocationsAPIds == null)
+            {
+                FoundLocationsAPIds = new HashSet<long>();
+            }
+
+            foreach (long id in ids)
+            {
+                FoundLocationsAPIds.Add(id);
             }
         }
 
@@ -54,6 +69,7 @@ namespace ArchiGungeon.Data
             dataToSave.countSaveData = countSaveDataToWrite;
             dataToSave.locationsCheckedFlagsData = locationsCheckedFlags;
             dataToSave.RecievedItemsIndex = RecievedItemsIndex;
+            dataToSave.FoundLocationsAPIds = FoundLocationsAPIds;
 
             SaveDataWriter.WriteSaveFile(dataToSave);
         }
@@ -142,5 +158,6 @@ namespace ArchiGungeon.Data
         public Dictionary<CountStats, int> countSaveData;
         public HashSet<GungeonFlags> locationsCheckedFlagsData;
         public int RecievedItemsIndex;
+        public HashSet<long> FoundLocationsAPIds;
     }
 }

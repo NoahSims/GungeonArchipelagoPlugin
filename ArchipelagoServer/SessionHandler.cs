@@ -446,26 +446,11 @@ namespace ArchiGungeon.ArchipelagoServer
                 return;
             }
 
-            //TODO: Instead just adding all items on the server again, check Session.Items.Index and compare with local index to see if there is any items we need to handle receiving.
             var itemList = Session.Items.AllItemsReceived;
 
             ArchipelagoGUI.ConsoleLog($"Retrieving server items!");
 
             AddItemsMissingItems(itemList, Session.Items.Index);
-
-            //TODO: Remove commented out section. No need to add items to gungeon unless we never received it based on index value
-            //foreach (var item in itemList)
-            //{
-            //    if(!allItemsReceivedFromServer.Contains(item))
-            //    {
-            //        allItemsReceivedFromServer.Add(item);
-
-            //        if (!itemsHandledThisRun.Contains(item.ItemId))
-            //        {
-            //            AddItemToLocalGungeon(item);
-            //        }
-            //    }   
-            //}
 
             hasRetrievedServerItemsOnce = true;
             TrapSpawnHandler.SetCanSpawn(true);
@@ -479,15 +464,29 @@ namespace ArchiGungeon.ArchipelagoServer
         /// <param name="sentIndex">The index the AP server says we are at. This should be the size remoteItems.</param>
         private static void AddItemsMissingItems(ReadOnlyCollection<ItemInfo> remoteItems, int sentIndex)
         {
+            // Extra debug that can be re-enabled for full item list print.
+            //string items = "";
+            //foreach (ItemInfo item in remoteItems)
+            //{
+            //    items += item.ItemDisplayName +", ";
+            //}
+            //ArchDebugPrint.DebugLog(DebugCategory.ServerReceive, $"AddItemsMissingItems - Full list of items: {items}");
+
             int localIndex = ArchipelaGunLocalDataManager.RecievedItemsIndex;
             ArchDebugPrint.DebugLog(DebugCategory.ServerReceive, $"AddItemsMissingItems - Adding any missing items from difference of local index: {localIndex} to remote index: {sentIndex}");
+
+            if(localIndex > sentIndex)
+            {
+                ArchDebugPrint.DebugLog(DebugCategory.ServerReceive, $"WARNING: local index {localIndex} is somehow larger than remote index {sentIndex}. Items are likely being missed.");
+            }
+
             while (localIndex < sentIndex)
             {
                 AddItemToLocalGungeon(remoteItems[localIndex]);
                 localIndex++;
             }
 
-            ArchipelaGunLocalDataManager.RecievedItemsIndex = localIndex;
+            ArchipelaGunLocalDataManager.RecievedItemsIndex = sentIndex;
         }
 
         /// <summary>
@@ -525,21 +524,11 @@ namespace ArchiGungeon.ArchipelagoServer
 
         public static void HandleDelayedItemInitialize()
         {
-            //TODO if not using remove. Also could condense this function and RetrieveItemsFromServer together at that point.
-            //if(hasRetrievedServerItemsOnce)
-            //{
-            //    RetrieveItemsFromLocalData();
-            //}
-            //else
-            //{
-            //    RetrieveItemsFromServer(); 
-            //}
-
+            // First send the full list of locations we locally know we found incase anything is out of sync
+            DataSender.SendFoundLocationCheck(ArchipelaGunLocalDataManager.FoundLocationsAPIds.ToArray());
+            // Then pull any missed items from the server.
             RetrieveItemsFromServer();
-            //CheckForProgressItems();
-
             IsValidToSpawnItems = true;
-            //CheckReverseCurse();
         }
 
         /// <summary>
@@ -856,13 +845,22 @@ namespace ArchiGungeon.ArchipelagoServer
             {
                 try
                 {
-                    //TODO: locally store all locations that should have been sent incase we fail to send
                     Session.Locations.CompleteLocationChecks(idArray);
-                    ScoutFoundLocationCheck(idArray);
+
+                    // If there isn't any found already, display the location notification.
+                    if (!idArray.Any(id => ArchipelaGunLocalDataManager.FoundLocationsAPIds.Contains(id)))
+                    {
+                        ScoutFoundLocationCheck(idArray);
+                    }
                 }
                 catch (Exception e)
                 {
                     ArchDebugPrint.DebugLog(DebugCategory.ServerSend, $"Error sending location checks: {e.Message}" );
+                }
+                finally
+                {
+                    // Always add the location ids to the local save. We can resync later if needed.
+                    ArchipelaGunLocalDataManager.AddFoundLocationIds(idArray);
                 }
             }
 
@@ -939,7 +937,7 @@ namespace ArchiGungeon.ArchipelagoServer
                 {
                     foreach (long key in locationInfoPacket.Keys)
                     {
-                        ArchDebugPrint.DebugLog(DebugCategory.ServerReceive, $"Item ID: {locationInfoPacket[key].ItemId} Item: {locationInfoPacket[key].Player}'s + {locationInfoPacket[key].ItemName} from {locationInfoPacket[key].ItemGame}");
+                        ArchDebugPrint.DebugLog(DebugCategory.ServerReceive, $"Location Scout found Item ID: {locationInfoPacket[key].ItemId} Item: {locationInfoPacket[key].Player}'s + {locationInfoPacket[key].ItemName} from {locationInfoPacket[key].ItemGame}");
                         ArchipelagoUIHelper.ArchipelagoUINotification($"Found {locationInfoPacket[key].Player}'s", $"{locationInfoPacket[key].ItemDisplayName}!");
                     }
                 },
