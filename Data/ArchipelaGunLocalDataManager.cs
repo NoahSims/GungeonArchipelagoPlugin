@@ -1,6 +1,7 @@
 ﻿using ArchiGungeon.Data;
 using ArchiGungeon.DebugTools;
 using ArchiGungeon.ItemArchipelago;
+using Archipelago.MultiClient.Net.Models;
 using HarmonyLib;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,7 @@ namespace ArchiGungeon.Data
     {
         public static HashSet<GungeonFlags> locationsCheckedFlags = new HashSet<GungeonFlags>(new GungeonFlagsComparer());
         public static HashSet<long> FoundLocationsAPIds = new HashSet<long>();
+        public static Dictionary<long, string> FoundHints = new Dictionary<long, string>();
         public static int RecievedItemsIndex = 0;
         public static int CreditMultiplier = 1;
 
@@ -28,6 +30,7 @@ namespace ArchiGungeon.Data
                 locationsCheckedFlags = data.locationsCheckedFlagsData;
                 RecievedItemsIndex = data.RecievedItemsIndex;
                 FoundLocationsAPIds = data.FoundLocationsAPIds;
+                FoundHints = data.FoundHints == null ? new Dictionary<long, string>() : data.FoundHints;
                 CreditMultiplier = data.CreditMultiplier;
             }
         }
@@ -43,6 +46,16 @@ namespace ArchiGungeon.Data
             {
                 FoundLocationsAPIds.Add(id);
             }
+        }
+
+        public static void AddFoundHint(long locationId, string hint)
+        {
+            if (FoundHints.ContainsKey(locationId))
+            {
+                ArchDebugPrint.DebugLog(DebugCategory.Warning, "WARN: Attempting to save hint that was already found for location: " + locationId);
+                return;
+            }
+            FoundHints.Add(locationId, hint);
         }
 
         private static void HandleSaveValidationAndWrite()
@@ -72,6 +85,7 @@ namespace ArchiGungeon.Data
             dataToSave.locationsCheckedFlagsData = locationsCheckedFlags;
             dataToSave.RecievedItemsIndex = RecievedItemsIndex;
             dataToSave.FoundLocationsAPIds = FoundLocationsAPIds;
+            dataToSave.FoundHints = FoundHints;
             dataToSave.CreditMultiplier = CreditMultiplier;
 
             SaveDataWriter.WriteSaveFile(dataToSave);
@@ -161,6 +175,7 @@ namespace ArchiGungeon.Data
         public Dictionary<CountStats, int> countSaveData;
         public HashSet<GungeonFlags> locationsCheckedFlagsData;
         public HashSet<long> FoundLocationsAPIds;
+        public Dictionary<long, string> FoundHints;
         public int RecievedItemsIndex;
         public int CreditMultiplier;
     }

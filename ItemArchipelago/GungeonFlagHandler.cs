@@ -1,12 +1,15 @@
 ﻿using ArchiGungeon.ArchipelagoServer;
 using ArchiGungeon.Data;
 using ArchiGungeon.UserInterface;
+using Archipelago.MultiClient.Net.Models;
+using Brave.BulletScript;
 using HarmonyLib;
 using HutongGames.PlayMaker.Actions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using UnityEngine;
 
 
 namespace ArchiGungeon.ItemArchipelago
@@ -324,7 +327,7 @@ namespace ArchiGungeon.ItemArchipelago
             if (ArchipelaGunLocalDataManager.locationsCheckedFlags.Contains(flag))
             {
                 //ETGModConsole.Log("GameStatsManagerPatch: MetaShopController attempting to put heart bottle in shop");
-                __result = GungeonFlags.BLUEPRINTMETA_MTXGUN; // this needs to be not the mtx gun, lol
+                __result = GungeonFlags.BLUEPRINTMETA_MTXGUN; // TODO this needs to be not the mtx gun, lol
                 return false;
             }
             __result = flag;
@@ -352,6 +355,62 @@ namespace ArchiGungeon.ItemArchipelago
                 }
             }
             return true;
+        }
+
+        /*
+         * Patch - ShopItemController.OnEnteredRange
+         * On entering range of a shop item, if it is an AP item, change the UI text to show the AP item being bought rather than the guneon item.
+         */
+        [HarmonyPatch(typeof(ShopItemController), nameof(ShopItemController.OnEnteredRange))]
+        [HarmonyPostfix]
+        public static void Patch_ShopOnEnteredRange(ShopItemController __instance)
+        {
+            //ETGModConsole.Log("GungeonFlagHandler: Entering OnEnteredRange");
+            if (__instance.m_parentShop != null && __instance.m_parentShop is MetaShopController)
+            {
+                //ETGModConsole.Log("GungeonFlagHandler: Attempting to change label");
+                GameUIRoot.Instance.DeregisterDefaultLabel(__instance.transform);
+                long locationId = (long)__instance.item.SaveFlagToSetOnAcquisition;
+                string locationText = ArchipelaGunLocalDataManager.FoundHints.ContainsKey(locationId) ? ArchipelaGunLocalDataManager.FoundHints[locationId] : "Not connected to Archipelago...";
+                string priceText = __instance.ModifiedPrice.ToString() + "[sprite \"hbux_text_icon\"]";
+                string text = $"{locationText}: {priceText}";
+                Vector3 offset = new Vector3(__instance.sprite.GetBounds().max.x + 0.1875f, __instance.sprite.GetBounds().min.y, 0f);
+                GameObject gameObject = GameUIRoot.Instance.RegisterDefaultLabel(__instance.transform, offset, text);
+                dfLabel componentInChildren = gameObject.GetComponentInChildren<dfLabel>();
+                componentInChildren.ColorizeSymbols = false;
+                componentInChildren.ProcessMarkup = true;
+
+                MetaShopController metaShopController = __instance.m_parentShop as MetaShopController;
+                if ((bool)metaShopController.Hologramophone && __instance.item is ItemBlueprintItem)
+                {
+                    PickupObject archItem = PickupObjectDatabase.GetById(NpcCellLocationItem.SpawnItemID);
+                    metaShopController.Hologramophone.ChangeToSprite(__instance.gameObject, archItem.sprite.collection, archItem.sprite.spriteId);
+                }
+            }
+        }
+
+        /*
+         * Patch - MetaShopController.DoSetup
+         * After Ox and Cadence shop is instantiated, get hints for the items they currently have available.
+         */
+        [HarmonyPatch(typeof(MetaShopController), nameof(MetaShopController.DoSetup))]
+        [HarmonyPostfix]
+        public static void GetLocationHintsOnShopSetup(MetaShopController __instance)
+        {
+            List<long> locations = new List<long>();
+            foreach (var item in __instance.m_itemControllers)
+            {
+                if (item.item.SaveFlagToSetOnAcquisition != GungeonFlags.BLUEPRINTMETA_MTXGUN) //TODO this check is only neccessary because I'm using MTXGUN in Patch_GetFlagFromTargetItem
+                {
+                    locations.Add((long)item.item.SaveFlagToSetOnAcquisition);
+                }
+            }
+            Dictionary<long, ScoutedItemInfo> hints = SessionHandler.DataSender.ScoutLocationHints(locations.ToArray());
+            foreach (long locationId in hints.Keys)
+            {
+                string hint = hints[locationId].Player + "'s " + hints[locationId].ItemName;
+                ArchipelaGunLocalDataManager.AddFoundHint(locationId, hint);
+            }
         }
 
         // This function will trigger any time the game tries to generate the loot pool and read what it thinks are in the pool. Could be useful for debugging.

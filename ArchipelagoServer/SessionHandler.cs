@@ -943,7 +943,24 @@ namespace ArchiGungeon.ArchipelagoServer
                     }
                 },
                 locationIDs);
-                return;
+            }
+
+            public static Dictionary<long, ScoutedItemInfo> ScoutLocationHints(long[] locationIDs)
+            {
+                ArchDebugPrint.DebugLog(DebugCategory.ServerReceive, $"Scouting location check: {locationIDs}");
+
+                Dictionary<long, ScoutedItemInfo> locationHints = null;
+                Session.Locations.ScoutLocationsAsync(locationInfoPacket =>
+                {
+                    locationHints = locationInfoPacket;
+                    foreach (long key in locationInfoPacket.Keys)
+                    {
+                        ArchDebugPrint.DebugLog(DebugCategory.ServerReceive, $"Hint: Item ID: {locationInfoPacket[key].ItemId} Item: {locationInfoPacket[key].Player}'s + {locationInfoPacket[key].ItemName} from {locationInfoPacket[key].ItemGame}");
+                    }
+                },
+                true, // createAsHint
+                locationIDs);
+                return locationHints;
             }
             #endregion
 

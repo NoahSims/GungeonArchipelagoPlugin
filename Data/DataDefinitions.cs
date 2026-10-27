@@ -113,6 +113,7 @@ namespace ArchiGungeon.Data
         UserInterface,
         GameCompletion,
         CharacterSystems,
+        Warning,
         Error
     }
 

@@ -29,6 +29,7 @@ namespace ArchiGungeon.DebugTools
             {DebugCategory.UserInterface, false },
             {DebugCategory.GameCompletion, false },
             {DebugCategory.CharacterSystems, false },
+            {DebugCategory.Warning, true },
             {DebugCategory.Error, true }
         };
 
