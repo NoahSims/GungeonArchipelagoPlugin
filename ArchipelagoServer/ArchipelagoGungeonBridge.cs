@@ -76,40 +76,47 @@ namespace ArchiGungeon.ArchipelagoServer
         /// <param name="apItem">Item id from AP of item to give. This is a custom set Id that will match whats set in the APWorld.</param>
         public static void GiveGungeonItem(ReceivedAPItem apItem)
         {
-            ArchipelagoUIHelper.ArchipelagoUINotification("Received " + apItem.DisplayName, "Found in " + apItem.NetworkItemInfo.LocationGame);
+            if(apItem != null)
+            { 
+                ArchipelagoUIHelper.ArchipelagoUINotification("Received " + apItem.DisplayName, "Found in " + apItem.LocationGame);
 
-            switch (apItem.Type)
+                switch (apItem.Type)
+                {
+                    case ReceivedItemType.ETGBaseItemFiller:
+                        // TODO refactor this now that we get the pickup obj earlier
+                        var spawneditem = SpecificItemSpawnHandler.GivePlayerSpecificItem(apItem.PickupObj.PickupObjectId);
+                        GameStatsManager.Instance.ForceUnlock(spawneditem.GetComponent<EncounterTrackable>()?.EncounterGuid);
+                        break;
+                    case ReceivedItemType.FoyerShop:
+                    case ReceivedItemType.NPC:
+                        UnlockNPC(apItem.ItemId);
+                        break;
+                    case ReceivedItemType.CustomProgressive:
+                        CustomProgressiveUnlocks(apItem);
+                        break;
+                    case ReceivedItemType.ConsumableFiller:
+                        // TODO
+                        break;
+                    case ReceivedItemType.CharacterUnlock:
+                        // TODO
+                        break;
+                    case ReceivedItemType.CosmeticFiller:
+                        // TODO
+                        break;
+                    case ReceivedItemType.KeyUnlock:
+                    case ReceivedItemType.CoreProgression:
+                        UnlockProgressFlag(apItem);
+                        break;
+                    case ReceivedItemType.Trap:
+                        // TODO
+                        break;
+                    default:
+                        break;
+                }
+            }
+            else
             {
-                case ReceivedItemType.ETGBaseItemFiller:
-                    // TODO refactor this now that we get the pickup obj earlier
-                    var spawneditem = SpecificItemSpawnHandler.GivePlayerSpecificItem(apItem.PickupObj.PickupObjectId);
-                    GameStatsManager.Instance.ForceUnlock(spawneditem.GetComponent<EncounterTrackable>()?.EncounterGuid);
-                    break;
-                case ReceivedItemType.FoyerShop:
-                case ReceivedItemType.NPC:
-                    UnlockNPC(apItem.ItemId);
-                    break;
-                case ReceivedItemType.CustomProgressive:
-                    CustomProgressiveUnlocks(apItem);
-                    break;
-                case ReceivedItemType.ConsumableFiller:
-                    // TODO
-                    break;
-                case ReceivedItemType.CharacterUnlock:
-                    // TODO
-                    break;
-                case ReceivedItemType.CosmeticFiller:
-                    // TODO
-                    break;
-                case ReceivedItemType.KeyUnlock:
-                case ReceivedItemType.CoreProgression:
-                    UnlockProgressFlag(apItem);
-                    break;
-                case ReceivedItemType.Trap:
-                    // TODO
-                    break;
-                default:
-                    break;
+                ArchDebugPrint.DebugLog(DebugCategory.Error, "Error giving gungeon item, apitem is null!");
             }
         }
 
@@ -346,8 +353,12 @@ namespace ArchiGungeon.ArchipelagoServer
                 case "Progressive Casing Multiplier":
                     //ArchipelaGunLocalDataManager.locationsCheckedFlags.Add(null);
                     break;
-                case "Progressive Hegemony Multiplier":
-                    //ArchipelaGunLocalDataManager.locationsCheckedFlags.Add(null);
+                case "Progressive Hedgemony Credit Multiplier":
+                    if(ArchipelaGunLocalDataManager.CreditMultiplier < 4) // Magic number hard cap to 3 progressive items.
+                    {
+                        ArchipelaGunLocalDataManager.CreditMultiplier++;
+                        SetMetaCreditMultiplier();
+                    }
                     break;
                 case "Progressive Curse Reduction":
                     //ArchipelaGunLocalDataManager.locationsCheckedFlags.Add(null);
@@ -455,6 +466,17 @@ namespace ArchiGungeon.ArchipelagoServer
             }
 
             return;
+        }
+
+        public static void RunStartCustomProgressives()
+        {
+            SetMetaCreditMultiplier();
+        }
+
+        public static void SetMetaCreditMultiplier()
+        {
+            GameManager.Instance.RewardManager.CurrentRewardData.MinMetaCurrencyFromBoss = 2 * ArchipelaGunLocalDataManager.CreditMultiplier;
+            GameManager.Instance.RewardManager.CurrentRewardData.MinMetaCurrencyFromBoss = 5 * ArchipelaGunLocalDataManager.CreditMultiplier;
         }
         #endregion
     }

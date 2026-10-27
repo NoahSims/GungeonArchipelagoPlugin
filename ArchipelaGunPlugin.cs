@@ -25,6 +25,7 @@ namespace ArchiGungeon
     ///</summary>
     public class ArchipelaGunPlugin : BaseUnityPlugin
     {
+        //TODO update these with our new versions
         public const string GUID = "maoboulve.etg.archipelagogungeon";
         public const string NAME = "Archipelago Gungeon Randomizer";
         public const string VERSION = "0.1.5";

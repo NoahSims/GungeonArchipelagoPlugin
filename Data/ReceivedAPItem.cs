@@ -25,9 +25,9 @@ namespace ArchiGungeon.Data
         /// </summary>
         public ItemInfo NetworkItemInfo { get; set; }
         /// <summary>
-        /// Name of the location the item was found in the multiworld.
+        /// Name of the game the item was found in the multiworld.
         /// </summary>
-        public string LocationDisplayName => NetworkItemInfo?.LocationDisplayName ?? "Debug Location";
+        public string LocationGame => NetworkItemInfo?.LocationGame ?? "Debug Game";
 
         private ReceivedAPItem(long id, string name, ReceivedItemType type, PickupObject pickup = null)
         {
@@ -69,7 +69,7 @@ namespace ArchiGungeon.Data
             { PickupObjectIdRange + 16, new ReceivedAPItem(PickupObjectIdRange + 16, "Synergrace", ReceivedItemType.NPC) },
             { PickupObjectIdRange + 17, new ReceivedAPItem(PickupObjectIdRange + 17, "Vampire", ReceivedItemType.NPC) },
             { PickupObjectIdRange + 18, new ReceivedAPItem(PickupObjectIdRange + 18, "Progressive Casing Multiplier", ReceivedItemType.CustomProgressive) },
-            { PickupObjectIdRange + 19, new ReceivedAPItem(PickupObjectIdRange + 19, "Progressive Hegemony Multiplier", ReceivedItemType.CustomProgressive) },
+            { PickupObjectIdRange + 19, new ReceivedAPItem(PickupObjectIdRange + 19, "Progressive Hedgemony Credit Multiplier", ReceivedItemType.CustomProgressive) },
             { PickupObjectIdRange + 20, new ReceivedAPItem(PickupObjectIdRange + 20, "Progressive Curse Reduction", ReceivedItemType.CustomProgressive) },
             { PickupObjectIdRange + 21, new ReceivedAPItem(PickupObjectIdRange + 21, "Progressive Coolness", ReceivedItemType.CustomProgressive) },
             { PickupObjectIdRange + 22, new ReceivedAPItem(PickupObjectIdRange + 22, "Progressive Start Chest", ReceivedItemType.CustomProgressive) },

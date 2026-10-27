@@ -401,15 +401,9 @@ namespace ArchiGungeon.GungeonEventHandlers
             triggerTwinKills = 0;
             IsStartOfRun = true;
 
-            //CharSwap.EndParadoxModeForReset();
+            ArchipelagoGungeonBridge.RunStartCustomProgressives();
+
             SessionHandler.ResetVariablesToStartOfRun();
-            
-
-            //PickupObject archipelaGun = PickupObjectDatabase.GetById(Archipelagun.SpawnItemID);
-            //controller1.inventory.AddGunToInventory((Gun)archipelaGun, makeActive: true);
-
-            //GameObject archipelItem = PickupObjectDatabase.GetById(Archipelagun.SpawnItemID).gameObject;
-            //LootEngine.SpawnItem(archipelItem, controller1.CenterPosition, Vector2.zero, 0);
         }
 
         // DEPRECATED --- DO NOT USE

@@ -13,8 +13,9 @@ namespace ArchiGungeon.Data
     public class ArchipelaGunLocalDataManager
     {
         public static HashSet<GungeonFlags> locationsCheckedFlags = new HashSet<GungeonFlags>(new GungeonFlagsComparer());
-        public static int RecievedItemsIndex = 0;
         public static HashSet<long> FoundLocationsAPIds = new HashSet<long>();
+        public static int RecievedItemsIndex = 0;
+        public static int CreditMultiplier = 1;
 
         public static void TryPreviousSaveLoad()
         {
@@ -27,6 +28,7 @@ namespace ArchiGungeon.Data
                 locationsCheckedFlags = data.locationsCheckedFlagsData;
                 RecievedItemsIndex = data.RecievedItemsIndex;
                 FoundLocationsAPIds = data.FoundLocationsAPIds;
+                CreditMultiplier = data.CreditMultiplier;
             }
         }
 
@@ -70,6 +72,7 @@ namespace ArchiGungeon.Data
             dataToSave.locationsCheckedFlagsData = locationsCheckedFlags;
             dataToSave.RecievedItemsIndex = RecievedItemsIndex;
             dataToSave.FoundLocationsAPIds = FoundLocationsAPIds;
+            dataToSave.CreditMultiplier = CreditMultiplier;
 
             SaveDataWriter.WriteSaveFile(dataToSave);
         }
@@ -157,7 +160,8 @@ namespace ArchiGungeon.Data
     {
         public Dictionary<CountStats, int> countSaveData;
         public HashSet<GungeonFlags> locationsCheckedFlagsData;
-        public int RecievedItemsIndex;
         public HashSet<long> FoundLocationsAPIds;
+        public int RecievedItemsIndex;
+        public int CreditMultiplier;
     }
 }
