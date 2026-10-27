@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
+using Alexandria;
 
 namespace ArchiGungeon.ArchipelagoServer
 {
@@ -95,7 +96,7 @@ namespace ArchiGungeon.ArchipelagoServer
                         CustomProgressiveUnlocks(apItem);
                         break;
                     case ReceivedItemType.ConsumableFiller:
-                        // TODO
+                        GiveCurrency(apItem);
                         break;
                     case ReceivedItemType.CharacterUnlock:
                         // TODO
@@ -371,6 +372,29 @@ namespace ArchiGungeon.ArchipelagoServer
                     break;
                 default:
                     break;
+            }
+        }
+
+        public static void GiveCurrency(ReceivedAPItem unlockItem)
+        {
+            int count = 0;
+            string itemId = "hegemony_credit"; // Move to within the switch statement if this is used for other currencies.
+            switch (unlockItem.DisplayName)
+            {
+                case "5 Hegemony Credits":
+                    count = 5;
+                    break;
+                case "10 Hegemony Credits":
+                    count = 10;
+                    break;
+                case "20 Hegemony Credits":
+                    count = 20;
+                    break;
+            }
+
+            for (int i = 0; i < count; i++)
+            {
+                GameManager.Instance.PrimaryPlayer.GiveItem(itemId);
             }
         }
 
