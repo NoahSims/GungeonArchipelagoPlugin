@@ -50,7 +50,6 @@ namespace ArchiGungeon.Data
                 { "fat_bullets", ShopPage.OX_SHOP_PAGE_3 },
                 { "+1_bullets", ShopPage.OX_SHOP_PAGE_3 },
                 { "angry_bullets", ShopPage.OX_SHOP_PAGE_3 },
-                // FIXME: The locations.py says that "siren" should be here?
                 { "heart_purse", ShopPage.OX_SHOP_PAGE_3 },
                 { "origuni", ShopPage.OX_SHOP_PAGE_3 },
                 // OX PAGE 4
@@ -113,12 +112,12 @@ namespace ArchiGungeon.Data
                 // DOUG PAGE 1
                 { "devolver", ShopPage.DOUG_SHOP_PAGE_1 },
                 { "casey", ShopPage.DOUG_SHOP_PAGE_1 },
-                { "mourning_star", ShopPage.DOUG_SHOP_PAGE_1 }, // I think this is right? It's called "DAWNHAMMER" in the locations
+                { "mourning_star", ShopPage.DOUG_SHOP_PAGE_1 },
                 { "strafe_gun", ShopPage.DOUG_SHOP_PAGE_1 },
                 { "hyper_light_blaster", ShopPage.DOUG_SHOP_PAGE_1 },
                 { "starpew", ShopPage.DOUG_SHOP_PAGE_1 },
                 // DOUG PAGE 2
-                { "dueling_pistol", ShopPage.DOUG_SHOP_PAGE_2 }
+                { "dueling_pistol", ShopPage.DOUG_SHOP_PAGE_2 },
                 { "teleporter_prototype", ShopPage.DOUG_SHOP_PAGE_2 },
                 { "vorpal_gun", ShopPage.DOUG_SHOP_PAGE_2 },
                 { "stout_bullets", ShopPage.DOUG_SHOP_PAGE_2 },
@@ -133,7 +132,7 @@ namespace ArchiGungeon.Data
                 { "bumbullets", ShopPage.DOUG_SHOP_PAGE_3 },
                 // DOUG PAGE 4
                 { "devolver_rounds", ShopPage.DOUG_SHOP_PAGE_4 },
-                // FIXME: The locations.py says that "CRITICALBULLETS" should be here
+                { "vorpal_bullets", ShopPage.DOUG_SHOP_PAGE_4 },
                 { "snowballets", ShopPage.DOUG_SHOP_PAGE_4 },
                 { "stone_dome", ShopPage.DOUG_SHOP_PAGE_4 },
                 { "combined_rifle", ShopPage.DOUG_SHOP_PAGE_4 },
