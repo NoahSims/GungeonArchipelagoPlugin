@@ -945,22 +945,21 @@ namespace ArchiGungeon.ArchipelagoServer
                 locationIDs);
             }
 
-            public static Dictionary<long, ScoutedItemInfo> ScoutLocationHints(long[] locationIDs)
+            public static void ScoutLocationHints(long[] locationIDs)
             {
                 ArchDebugPrint.DebugLog(DebugCategory.ServerReceive, $"Scouting location check: {locationIDs}");
 
-                Dictionary<long, ScoutedItemInfo> locationHints = null;
                 Session.Locations.ScoutLocationsAsync(locationInfoPacket =>
                 {
-                    locationHints = locationInfoPacket;
                     foreach (long key in locationInfoPacket.Keys)
                     {
+                        string hint = locationInfoPacket[key].Player + "'s " + locationInfoPacket[key].ItemName;
                         ArchDebugPrint.DebugLog(DebugCategory.ServerReceive, $"Hint: Item ID: {locationInfoPacket[key].ItemId} Item: {locationInfoPacket[key].Player}'s + {locationInfoPacket[key].ItemName} from {locationInfoPacket[key].ItemGame}");
+                        ArchipelaGunLocalDataManager.AddFoundHint(locationInfoPacket[key].LocationId, hint);
                     }
                 },
                 true, // createAsHint
                 locationIDs);
-                return locationHints;
             }
             #endregion
 

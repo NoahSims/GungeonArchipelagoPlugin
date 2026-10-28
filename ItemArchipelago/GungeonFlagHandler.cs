@@ -400,17 +400,13 @@ namespace ArchiGungeon.ItemArchipelago
             List<long> locations = new List<long>();
             foreach (var item in __instance.m_itemControllers)
             {
-                if (item.item.SaveFlagToSetOnAcquisition != GungeonFlags.BLUEPRINTMETA_MTXGUN) //TODO this check is only neccessary because I'm using MTXGUN in Patch_GetFlagFromTargetItem
+                if (!ArchipelaGunLocalDataManager.FoundHints.ContainsKey((long)item.item.SaveFlagToSetOnAcquisition) &&
+                    item.item.SaveFlagToSetOnAcquisition != GungeonFlags.BLUEPRINTMETA_MTXGUN) //TODO this check is only neccessary because I'm using MTXGUN in Patch_GetFlagFromTargetItem
                 {
                     locations.Add((long)item.item.SaveFlagToSetOnAcquisition);
                 }
             }
-            Dictionary<long, ScoutedItemInfo> hints = SessionHandler.DataSender.ScoutLocationHints(locations.ToArray());
-            foreach (long locationId in hints.Keys)
-            {
-                string hint = hints[locationId].Player + "'s " + hints[locationId].ItemName;
-                ArchipelaGunLocalDataManager.AddFoundHint(locationId, hint);
-            }
+            SessionHandler.DataSender.ScoutLocationHints(locations.ToArray());
         }
 
         // This function will trigger any time the game tries to generate the loot pool and read what it thinks are in the pool. Could be useful for debugging.
