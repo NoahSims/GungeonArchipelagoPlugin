@@ -422,8 +422,9 @@ namespace ArchiGungeon.ItemArchipelago
         [HarmonyPostfix]
         public static void Patch_ShopOnEnteredRange(ShopItemController __instance)
         {
-            //ETGModConsole.Log("GungeonFlagHandler: Entering OnEnteredRange");
-            if (__instance.m_parentShop != null && __instance.m_parentShop is MetaShopController)
+            //ETGModConsole.Log("GungeonFlagHandler: Entering OnEnteredRange - " + __instance.item.SaveFlagToSetOnAcquisition.ToString());
+            // m_parentShop = metaShopController = Ox and Cadence. m_baseParentShop = all other shops
+            if ((__instance.m_parentShop != null || __instance.m_baseParentShop) && GameManager.Instance.CurrentLevelOverrideState == GameManager.LevelOverrideState.FOYER)
             {
                 //ETGModConsole.Log("GungeonFlagHandler: Attempting to change label");
                 GameUIRoot.Instance.DeregisterDefaultLabel(__instance.transform);
@@ -437,27 +438,52 @@ namespace ArchiGungeon.ItemArchipelago
                 componentInChildren.ColorizeSymbols = false;
                 componentInChildren.ProcessMarkup = true;
 
-                MetaShopController metaShopController = __instance.m_parentShop as MetaShopController;
-                if ((bool)metaShopController.Hologramophone && __instance.item is ItemBlueprintItem)
+                if (__instance.m_parentShop != null && __instance.m_parentShop is MetaShopController)
                 {
-                    PickupObject archItem = PickupObjectDatabase.GetById(NpcCellLocationItem.SpawnItemID);
-                    metaShopController.Hologramophone.ChangeToSprite(__instance.gameObject, archItem.sprite.collection, archItem.sprite.spriteId);
+                    MetaShopController metaShopController = __instance.m_parentShop as MetaShopController;
+                    if ((bool)metaShopController.Hologramophone && __instance.item is ItemBlueprintItem)
+                    {
+                        PickupObject archItem = PickupObjectDatabase.GetById(NpcCellLocationItem.SpawnItemID);
+                        metaShopController.Hologramophone.ChangeToSprite(__instance.gameObject, archItem.sprite.collection, archItem.sprite.spriteId);
+                    }
                 }
+                
             }
         }
 
         /*
          * Patch - MetaShopController.DoSetup
          * After Ox and Cadence shop is instantiated, get hints for the items they currently have available.
+         * Also checks for valid item shop pools
          */
         [HarmonyPatch(typeof(MetaShopController), nameof(MetaShopController.DoSetup))]
         [HarmonyPostfix]
-        public static void GetLocationHintsOnShopSetup(MetaShopController __instance)
+        public static void MetaShopDoSetupPostfix(MetaShopController __instance)
+        {
+            ShopDoSetupPostfix(__instance.m_itemControllers);
+        }
+
+        /*
+         * Patch - BaseShopController.DoSetup
+         * After Non-Ox and Cadence shops are instantiated, get hints for the items they currently have available.
+         * Also checks for valid item shop pools
+         */
+        [HarmonyPatch(typeof(BaseShopController), nameof(BaseShopController.DoSetup))]
+        [HarmonyPostfix]
+        public static void BaseShopDoSetupPostfix(BaseShopController __instance)
+        {
+            if(GameManager.Instance.CurrentLevelOverrideState == GameManager.LevelOverrideState.FOYER)
+            {
+                ShopDoSetupPostfix(__instance.m_itemControllers);
+            }
+        }
+
+        public static void ShopDoSetupPostfix(List<ShopItemController> itemControllers)
         {
             List<long> locationIds = new List<long>();
             List<GungeonFlags> itemGungeonFlags = new List<GungeonFlags>();
 
-            foreach (var item in __instance.m_itemControllers)
+            foreach (var item in itemControllers)
             {
                 itemGungeonFlags.Add(item.item.SaveFlagToSetOnAcquisition);
 
@@ -475,20 +501,21 @@ namespace ArchiGungeon.ItemArchipelago
                 {
                     // TODO: Freak out and panic!
                     Debug.Log("ALERT: Couldn't find a shop offering with the tag " + itemFlag);
-                }                
+                }
                 ShopPage shopPageForItem = MetaShopOfferings.ShopOfferings.GetValueSafe(itemFlag).Page;
 
                 // Figure out what shop pages the player should have access to...
                 bool hasAccess = MetaShopOfferings.hasAccessToShopPage(shopPageForItem);
 
                 // If the item shouldn't be accessed, stop the item from spawning
-                    // Pray that `ForceOutOfStock()` works
+                // Pray that `ForceOutOfStock()` works
                 if (!hasAccess)
                 {
                     item.ForceOutOfStock();
                 }
             }
 
+            // get hints for current shop locations
             SessionHandler.DataSender.ScoutLocationHints(locationIds.ToArray());
         }
 
