@@ -209,9 +209,13 @@ namespace ArchiGungeon.ItemArchipelago
             { GungeonFlags.ACHIEVEMENT_SURPRISE_MIMIC, APLocations.ACHIEVEMENT_SURPRISE_MIMIC },
             { GungeonFlags.ACHIEVEMENT_KILL_JAMMED_BOSS, APLocations.ACHIEVEMENT_KILL_JAMMED_BOSS },
             { GungeonFlags.ACHIEVEMENT_BIGGEST_WALLET, APLocations.ACHIEVEMENT_BIGGEST_WALLET },
-            { GungeonFlags.TUTORIAL_COMPLETED, APLocations.TutorialComplete },
-            { GungeonFlags.TUTORIAL_AGREED_TO_HELP_MANFRED, APLocations.SerManuelRemains }
-
+            // Other
+            { GungeonFlags.TUTORIAL_COMPLETED, APLocations.TUTORIAL_COMPLETED },
+            { GungeonFlags.TUTORIAL_UNLOCK_HELMET, APLocations.TUTORIAL_UNLOCK_HELMET },
+            { GungeonFlags.TUTORIAL_UNLOCK_SHIELD, APLocations.TUTORIAL_UNLOCK_SHIELD },
+            { GungeonFlags.ITEMSPECIFIC_STOLE_DRILL, APLocations.ITEMSPECIFIC_STOLE_DRILL },
+            { GungeonFlags.ITEMSPECIFIC_STOLE_BANKBAG, APLocations.ITEMSPECIFIC_STOLE_BANKBAG },
+            { GungeonFlags.ITEMSPECIFIC_STOLE_BANKMASK, APLocations.ITEMSPECIFIC_STOLE_BANKMASK }
         };
 
         // Used to determine if a flag should be checked for locations, but still set like a typical gungeon flag
@@ -236,7 +240,11 @@ namespace ArchiGungeon.ItemArchipelago
             GungeonFlags.ACHIEVEMENT_NOBOSSDAMAGE_HOLLOW,
             GungeonFlags.ACHIEVEMENT_NOBOSSDAMAGE_FORGE,
             GungeonFlags.TUTORIAL_COMPLETED,
-            GungeonFlags.TUTORIAL_AGREED_TO_HELP_MANFRED
+            GungeonFlags.TUTORIAL_UNLOCK_HELMET,
+            GungeonFlags.TUTORIAL_UNLOCK_SHIELD,
+            GungeonFlags.ITEMSPECIFIC_STOLE_DRILL,
+            GungeonFlags.ITEMSPECIFIC_STOLE_BANKBAG,
+            GungeonFlags.ITEMSPECIFIC_STOLE_BANKMASK
         };
 
         public static HashSet<GungeonFlags> _pastKilledFlags = new HashSet<GungeonFlags>{
@@ -362,6 +370,10 @@ namespace ArchiGungeon.ItemArchipelago
             return true;
         }
 
+        /// <summary>
+        /// Before the Foyer can check if Doug should spawn or not, intercept to run custom logic if we have the ap items to spawn Doug or not. Force the spawn if so, or 0 chance if not.
+        /// </summary>
+        /// <returns></returns>
         [HarmonyPatch(typeof(Dungeon), nameof(Dungeon.StartupFoyerChecks))]
         [HarmonyPrefix]
         public static bool Patch_StartupFoyerChecks()
@@ -378,6 +390,26 @@ namespace ArchiGungeon.ItemArchipelago
                 // Move on to StartupFoyerChecks() and set the chance to spawn Doug to 100.
                 GameStatsManager.Instance.AccumulatedBeetleMerchantChance = 100;
                 GameStatsManager.Instance.AccumulatedUsedBeetleMerchantChance = 100;
+                return true;
+            }
+        }
+
+        /// <summary>
+        /// Interjects before GetRandomLockedPaydayItem() is ran to return a random not unlocked payday item. If we don't have the AP Item (which unlocks the biggest wallet achievement), then force it to be null.
+        /// Once we have the item let the game run the random as normal.
+        /// </summary>
+        /// <returns></returns>
+        [HarmonyPatch(typeof(BaseShopController), nameof(BaseShopController.GetRandomLockedPaydayItem))]
+        [HarmonyPrefix]
+        public static bool Patch_GetRandomLockedPaydayItem(ref PickupObject __result)
+        {
+            if(!GameStatsManager.Instance.GetFlag(GungeonFlags.ACHIEVEMENT_BIGGEST_WALLET))
+            {
+                __result = null;
+                return false;
+            }
+            else
+            {
                 return true;
             }
         }

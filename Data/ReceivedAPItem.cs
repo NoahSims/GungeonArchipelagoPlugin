@@ -52,7 +52,7 @@ namespace ArchiGungeon.Data
         {
             { PickupObjectIdRange, new ReceivedAPItem(PickupObjectIdRange, "Progressive Ox and Cadence", ReceivedItemType.FoyerShop) },
             { PickupObjectIdRange + 1, new ReceivedAPItem(PickupObjectIdRange + 1, "Progressive Professor Goopton", ReceivedItemType.FoyerShop) },
-            { PickupObjectIdRange + 2, new ReceivedAPItem(PickupObjectIdRange + 2, "Progressive Professor Trorc", ReceivedItemType.FoyerShop) },
+            { PickupObjectIdRange + 2, new ReceivedAPItem(PickupObjectIdRange + 2, "Progressive Trorc", ReceivedItemType.FoyerShop) },
             { PickupObjectIdRange + 3, new ReceivedAPItem(PickupObjectIdRange + 3, "Progressive Doug", ReceivedItemType.FoyerShop) },
             { PickupObjectIdRange + 4, new ReceivedAPItem(PickupObjectIdRange + 4, "Tinker", ReceivedItemType.NPC) },
             { PickupObjectIdRange + 5, new ReceivedAPItem(PickupObjectIdRange + 5, "Sorceress", ReceivedItemType.NPC) },
