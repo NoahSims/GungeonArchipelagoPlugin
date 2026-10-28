@@ -50,10 +50,10 @@ namespace ArchiGungeon.Data
         // Note if you change the Id or name of any of these please besure to double check ArchipelagoGungeonBridge.cs and DebugCommands.cs use the updated values.
         private static Dictionary<long, ReceivedAPItem> _fullCustomItemDictionary = new Dictionary<long, ReceivedAPItem>()
         {
-            { PickupObjectIdRange, new ReceivedAPItem(PickupObjectIdRange, "Ox and Cadence", ReceivedItemType.FoyerShop) },
-            { PickupObjectIdRange + 1, new ReceivedAPItem(PickupObjectIdRange + 1, "Professor Goopton", ReceivedItemType.FoyerShop) },
-            { PickupObjectIdRange + 2, new ReceivedAPItem(PickupObjectIdRange + 2, "Professor Trorc", ReceivedItemType.FoyerShop) },
-            { PickupObjectIdRange + 3, new ReceivedAPItem(PickupObjectIdRange + 3, "Doug", ReceivedItemType.FoyerShop) },
+            { PickupObjectIdRange, new ReceivedAPItem(PickupObjectIdRange, "Progressive Ox and Cadence", ReceivedItemType.FoyerShop) },
+            { PickupObjectIdRange + 1, new ReceivedAPItem(PickupObjectIdRange + 1, "Progressive Professor Goopton", ReceivedItemType.FoyerShop) },
+            { PickupObjectIdRange + 2, new ReceivedAPItem(PickupObjectIdRange + 2, "Progressive Professor Trorc", ReceivedItemType.FoyerShop) },
+            { PickupObjectIdRange + 3, new ReceivedAPItem(PickupObjectIdRange + 3, "Progressive Doug", ReceivedItemType.FoyerShop) },
             { PickupObjectIdRange + 4, new ReceivedAPItem(PickupObjectIdRange + 4, "Tinker", ReceivedItemType.NPC) },
             { PickupObjectIdRange + 5, new ReceivedAPItem(PickupObjectIdRange + 5, "Sorceress", ReceivedItemType.NPC) },
             { PickupObjectIdRange + 6, new ReceivedAPItem(PickupObjectIdRange + 6, "Daisuke", ReceivedItemType.NPC) },
@@ -73,7 +73,7 @@ namespace ArchiGungeon.Data
             { PickupObjectIdRange + 20, new ReceivedAPItem(PickupObjectIdRange + 20, "Progressive Curse Reduction", ReceivedItemType.CustomProgressive) },
             { PickupObjectIdRange + 21, new ReceivedAPItem(PickupObjectIdRange + 21, "Progressive Coolness", ReceivedItemType.CustomProgressive) },
             { PickupObjectIdRange + 22, new ReceivedAPItem(PickupObjectIdRange + 22, "Progressive Start Chest", ReceivedItemType.CustomProgressive) },
-            { PickupObjectIdRange + 23, new ReceivedAPItem(PickupObjectIdRange + 23, "Tinker Progressive", ReceivedItemType.CustomProgressive) },
+            { PickupObjectIdRange + 23, new ReceivedAPItem(PickupObjectIdRange + 23, "Progressive Short Cut", ReceivedItemType.CustomProgressive) },
             { PickupObjectIdRange + 24, new ReceivedAPItem(PickupObjectIdRange + 24, "5 Hegemony Credits", ReceivedItemType.ConsumableFiller) }, // Consider one object to represent all numbers of consumables that can vary.
             { PickupObjectIdRange + 25, new ReceivedAPItem(PickupObjectIdRange + 25, "10 Hegemony Credits", ReceivedItemType.ConsumableFiller) },
             { PickupObjectIdRange + 26, new ReceivedAPItem(PickupObjectIdRange + 26, "20 Hegemony Credits", ReceivedItemType.ConsumableFiller) },

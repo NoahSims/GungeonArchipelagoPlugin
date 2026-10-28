@@ -3,6 +3,7 @@ using ArchiGungeon.Data;
 using ArchiGungeon.UserInterface;
 using Archipelago.MultiClient.Net.Models;
 using Brave.BulletScript;
+using Dungeonator;
 using HarmonyLib;
 using HutongGames.PlayMaker.Actions;
 using System;
@@ -207,7 +208,9 @@ namespace ArchiGungeon.ItemArchipelago
             { GungeonFlags.ACHIEVEMENT_TABLES_FLIPPED, APLocations.ACHIEVEMENT_TABLES_FLIPPED },
             { GungeonFlags.ACHIEVEMENT_SURPRISE_MIMIC, APLocations.ACHIEVEMENT_SURPRISE_MIMIC },
             { GungeonFlags.ACHIEVEMENT_KILL_JAMMED_BOSS, APLocations.ACHIEVEMENT_KILL_JAMMED_BOSS },
-            { GungeonFlags.ACHIEVEMENT_BIGGEST_WALLET, APLocations.ACHIEVEMENT_BIGGEST_WALLET }
+            { GungeonFlags.ACHIEVEMENT_BIGGEST_WALLET, APLocations.ACHIEVEMENT_BIGGEST_WALLET },
+            { GungeonFlags.TUTORIAL_COMPLETED, APLocations.TutorialComplete },
+            { GungeonFlags.TUTORIAL_AGREED_TO_HELP_MANFRED, APLocations.SerManuelRemains }
 
         };
 
@@ -231,7 +234,9 @@ namespace ArchiGungeon.ItemArchipelago
             GungeonFlags.ACHIEVEMENT_NOBOSSDAMAGE_GUNGEON,
             GungeonFlags.ACHIEVEMENT_NOBOSSDAMAGE_MINES,
             GungeonFlags.ACHIEVEMENT_NOBOSSDAMAGE_HOLLOW,
-            GungeonFlags.ACHIEVEMENT_NOBOSSDAMAGE_FORGE
+            GungeonFlags.ACHIEVEMENT_NOBOSSDAMAGE_FORGE,
+            GungeonFlags.TUTORIAL_COMPLETED,
+            GungeonFlags.TUTORIAL_AGREED_TO_HELP_MANFRED
         };
 
         public static HashSet<GungeonFlags> _pastKilledFlags = new HashSet<GungeonFlags>{
@@ -355,6 +360,26 @@ namespace ArchiGungeon.ItemArchipelago
                 }
             }
             return true;
+        }
+
+        [HarmonyPatch(typeof(Dungeon), nameof(Dungeon.StartupFoyerChecks))]
+        [HarmonyPrefix]
+        public static bool Patch_StartupFoyerChecks()
+        {
+            // Doug locations ids are between 240000 and 240220, with no other ids should be in that range. 
+            // So we can count how many location ids found are between that range and prevent Doug from spawning back in the foyer if we've reached max bought items for the progressive pages available to us.
+            if (ArchipelaGunLocalDataManager.FoundLocationsAPIds.Count(id => id > 240000 && id < 240220) >= ArchipelaGunLocalDataManager.DougShopProgCount * 6)
+            {
+                // We have all items we have access to, don't run StartupFoyerChecks() to spawn Doug
+                return false;
+            }
+            else
+            {
+                // Move on to StartupFoyerChecks() and set the chance to spawn Doug to 100.
+                GameStatsManager.Instance.AccumulatedBeetleMerchantChance = 100;
+                GameStatsManager.Instance.AccumulatedUsedBeetleMerchantChance = 100;
+                return true;
+            }
         }
 
         /*
