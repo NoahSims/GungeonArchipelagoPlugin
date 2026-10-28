@@ -454,17 +454,44 @@ namespace ArchiGungeon.ItemArchipelago
         [HarmonyPostfix]
         public static void GetLocationHintsOnShopSetup(MetaShopController __instance)
         {
-            List<long> locations = new List<long>();
+            List<long> locationIds = new List<long>();
+            List<GungeonFlags> itemGungeonFlags = new List<GungeonFlags>();
+
             foreach (var item in __instance.m_itemControllers)
             {
+                itemGungeonFlags.Add(item.item.SaveFlagToSetOnAcquisition);
+
+                //// Preform check for finding hints ////
                 if (!ArchipelaGunLocalDataManager.FoundHints.ContainsKey((long)item.item.SaveFlagToSetOnAcquisition) &&
                     item.item.SaveFlagToSetOnAcquisition != GungeonFlags.BLUEPRINTMETA_MTXGUN) //TODO this check is only neccessary because I'm using MTXGUN in Patch_GetFlagFromTargetItem
                 {
-                    locations.Add((long)item.item.SaveFlagToSetOnAcquisition);
+                    locationIds.Add((long)item.item.SaveFlagToSetOnAcquisition);
+                }
+
+                //// Stop shop item from spawning if the current shop page isn't unlocked ////
+                GungeonFlags itemFlag = item.item.SaveFlagToSetOnAcquisition;
+
+                if (!MetaShopOfferings.ShopOfferings.ContainsKey(itemFlag))
+                {
+                    // TODO: Freak out and panic!
+                    Debug.Log("ALERT: Couldn't find a shop offering with the tag " + itemFlag);
+                }                
+                ShopPage shopPageForItem = MetaShopOfferings.ShopOfferings.GetValueSafe(itemFlag).Page;
+
+                // Figure out what shop pages the player should have access to...
+                bool hasAccess = MetaShopOfferings.hasAccessToShopPage(shopPageForItem);
+
+                // If the item shouldn't be accessed, stop the item from spawning
+                    // Pray that `ForceOutOfStock()` works
+                if (!hasAccess)
+                {
+                    item.ForceOutOfStock();
                 }
             }
-            SessionHandler.DataSender.ScoutLocationHints(locations.ToArray());
+
+            SessionHandler.DataSender.ScoutLocationHints(locationIds.ToArray());
         }
+
 
         // This function will trigger any time the game tries to generate the loot pool and read what it thinks are in the pool. Could be useful for debugging.
         // I don't know where else to put this, so this can hang out here for now. Uncomment if you want, I guess

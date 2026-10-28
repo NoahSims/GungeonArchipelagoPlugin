@@ -41,6 +41,52 @@ namespace ArchiGungeon.Data
 
     public static class MetaShopOfferings
     {
+        public static bool hasAccessToShopPage(ShopPage page)
+        {
+            // Forgive me 😔
+            switch (page)
+            {
+                case ShopPage.OX_SHOP_PAGE_1:
+                    return ArchipelaGunLocalDataManager.MetaShopProgCount >= 1;
+                case ShopPage.OX_SHOP_PAGE_2:
+                    return ArchipelaGunLocalDataManager.MetaShopProgCount >= 2;
+                case ShopPage.OX_SHOP_PAGE_3:
+                    return ArchipelaGunLocalDataManager.MetaShopProgCount >= 3;
+                case ShopPage.OX_SHOP_PAGE_4:
+                    return ArchipelaGunLocalDataManager.MetaShopProgCount >= 4;
+                case ShopPage.OX_SHOP_PAGE_5:
+                    return ArchipelaGunLocalDataManager.MetaShopProgCount >= 5;
+                case ShopPage.OX_SHOP_PAGE_6:
+                    return ArchipelaGunLocalDataManager.MetaShopProgCount >= 6;
+                case ShopPage.OX_SHOP_PAGE_7:
+                    return ArchipelaGunLocalDataManager.MetaShopProgCount >= 7;
+                case ShopPage.OX_SHOP_PAGE_8:
+                    return ArchipelaGunLocalDataManager.MetaShopProgCount >= 8;
+                case ShopPage.TRORC_SHOP_PAGE_1:
+                    return ArchipelaGunLocalDataManager.TrorcShopProgCount >= 1;
+                case ShopPage.TRORC_SHOP_PAGE_2:
+                    return ArchipelaGunLocalDataManager.TrorcShopProgCount >= 2;
+                case ShopPage.GOOPTON_SHOP_PAGE_1:
+                    return ArchipelaGunLocalDataManager.GoopShopProgCount >= 1;
+                case ShopPage.GOOPTON_SHOP_PAGE_2:
+                    return ArchipelaGunLocalDataManager.GoopShopProgCount >= 2;
+                case ShopPage.DOUG_SHOP_PAGE_1:
+                    return ArchipelaGunLocalDataManager.DougShopProgCount >= 1;
+                case ShopPage.DOUG_SHOP_PAGE_2:
+                    return ArchipelaGunLocalDataManager.DougShopProgCount >= 2;
+                case ShopPage.DOUG_SHOP_PAGE_3:
+                    return ArchipelaGunLocalDataManager.DougShopProgCount >= 3;
+                case ShopPage.DOUG_SHOP_PAGE_4:
+                    return ArchipelaGunLocalDataManager.DougShopProgCount >= 4;
+                case ShopPage.DOUG_SHOP_PAGE_5:
+                    return ArchipelaGunLocalDataManager.DougShopProgCount >= 5;
+                case ShopPage.DOUG_SHOP_PAGE_6:
+                    return ArchipelaGunLocalDataManager.DougShopProgCount >= 6;
+                default:
+                    return false;
+            }
+        }
+
         public static readonly Dictionary<GungeonFlags, LocationInfo> ShopOfferings =
             new Dictionary<GungeonFlags, LocationInfo>
             {
