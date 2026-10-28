@@ -207,6 +207,7 @@ namespace ArchiGungeon.ArchipelagoServer
             {
                 case 0: // Ox and Candence
                     GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.META_SHOP_ACTIVE_IN_FOYER, true);
+                    ArchipelaGunLocalDataManager.MetaShopProgCount++;
                     break;
                 case 1: // Prof Goop
                     GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.SHOP_GOOP_ACTIVE, true);
@@ -215,12 +216,16 @@ namespace ArchiGungeon.ArchipelagoServer
                     GameStats goopStats = new GameStats();
                     goopStats.SetStat(TrackedStats.MERCHANT_PURCHASES_GOOP, 1);
                     GameStatsManager.Instance.m_characterStats.GetFirst().Value.AddStats(goopStats);
+                    ArchipelaGunLocalDataManager.GoopShopProgCount++;
                     break;
                 case 2: // Trorc
                     GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.SHOP_TRUCK_ACTIVE, true);
+                    ArchipelaGunLocalDataManager.TrorcShopProgCount++;
                     break;
                 case 3: // Doug
                     GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.SHOP_BEETLE_ACTIVE, true);
+                    GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.SHOP_HAS_MET_BEETLE, true);
+                    ArchipelaGunLocalDataManager.DougShopProgCount++;
                     break;
                 case 4: // Tinker
                     GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.SHERPA_ACTIVE_IN_ELEVATOR_ROOM, true);
@@ -502,6 +507,7 @@ namespace ArchiGungeon.ArchipelagoServer
             GameManager.Instance.RewardManager.CurrentRewardData.MinMetaCurrencyFromBoss = 2 * ArchipelaGunLocalDataManager.CreditMultiplier;
             GameManager.Instance.RewardManager.CurrentRewardData.MinMetaCurrencyFromBoss = 5 * ArchipelaGunLocalDataManager.CreditMultiplier;
         }
+
         #endregion
     }
 

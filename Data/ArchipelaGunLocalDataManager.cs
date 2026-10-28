@@ -18,6 +18,10 @@ namespace ArchiGungeon.Data
         public static Dictionary<long, string> FoundHints = new Dictionary<long, string>();
         public static int RecievedItemsIndex = 0;
         public static int CreditMultiplier = 1;
+        public static int MetaShopProgCount = 0;
+        public static int TrorcShopProgCount = 0;
+        public static int DougShopProgCount = 0;
+        public static int GoopShopProgCount = 0;
 
         public static void TryPreviousSaveLoad()
         {
@@ -32,6 +36,10 @@ namespace ArchiGungeon.Data
                 FoundLocationsAPIds = data.FoundLocationsAPIds;
                 FoundHints = data.FoundHints == null ? new Dictionary<long, string>() : data.FoundHints;
                 CreditMultiplier = data.CreditMultiplier;
+                MetaShopProgCount = data.MetaShopProgCount;
+                TrorcShopProgCount = data.TrorcShopProgCount;
+                DougShopProgCount = data.DougShopProgCount;
+                GoopShopProgCount = data.GoopShopProgCount;
             }
         }
 
@@ -87,6 +95,10 @@ namespace ArchiGungeon.Data
             dataToSave.FoundLocationsAPIds = FoundLocationsAPIds;
             dataToSave.FoundHints = FoundHints;
             dataToSave.CreditMultiplier = CreditMultiplier;
+            dataToSave.MetaShopProgCount = MetaShopProgCount;
+            dataToSave.DougShopProgCount = DougShopProgCount;
+            dataToSave.GoopShopProgCount = GoopShopProgCount;
+            dataToSave.TrorcShopProgCount = TrorcShopProgCount;
 
             SaveDataWriter.WriteSaveFile(dataToSave);
         }
@@ -178,5 +190,9 @@ namespace ArchiGungeon.Data
         public Dictionary<long, string> FoundHints;
         public int RecievedItemsIndex;
         public int CreditMultiplier;
+        public int MetaShopProgCount = 0;
+        public int TrorcShopProgCount = 0;
+        public int DougShopProgCount = 0;
+        public int GoopShopProgCount = 0;
     }
 }
