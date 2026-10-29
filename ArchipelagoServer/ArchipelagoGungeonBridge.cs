@@ -1,18 +1,19 @@
-﻿using ArchiGungeon.Character;
+﻿using Alexandria;
+using ArchiGungeon.Character;
 using ArchiGungeon.Data;
 using ArchiGungeon.DebugTools;
 using ArchiGungeon.GungeonEventHandlers;
 using ArchiGungeon.ItemArchipelago;
 using ArchiGungeon.UserInterface;
-using Archipelago.MultiClient.Net.Models;
 using Archipelago.MultiClient.Net.Enums;
+using Archipelago.MultiClient.Net.Models;
+using Dungeonator;
 using HutongGames.PlayMaker.Actions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
-using Alexandria;
 
 namespace ArchiGungeon.ArchipelagoServer
 {
@@ -373,7 +374,10 @@ namespace ArchiGungeon.ArchipelagoServer
                     //ArchipelaGunLocalDataManager.locationsCheckedFlags.Add(null);
                     break;
                 case "Progressive Start Chest":
-                    //ArchipelaGunLocalDataManager.locationsCheckedFlags.Add(null);
+                    if (ArchipelaGunLocalDataManager.StarterChestProgress < 5) // Magic number hard cap to 5 progressive items.
+                    {
+                        ArchipelaGunLocalDataManager.StarterChestProgress++;
+                    }
                     break;
                 default:
                     break;
@@ -500,12 +504,79 @@ namespace ArchiGungeon.ArchipelagoServer
         public static void RunStartCustomProgressives()
         {
             SetMetaCreditMultiplier();
+            SpawnStarterChest();
         }
 
         public static void SetMetaCreditMultiplier()
         {
             GameManager.Instance.RewardManager.CurrentRewardData.MinMetaCurrencyFromBoss = 2 * ArchipelaGunLocalDataManager.CreditMultiplier;
             GameManager.Instance.RewardManager.CurrentRewardData.MinMetaCurrencyFromBoss = 5 * ArchipelaGunLocalDataManager.CreditMultiplier;
+        }
+
+        public static void SpawnStarterChest()
+        {
+            ArchDebugPrint.DebugLog(DebugCategory.ItemHandling, "Attempting to spawn Starter Chest for progression level: " + ArchipelaGunLocalDataManager.StarterChestProgress);
+            if (ArchipelaGunLocalDataManager.StarterChestProgress <= 0)
+            {
+                return;
+            }
+
+            RewardManager rewardManager = GameManager.Instance?.RewardManager;
+            Chest chest = rewardManager?.D_Chest;
+            switch (ArchipelaGunLocalDataManager.StarterChestProgress)
+            {
+                case 1:
+                    chest = rewardManager?.D_Chest;
+                    break;
+                case 2:
+                    chest = rewardManager?.C_Chest;
+                    break;
+                case 3:
+                    chest = rewardManager?.B_Chest;
+                    break;
+                case 4:
+                    chest = rewardManager?.A_Chest;
+                    break;
+                case 5:
+                default:
+                    chest = rewardManager?.S_Chest;
+                    break;
+            }
+
+            try
+            {
+                chest.IsLocked = false;
+                // This is how gungeon handles chest spawn on rainbow runs.
+                var data = GameManager.Instance.m_dungeon.data;
+                if (data == null)
+                {
+                    ArchDebugPrint.DebugLog(DebugCategory.ItemHandling, "No Dungeon Data for start chest");
+                    return;
+                }
+                List<TeleporterController> componentsAbsoluteInRoom = data.Entrance.GetComponentsAbsoluteInRoom<TeleporterController>();
+                Vector3? vector = null;
+                if (componentsAbsoluteInRoom != null && componentsAbsoluteInRoom.Count > 0)
+                {
+                    vector = componentsAbsoluteInRoom[0].transform.position + new Vector3(0.5f, 2f, 0f);
+                }
+                if (!vector.HasValue)
+                {
+                    bool success = false;
+                    IntVector2 centeredVisibleClearSpot = data.Entrance.GetCenteredVisibleClearSpot(4, 4, out success, restrictive: true);
+                    if (success)
+                    {
+                        vector = (centeredVisibleClearSpot + IntVector2.One).ToVector2().ToVector3ZisY();
+                    }
+                }
+                if (vector.HasValue)
+                {
+                    Chest.Spawn(chest, vector.Value, data.Entrance, ForceNoMimic: true);
+                }
+            }
+            catch (Exception ex)
+            {
+                ArchDebugPrint.DebugLog(DebugCategory.ItemHandling, "Error spawning start chest with Error: " + ex.Message + " - " + ex.StackTrace);
+            }
         }
 
         #endregion

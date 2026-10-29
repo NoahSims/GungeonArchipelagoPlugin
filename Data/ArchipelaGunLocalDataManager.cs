@@ -22,6 +22,7 @@ namespace ArchiGungeon.Data
         public static int TrorcShopProgCount = 0;
         public static int DougShopProgCount = 0;
         public static int GoopShopProgCount = 0;
+        public static int StarterChestProgress = 0;
 
         public static void TryPreviousSaveLoad()
         {
@@ -40,6 +41,7 @@ namespace ArchiGungeon.Data
                 TrorcShopProgCount = data.TrorcShopProgCount;
                 DougShopProgCount = data.DougShopProgCount;
                 GoopShopProgCount = data.GoopShopProgCount;
+                StarterChestProgress = data.StarterChestProgress;
             }
         }
 
@@ -99,6 +101,7 @@ namespace ArchiGungeon.Data
             dataToSave.DougShopProgCount = DougShopProgCount;
             dataToSave.GoopShopProgCount = GoopShopProgCount;
             dataToSave.TrorcShopProgCount = TrorcShopProgCount;
+            dataToSave.StarterChestProgress = StarterChestProgress;
 
             SaveDataWriter.WriteSaveFile(dataToSave);
         }
@@ -194,5 +197,6 @@ namespace ArchiGungeon.Data
         public int TrorcShopProgCount = 0;
         public int DougShopProgCount = 0;
         public int GoopShopProgCount = 0;
+        public int StarterChestProgress = 0;
     }
 }

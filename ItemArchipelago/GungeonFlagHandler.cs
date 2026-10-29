@@ -380,7 +380,8 @@ namespace ArchiGungeon.ItemArchipelago
         {
             // Doug locations ids are between 240000 and 240220, with no other ids should be in that range. 
             // So we can count how many location ids found are between that range and prevent Doug from spawning back in the foyer if we've reached max bought items for the progressive pages available to us.
-            if (ArchipelaGunLocalDataManager.FoundLocationsAPIds.Count(id => id > 240000 && id < 240220) >= ArchipelaGunLocalDataManager.DougShopProgCount * 6)
+            // Max count of 6 pages, so if we have all 6 then we just gaurentee Doug is always there.
+            if (ArchipelaGunLocalDataManager.DougShopProgCount < 6 && ArchipelaGunLocalDataManager.FoundLocationsAPIds.Count(id => id > 240000 && id < 240220) >= ArchipelaGunLocalDataManager.DougShopProgCount * 6)
             {
                 // We have all items we have access to, don't run StartupFoyerChecks() to spawn Doug
                 return false;
