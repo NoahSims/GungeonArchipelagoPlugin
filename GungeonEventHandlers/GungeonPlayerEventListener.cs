@@ -212,7 +212,31 @@ namespace ArchiGungeon.GungeonEventHandlers
 
         private static void OnShopItemCreated(ShopItemController obj)
         {
-            if(!APPickUpItem.HasAPItemChecksRemaining())
+            /*
+            try
+            {
+                if (!MetaShopOfferings.ShopOfferings.ContainsKey(obj?.item?.itemName))
+                {
+                    Debug.Log("Couldn't find key that matches " + obj?.item?.itemName);
+                    int PickupObjectId = obj?.item?.PickupObjectId ?? -1;
+                    //PickupObject test = PickupObjectDatabase.GetByName(obj?.item?.itemName);
+                    GameObject somethingStupid = obj.gameObject;
+                    //obj?.item?.encounterTrackable.prerequisites[0]; // the flag that we want ??
+                    Debug.Log("Maybe it's " + somethingStupid.name + "?");
+                }
+
+                ShopPage page = MetaShopOfferings.ShopOfferings[obj?.item?.itemName];
+                Debug.Log("New Shop Item Spawned | Item: " + obj?.item?.itemName + ", ShopPage: " + page);
+                ArchDebugPrint.DebugLog(DebugCategory.ItemHandling, "New Shop Item Spawned | Item: " + obj?.item?.itemName + ", ShopPage: " + page);
+            }
+            catch (Exception)
+            {
+                Debug.Log("Failed to read created shop item...");
+            }
+            */
+
+
+            if (!APPickUpItem.HasAPItemChecksRemaining())
             {
                 return;
             }

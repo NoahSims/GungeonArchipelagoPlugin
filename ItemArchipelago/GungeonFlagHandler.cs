@@ -423,8 +423,9 @@ namespace ArchiGungeon.ItemArchipelago
         [HarmonyPostfix]
         public static void Patch_ShopOnEnteredRange(ShopItemController __instance)
         {
-            //ETGModConsole.Log("GungeonFlagHandler: Entering OnEnteredRange");
-            if (__instance.m_parentShop != null && __instance.m_parentShop is MetaShopController)
+            //ETGModConsole.Log("GungeonFlagHandler: Entering OnEnteredRange - " + __instance.item.SaveFlagToSetOnAcquisition.ToString());
+            // m_parentShop = metaShopController = Ox and Cadence. m_baseParentShop = all other shops
+            if ((__instance.m_parentShop != null || __instance.m_baseParentShop) && GameManager.Instance.CurrentLevelOverrideState == GameManager.LevelOverrideState.FOYER)
             {
                 //ETGModConsole.Log("GungeonFlagHandler: Attempting to change label");
                 GameUIRoot.Instance.DeregisterDefaultLabel(__instance.transform);
@@ -438,34 +439,87 @@ namespace ArchiGungeon.ItemArchipelago
                 componentInChildren.ColorizeSymbols = false;
                 componentInChildren.ProcessMarkup = true;
 
-                MetaShopController metaShopController = __instance.m_parentShop as MetaShopController;
-                if ((bool)metaShopController.Hologramophone && __instance.item is ItemBlueprintItem)
+                if (__instance.m_parentShop != null && __instance.m_parentShop is MetaShopController)
                 {
-                    PickupObject archItem = PickupObjectDatabase.GetById(NpcCellLocationItem.SpawnItemID);
-                    metaShopController.Hologramophone.ChangeToSprite(__instance.gameObject, archItem.sprite.collection, archItem.sprite.spriteId);
+                    MetaShopController metaShopController = __instance.m_parentShop as MetaShopController;
+                    if ((bool)metaShopController.Hologramophone && __instance.item is ItemBlueprintItem)
+                    {
+                        PickupObject archItem = PickupObjectDatabase.GetById(NpcCellLocationItem.SpawnItemID);
+                        metaShopController.Hologramophone.ChangeToSprite(__instance.gameObject, archItem.sprite.collection, archItem.sprite.spriteId);
+                    }
                 }
+                
             }
         }
 
         /*
          * Patch - MetaShopController.DoSetup
          * After Ox and Cadence shop is instantiated, get hints for the items they currently have available.
+         * Also checks for valid item shop pools
          */
         [HarmonyPatch(typeof(MetaShopController), nameof(MetaShopController.DoSetup))]
         [HarmonyPostfix]
-        public static void GetLocationHintsOnShopSetup(MetaShopController __instance)
+        public static void MetaShopDoSetupPostfix(MetaShopController __instance)
         {
-            List<long> locations = new List<long>();
-            foreach (var item in __instance.m_itemControllers)
+            ShopDoSetupPostfix(__instance.m_itemControllers);
+        }
+
+        /*
+         * Patch - BaseShopController.DoSetup
+         * After Non-Ox and Cadence shops are instantiated, get hints for the items they currently have available.
+         * Also checks for valid item shop pools
+         */
+        [HarmonyPatch(typeof(BaseShopController), nameof(BaseShopController.DoSetup))]
+        [HarmonyPostfix]
+        public static void BaseShopDoSetupPostfix(BaseShopController __instance)
+        {
+            if(GameManager.Instance.CurrentLevelOverrideState == GameManager.LevelOverrideState.FOYER)
             {
+                ShopDoSetupPostfix(__instance.m_itemControllers);
+            }
+        }
+
+        public static void ShopDoSetupPostfix(List<ShopItemController> itemControllers)
+        {
+            List<long> locationIds = new List<long>();
+            List<GungeonFlags> itemGungeonFlags = new List<GungeonFlags>();
+
+            foreach (var item in itemControllers)
+            {
+                itemGungeonFlags.Add(item.item.SaveFlagToSetOnAcquisition);
+
+                //// Preform check for finding hints ////
                 if (!ArchipelaGunLocalDataManager.FoundHints.ContainsKey((long)item.item.SaveFlagToSetOnAcquisition) &&
                     item.item.SaveFlagToSetOnAcquisition != GungeonFlags.BLUEPRINTMETA_MTXGUN) //TODO this check is only neccessary because I'm using MTXGUN in Patch_GetFlagFromTargetItem
                 {
-                    locations.Add((long)item.item.SaveFlagToSetOnAcquisition);
+                    locationIds.Add((long)item.item.SaveFlagToSetOnAcquisition);
+                }
+
+                //// Stop shop item from spawning if the current shop page isn't unlocked ////
+                GungeonFlags itemFlag = item.item.SaveFlagToSetOnAcquisition;
+
+                if (!MetaShopOfferings.ShopOfferings.ContainsKey(itemFlag))
+                {
+                    // TODO: Freak out and panic!
+                    Debug.Log("ALERT: Couldn't find a shop offering with the tag " + itemFlag);
+                }
+                ShopPage shopPageForItem = MetaShopOfferings.ShopOfferings.GetValueSafe(itemFlag).Page;
+
+                // Figure out what shop pages the player should have access to...
+                bool hasAccess = MetaShopOfferings.hasAccessToShopPage(shopPageForItem);
+
+                // If the item shouldn't be accessed, stop the item from spawning
+                // Pray that `ForceOutOfStock()` works
+                if (!hasAccess)
+                {
+                    item.ForceOutOfStock();
                 }
             }
-            SessionHandler.DataSender.ScoutLocationHints(locations.ToArray());
+
+            // get hints for current shop locations
+            SessionHandler.DataSender.ScoutLocationHints(locationIds.ToArray());
         }
+
 
         // This function will trigger any time the game tries to generate the loot pool and read what it thinks are in the pool. Could be useful for debugging.
         // I don't know where else to put this, so this can hang out here for now. Uncomment if you want, I guess
