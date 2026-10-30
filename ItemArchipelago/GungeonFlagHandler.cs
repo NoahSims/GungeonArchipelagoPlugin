@@ -362,7 +362,12 @@ namespace ArchiGungeon.ItemArchipelago
                 {
                     if (__instance.m_prerequisites[i].prerequisiteType == DungeonPrerequisite.PrerequisiteType.FLAG)
                     {
-                        __result = ArchipelaGunLocalDataManager.locationsCheckedFlags.Contains(__instance.m_prerequisites[i].saveFlagToCheck);
+                        bool hasLocationBeenChecked = ArchipelaGunLocalDataManager.locationsCheckedFlags.Contains(__instance.m_prerequisites[i].saveFlagToCheck);
+                        ShopPage shopPageForItem = MetaShopOfferings.ShopOfferings.GetValueSafe(__instance.m_prerequisites[i].saveFlagToCheck).Page;
+
+                        // The result should be *FALSE* if the item *SHOULD* spawn in the shop
+                        __result = !(!hasLocationBeenChecked && MetaShopOfferings.hasAccessToShopPage(shopPageForItem));
+
                         return false;
                     }
                 }
@@ -509,7 +514,6 @@ namespace ArchiGungeon.ItemArchipelago
                 bool hasAccess = MetaShopOfferings.hasAccessToShopPage(shopPageForItem);
 
                 // If the item shouldn't be accessed, stop the item from spawning
-                // Pray that `ForceOutOfStock()` works
                 if (!hasAccess)
                 {
                     item.ForceOutOfStock();
