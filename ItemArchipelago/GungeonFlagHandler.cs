@@ -566,7 +566,7 @@ namespace ArchiGungeon.ItemArchipelago
          */
         [HarmonyPatch(typeof(GameStatsManager), nameof(GameStatsManager.RegisterStatChange))]
         [HarmonyPrefix]
-        public static bool Patch_GetRandomLockedPaydayItemLol(TrackedStats stat, float value)
+        public static bool Patch_RegisterStatChange(TrackedStats stat, float value)
         {
             if (stat == TrackedStats.TIMES_REACHED_RATGEON)
             {
