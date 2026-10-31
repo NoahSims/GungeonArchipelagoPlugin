@@ -417,6 +417,44 @@ namespace ArchiGungeon.ItemArchipelago
             }
         }
 
+        /// <summary>
+        /// Interupt when the fireplace interact function is called, preventing it from unlocking the Oubliette unless we have the AP item.
+        /// </summary>
+        /// <returns></returns>
+        [HarmonyPatch(typeof(FireplaceController), nameof(FireplaceController.Interact))]
+        [HarmonyPrefix]
+        public static bool Patch_FireplaceInteract()
+        {
+            if(ArchipelaGunLocalDataManager.HasOublietteAccess)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Interrupt when interacting with the shrine that opens to the abbey. If we have the AP item force the crest true, if not don't even get the option.
+        /// </summary>
+        /// <param name="interactor"></param>
+        /// <returns></returns>
+        [HarmonyPatch(typeof(CrestDoorController), nameof(CrestDoorController.HandleShrineConversation))]
+        [HarmonyPrefix]
+        public static bool Patch_HandleShrineConversation(PlayerController interactor)
+        {
+            if (ArchipelaGunLocalDataManager.HasAbbeyAccess)
+            {
+                interactor.healthHaver.HasCrest = true;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         /*
          * Patch - ShopItemController.OnEnteredRange
          * On entering range of a shop item, if it is an AP item, change the UI text to show the AP item being bought rather than the guneon item.

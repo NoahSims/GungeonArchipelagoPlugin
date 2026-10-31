@@ -23,6 +23,10 @@ namespace ArchiGungeon.Data
         public static int DougShopProgCount = 0;
         public static int GoopShopProgCount = 0;
         public static int StarterChestProgress = 0;
+        public static bool HasOublietteAccess = false;
+        public static bool HasAbbeyAccess = false;
+        public static bool HasRatLairAccess = false;
+        public static bool HasRnGAccess = false;
 
         public static void TryPreviousSaveLoad()
         {
@@ -42,6 +46,10 @@ namespace ArchiGungeon.Data
                 DougShopProgCount = data.DougShopProgCount;
                 GoopShopProgCount = data.GoopShopProgCount;
                 StarterChestProgress = data.StarterChestProgress;
+                HasOublietteAccess = data.HasOublietteAccess;
+                HasAbbeyAccess = data.HasAbbeyAccess;
+                HasRatLairAccess = data.HasRatLairAccess;
+                HasRnGAccess = data.HasRnGAccess;
             }
         }
 
@@ -102,6 +110,10 @@ namespace ArchiGungeon.Data
             dataToSave.GoopShopProgCount = GoopShopProgCount;
             dataToSave.TrorcShopProgCount = TrorcShopProgCount;
             dataToSave.StarterChestProgress = StarterChestProgress;
+            dataToSave.HasOublietteAccess = HasOublietteAccess;
+            dataToSave.HasAbbeyAccess = HasAbbeyAccess;
+            dataToSave.HasRatLairAccess = HasRatLairAccess;
+            dataToSave.HasRnGAccess = HasRnGAccess;
 
             SaveDataWriter.WriteSaveFile(dataToSave);
         }
@@ -198,5 +210,9 @@ namespace ArchiGungeon.Data
         public int DougShopProgCount = 0;
         public int GoopShopProgCount = 0;
         public int StarterChestProgress = 0;
+        public bool HasOublietteAccess = false;
+        public bool HasAbbeyAccess = false;
+        public bool HasRatLairAccess = false;
+        public bool HasRnGAccess = false;
     }
 }

@@ -320,6 +320,18 @@ namespace ArchiGungeon.ArchipelagoServer
                 case "Payday Items Available to Steal":
                     GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.ACHIEVEMENT_BIGGEST_WALLET, true);
                     break;
+                case "Oubliette Unlocked":
+                    ArchipelaGunLocalDataManager.HasOublietteAccess = true;
+                    break;
+                case "Old Crest":
+                    ArchipelaGunLocalDataManager.HasAbbeyAccess = true;
+                    break;
+                case "Gnawed Key":
+                    ArchipelaGunLocalDataManager.HasRatLairAccess = true;
+                    break;
+                case "RnG Department Unlocked":
+                    ArchipelaGunLocalDataManager.HasRnGAccess = true;
+                    break;
                 default:
                     break;
             }
