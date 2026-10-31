@@ -60,7 +60,7 @@ namespace ArchiGungeon.Data
         TUTORIAL_UNLOCK_SHIELD = 2051,
         BustedTVDelivered,
         OldCrestPickup,
-        TruthChestFirstOpen,
+        OPEN_TRUTH_CHEST = 400302,
         ITEMSPECIFIC_STOLE_BANKBAG = 170001,
         ITEMSPECIFIC_STOLE_BANKMASK = 170002,
         ITEMSPECIFIC_STOLE_DRILL = 170003,

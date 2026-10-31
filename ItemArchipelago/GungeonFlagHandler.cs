@@ -580,6 +580,17 @@ namespace ArchiGungeon.ItemArchipelago
             return true;
         }
 
+        /*
+         * Patch - OpenTruthChest.OpenChest
+         * Handle location check for openning Brother Albern's Truth Chest
+         */
+        [HarmonyPatch(typeof(OpenTruthChest), nameof(OpenTruthChest.OpenChest))]
+        [HarmonyPostfix]
+        public static void TruthChestOpenLocation()
+        {
+            SessionHandler.DataSender.SendFoundLocationCheck(APLocations.OPEN_TRUTH_CHEST);
+        }
+
         // This function will trigger any time the game tries to generate the loot pool and read what it thinks are in the pool. Could be useful for debugging.
         // I don't know where else to put this, so this can hang out here for now. Uncomment if you want, I guess
         /*
