@@ -8,6 +8,7 @@ using ArchiGungeon.DebugTools;
 using ArchiGungeon.EnemyHandlers;
 using ArchiGungeon.ItemArchipelago;
 using ArchiGungeon.UserInterface;
+using HutongGames.PlayMaker.Actions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -191,7 +192,6 @@ namespace ArchiGungeon.GungeonEventHandlers
             ArchipelagoGUI.OnMenuOpen += OnArchipelagoMenuOpen;
             ArchipelagoGUI.OnMenuClose += OnArchipelagoMenuClose;
 
-            
             CustomActions.OnRunStart += OnRunStarted;
             CustomActions.OnBossKilled += OnBossKilled;
             CustomActions.OnNewPlayercontrollerSpawned += OnPlayerControllerSpawned;
@@ -589,6 +589,22 @@ namespace ArchiGungeon.GungeonEventHandlers
                     }
 
                     lastFloorLoaded = newFloorLoaded;
+
+                    var primer = UnityEngine.GameObject.FindObjectOfType<AncientPrimerItem>();
+                    if(primer != null)
+                    {
+                        ArchDebugPrint.DebugLog(DebugCategory.PlayerEventListener, $"Found Ancient Primer! - {primer.gameObject.name}");
+                    }
+                    var gunpowder = UnityEngine.GameObject.FindObjectOfType<ArcaneGunpowderItem>();
+                    if (gunpowder != null)
+                    {
+                        ArchDebugPrint.DebugLog(DebugCategory.PlayerEventListener, $"Found Arcane Gunpower! - {gunpowder.gameObject.name}");
+                    }
+                    var slug = UnityEngine.GameObject.FindObjectOfType<AstralSlugItem>();
+                    if (slug != null)
+                    {
+                        ArchDebugPrint.DebugLog(DebugCategory.PlayerEventListener, $"Found Astral Slug! - {slug.gameObject.name}");
+                    }
                 }
             }
             catch (Exception ex)
