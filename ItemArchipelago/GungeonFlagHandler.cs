@@ -240,8 +240,6 @@ namespace ArchiGungeon.ItemArchipelago
             GungeonFlags.ACHIEVEMENT_NOBOSSDAMAGE_HOLLOW,
             GungeonFlags.ACHIEVEMENT_NOBOSSDAMAGE_FORGE,
             GungeonFlags.TUTORIAL_COMPLETED,
-            GungeonFlags.TUTORIAL_UNLOCK_HELMET,
-            GungeonFlags.TUTORIAL_UNLOCK_SHIELD,
             GungeonFlags.ITEMSPECIFIC_STOLE_DRILL,
             GungeonFlags.ITEMSPECIFIC_STOLE_BANKBAG,
             GungeonFlags.ITEMSPECIFIC_STOLE_BANKMASK
@@ -339,7 +337,6 @@ namespace ArchiGungeon.ItemArchipelago
             }
             if (ArchipelaGunLocalDataManager.locationsCheckedFlags.Contains(flag))
             {
-                //ETGModConsole.Log("GameStatsManagerPatch: MetaShopController attempting to put heart bottle in shop");
                 __result = GungeonFlags.BLUEPRINTMETA_MTXGUN; // TODO this needs to be not the mtx gun, lol
                 return false;
             }
@@ -524,6 +521,26 @@ namespace ArchiGungeon.ItemArchipelago
             SessionHandler.DataSender.ScoutLocationHints(locationIds.ToArray());
         }
 
+
+        /*
+         * Patch - GameStatsManager.RegisterStatChange
+         * Handle location checks for locations with no gungeon flag
+         */
+        [HarmonyPatch(typeof(GameStatsManager), nameof(GameStatsManager.RegisterStatChange))]
+        [HarmonyPrefix]
+        public static bool Patch_GetRandomLockedPaydayItemLol(TrackedStats stat, float value)
+        {
+            if (stat == TrackedStats.TIMES_REACHED_RATGEON)
+            {
+                SessionHandler.DataSender.SendFoundLocationCheck(APLocations.ACHIEVEMENT_ACCESS_RATGEON);
+                return false;
+            }
+            else if (stat == TrackedStats.TIMES_REACHED_NAKATOMI)
+            {
+                SessionHandler.DataSender.SendFoundLocationCheck(APLocations.ACHIEVEMENT_ACCESS_RNG_DEP);
+            }
+            return true;
+        }
 
         // This function will trigger any time the game tries to generate the loot pool and read what it thinks are in the pool. Could be useful for debugging.
         // I don't know where else to put this, so this can hang out here for now. Uncomment if you want, I guess

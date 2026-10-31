@@ -32,9 +32,9 @@ namespace ArchiGungeon.Data
                 ArchipelaGunFileData data = SaveDataWriter.RetrieveSaveData();
 
                 CountGoalManager.SetFullCountSaveData(data.countSaveData);
-                locationsCheckedFlags = data.locationsCheckedFlagsData;
+                locationsCheckedFlags = data.locationsCheckedFlagsData == null ? new HashSet<GungeonFlags>(new GungeonFlagsComparer()) : data.locationsCheckedFlagsData;
                 RecievedItemsIndex = data.RecievedItemsIndex;
-                FoundLocationsAPIds = data.FoundLocationsAPIds;
+                FoundLocationsAPIds = data.FoundLocationsAPIds == null ? new HashSet<long>() : data.FoundLocationsAPIds;
                 FoundHints = data.FoundHints == null ? new Dictionary<long, string>() : data.FoundHints;
                 CreditMultiplier = data.CreditMultiplier;
                 MetaShopProgCount = data.MetaShopProgCount;
