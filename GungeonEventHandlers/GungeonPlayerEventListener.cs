@@ -588,8 +588,11 @@ namespace ArchiGungeon.GungeonEventHandlers
                         EnemySwapping.ReduceEnemyDamageMult(1);
                     }
 
+                    ArchipelagoGungeonBridge.OnFloorLoaded(newFloorLoaded);
+
                     lastFloorLoaded = newFloorLoaded;
 
+                    // Testing getting bullet parts objects in a level, please remove once we have a solution
                     var primer = UnityEngine.GameObject.FindObjectOfType<AncientPrimerItem>();
                     if(primer != null)
                     {

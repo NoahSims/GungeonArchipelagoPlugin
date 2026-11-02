@@ -328,6 +328,19 @@ namespace ArchiGungeon.ArchipelagoServer
                     break;
                 case "Gnawed Key":
                     ArchipelaGunLocalDataManager.HasRatLairAccess = true;
+                    // Sets the gnawed key to be normal price. We don't need to do this as we spawn the key at the start of the room tbh
+                    GameStats ratStats = new GameStats();
+                    ratStats.SetStat(TrackedStats.AMOUNT_PAID_FOR_RAT_KEY, 1000);
+                    GameStatsManager.Instance.m_characterStats.GetFirst().Value.AddStats(ratStats);
+                    break;
+                case "Infuriating Note":
+                    // For now the notes are one object, might be seperate objects later.
+                    GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.RESOURCEFUL_RAT_NOTE_01, true);
+                    GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.RESOURCEFUL_RAT_NOTE_02, true);
+                    GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.RESOURCEFUL_RAT_NOTE_03, true);
+                    GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.RESOURCEFUL_RAT_NOTE_04, true);
+                    GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.RESOURCEFUL_RAT_NOTE_05, true);
+                    GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.RESOURCEFUL_RAT_NOTE_06, true);
                     break;
                 case "RnG Department Unlocked":
                     ArchipelaGunLocalDataManager.HasRnGAccess = true;
@@ -562,24 +575,10 @@ namespace ArchiGungeon.ArchipelagoServer
                 var data = GameManager.Instance.m_dungeon.data;
                 if (data == null)
                 {
-                    ArchDebugPrint.DebugLog(DebugCategory.ItemHandling, "No Dungeon Data for start chest");
+                    ArchDebugPrint.DebugLog(DebugCategory.ItemHandling, "No Dungeon Data for Chest Spawn");
                     return;
                 }
-                List<TeleporterController> componentsAbsoluteInRoom = data.Entrance.GetComponentsAbsoluteInRoom<TeleporterController>();
-                Vector3? vector = null;
-                if (componentsAbsoluteInRoom != null && componentsAbsoluteInRoom.Count > 0)
-                {
-                    vector = componentsAbsoluteInRoom[0].transform.position + new Vector3(0.5f, 2f, 0f);
-                }
-                if (!vector.HasValue)
-                {
-                    bool success = false;
-                    IntVector2 centeredVisibleClearSpot = data.Entrance.GetCenteredVisibleClearSpot(4, 4, out success, restrictive: true);
-                    if (success)
-                    {
-                        vector = (centeredVisibleClearSpot + IntVector2.One).ToVector2().ToVector3ZisY();
-                    }
-                }
+                Vector3? vector = GetStartRoomSpawnLocation();
                 if (vector.HasValue)
                 {
                     Chest.Spawn(chest, vector.Value, data.Entrance, ForceNoMimic: true);
@@ -589,6 +588,68 @@ namespace ArchiGungeon.ArchipelagoServer
             {
                 ArchDebugPrint.DebugLog(DebugCategory.ItemHandling, "Error spawning start chest with Error: " + ex.Message + " - " + ex.StackTrace);
             }
+        }
+
+        /// <summary>
+        /// Finds a suitable center spot to spawn items/chests in the first room of each floor.
+        /// </summary>
+        /// <returns>Vector3 location of a spot.</returns>
+        private static Vector3? GetStartRoomSpawnLocation()
+        {
+            Vector3? vector = null;
+            var data = GameManager.Instance.m_dungeon.data;
+            if (data == null)
+            {
+                ArchDebugPrint.DebugLog(DebugCategory.ItemHandling, "No Dungeon Data for start room spawn");
+                return vector;
+            }
+            List<TeleporterController> componentsAbsoluteInRoom = data.Entrance.GetComponentsAbsoluteInRoom<TeleporterController>();
+
+            if (componentsAbsoluteInRoom != null && componentsAbsoluteInRoom.Count > 0)
+            {
+                vector = componentsAbsoluteInRoom[0].transform.position + new Vector3(0.5f, 2f, 0f);
+            }
+            if (!vector.HasValue)
+            {
+                bool success = false;
+                IntVector2 centeredVisibleClearSpot = data.Entrance.GetCenteredVisibleClearSpot(4, 4, out success, restrictive: true);
+                if (success)
+                {
+                    vector = (centeredVisibleClearSpot + IntVector2.One).ToVector2().ToVector3ZisY();
+                }
+            }
+
+            return vector;
+        }
+
+        /// <summary>
+        /// Called when AP items have special logic that should occur at the start of floors.
+        /// </summary>
+        /// <param name="floorName"></param>
+        public static void OnFloorLoaded(string floorName)
+        {
+            // Floor 2
+            if(floorName == "tt5")
+            {
+                if(ArchipelaGunLocalDataManager.HasAbbeyAccess)
+                {
+                    // Old Crest
+                    GameObject archipelItem = PickupObjectDatabase.GetById(305).gameObject;
+                    LootEngine.SpawnItem(archipelItem, GetStartRoomSpawnLocation().Value, Vector2.zero, 0);
+                }
+            }
+            // Floor 3
+            else if (floorName == "tt_mines")
+            {
+                if (ArchipelaGunLocalDataManager.HasRatLairAccess)
+                {
+                    // Gnawed Key
+                    GameObject archipelItem = PickupObjectDatabase.GetById(316).gameObject;
+                    LootEngine.SpawnItem(archipelItem, GetStartRoomSpawnLocation().Value, Vector2.zero, 0);
+                }
+            }
+            //tt_catacombs
+            //tt_forge
         }
 
         #endregion

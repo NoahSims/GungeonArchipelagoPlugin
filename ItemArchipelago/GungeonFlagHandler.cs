@@ -369,6 +369,10 @@ namespace ArchiGungeon.ItemArchipelago
                     }
                 }
             }
+            else if(__instance.m_prerequisites.Any(dp => dp.saveFlagToCheck == GungeonFlags.BLACKSMITH_BULLET_COMPLETE))
+            {
+                ETGModConsole.Log("Patch_PrerequisitesMet: Found item expecting bullet to be complete - " + __instance.name);
+            }
             return true;
         }
 
@@ -446,7 +450,8 @@ namespace ArchiGungeon.ItemArchipelago
         {
             if (ArchipelaGunLocalDataManager.HasAbbeyAccess)
             {
-                interactor.healthHaver.HasCrest = true;
+                // Currently we are dropping the Crest at the start of the room. Alternatively we could just force it true here.
+                //interactor.healthHaver.HasCrest = true;
                 return true;
             }
             else
@@ -455,10 +460,23 @@ namespace ArchiGungeon.ItemArchipelago
             }
         }
 
+        /// <summary>
+        /// Before the Chest determines if there is a chance to drop an Infuriating note, spoof the bool that says it already dropped so it can't drop.
+        /// </summary>
+        /// <returns></returns>
+        [HarmonyPatch(typeof(Chest), nameof(Chest.HandleQuestContentsModification))]
+        [HarmonyPrefix]
+        public static bool Patch_HandleQuestContentsModification()
+        {
+            Chest.HasDroppedResourcefulRatNoteThisSession = true;
+            return true;
+        }
+
+
         /*
-         * Patch - ShopItemController.OnEnteredRange
-         * On entering range of a shop item, if it is an AP item, change the UI text to show the AP item being bought rather than the guneon item.
-         */
+        * Patch - ShopItemController.OnEnteredRange
+        * On entering range of a shop item, if it is an AP item, change the UI text to show the AP item being bought rather than the guneon item.
+        */
         [HarmonyPatch(typeof(ShopItemController), nameof(ShopItemController.OnEnteredRange))]
         [HarmonyPostfix]
         public static void Patch_ShopOnEnteredRange(ShopItemController __instance)
@@ -559,6 +577,20 @@ namespace ArchiGungeon.ItemArchipelago
             SessionHandler.DataSender.ScoutLocationHints(locationIds.ToArray());
         }
 
+        /// <summary>
+        /// Forces the Gnawed Key to be out of stock unless the AP item has been received.
+        /// </summary>
+        /// <param name="i"></param>
+        /// <param name="__instance"></param>
+        [HarmonyPatch(typeof(ShopItemController), nameof(ShopItemController.InitializeInternal))]
+        [HarmonyPostfix]
+        public static void InitializeInternalPostFix(PickupObject i, ShopItemController __instance)
+        {
+            if (__instance.IsResourcefulRatKey && !ArchipelaGunLocalDataManager.HasRatLairAccess)
+            {
+                __instance.ForceOutOfStock();
+            }
+        }
 
         /*
          * Patch - GameStatsManager.RegisterStatChange
