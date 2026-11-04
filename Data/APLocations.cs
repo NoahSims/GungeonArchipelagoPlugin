@@ -37,6 +37,8 @@ namespace ArchiGungeon.Data
         BOSSKILLED_LICH = 19000,
 	    BOSSKILLED_HIGHDRAGUN = 19001, 
         TUTORIAL_KILLED_MANFREDS_RIVAL = 2002,
+        BOSSKILLED_MINI_MAGICIAN = 400400,
+        //BOSSKILLED_MINI_MAGICIAN_X5 = 400401, //I don't think this will work
         PunchoutRateDefeated, // ??
         BOSSKILLED_ROGUE_PAST = 18001,
         BOSSKILLED_CONVICT_PAST = 18002,

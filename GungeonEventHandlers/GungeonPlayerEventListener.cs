@@ -168,6 +168,8 @@ namespace ArchiGungeon.GungeonEventHandlers
 
         };
 
+        private static string ShadowMagicianGuid = "db97e486ef02425280129e1e27c33118";
+
         private static List<string> TriggerTwinGuids { get; } = new List<string>
         {
             "ea40fcc863d34b0088f490f4e57f8913",
@@ -473,6 +475,19 @@ namespace ArchiGungeon.GungeonEventHandlers
                     SessionHandler.DataSender.SendFoundLocationCheck(APLocations.Floor4Complete);
                     //SessionHandler.DataSender.SendFoundLocationCheck(APLocations.BOSSKILLED_STATUES);
                 }
+            }
+
+            else if (enemyGuid.Equals(ShadowMagicianGuid))
+            {
+                SessionHandler.DataSender.SendFoundLocationCheck(APLocations.BOSSKILLED_MINI_MAGICIAN);
+                /* Not doing a location for shadow magician X5
+                int shadowMagsKilled = GameStatsManager.Instance.QueryEncounterable("f2229286b97341bcb99e528108949ec1");
+                if (shadowMagsKilled >= 4) // GameStatsManager does not increment until after this, so check for 4 kills
+                {
+                    ETGModConsole.Log("Sending Location! shadow magician x5");
+                    SessionHandler.DataSender.SendFoundLocationCheck(APLocations.BOSSKILLED_MINI_MAGICIAN_X5);
+                }
+                */
             }
 
             //if(GameCompletionGUIds.ContainsKey(enemyGuid))

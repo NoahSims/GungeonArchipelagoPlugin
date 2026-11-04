@@ -18,6 +18,8 @@ namespace ArchiGungeon.ItemArchipelago
     [HarmonyPatch]
     internal class GungeonFlagHandler
     {
+        public const string SHADOW_MAGICIAN_ENCOUNTER_GUID = "f2229286b97341bcb99e528108949ec1";
+
         // Map a flag to the NULL APlocation if you want to stop the flag from being set, but not unlock a location.
         public static Dictionary<GungeonFlags, APLocations> GungeonFlagsToAPLocations = new Dictionary<GungeonFlags, APLocations>(new GungeonFlagsComparer()) {
             // Shop flags
@@ -621,6 +623,25 @@ namespace ArchiGungeon.ItemArchipelago
         public static void TruthChestOpenLocation()
         {
             SessionHandler.DataSender.SendFoundLocationCheck(APLocations.OPEN_TRUTH_CHEST);
+        }
+
+        /*
+         * Patch - GameStatsManager.HandleEncounteredObject
+         * Shadow Magician item unlocks are based on the number of times you've killed it. This stat is tracked
+         * as an EncounterTrackable, just a list in your save file of enemies and how many times you've killed them.
+         * This patch is here to stop that tracker from incrementing when you kill the boss, so that it will send the location
+         * but not unlock the vanilla item.
+         * TODO - might need to relook at this when implementing the shadow magician items as unlockable items.
+         */
+        [HarmonyPatch(typeof(GameStatsManager), nameof(GameStatsManager.HandleEncounteredObject))]
+        [HarmonyPrefix]
+        public static bool StopEncounterTracking(GameStatsManager __instance, EncounterTrackable et)
+        {
+            if (et.EncounterGuid == SHADOW_MAGICIAN_ENCOUNTER_GUID)
+            {
+                return false;
+            }
+            return true;
         }
 
         // This function will trigger any time the game tries to generate the loot pool and read what it thinks are in the pool. Could be useful for debugging.
