@@ -150,6 +150,7 @@ namespace ArchiGungeon.ItemArchipelago
             { GungeonFlags.SHERPA_UNLOCK4_ELEMENT2, APLocations.SHERPA_UNLOCK4_ELEMENT2 },
             { GungeonFlags.SHERPA_UNLOCK4_ELEMENT3, APLocations.SHERPA_UNLOCK4_ELEMENT3 },
             { GungeonFlags.SHERPA_UNLOCK4_ELEMENT4, APLocations.SHERPA_UNLOCK4_ELEMENT4 },
+            { GungeonFlags.BLACKSMITH_RECEIVED_BUSTED_TELEVISION, APLocations.BLACKSMITH_RECEIVED_BUSTED_TELEVISION },
             // Other NPCs
             { GungeonFlags.WINCHESTER_MET_PREVIOUSLY, APLocations.WINCHESTER_MET_PREVIOUSLY },
             { GungeonFlags.SHOP_TRUCK_ACTIVE, APLocations.SHOP_TRUCK_ACTIVE },

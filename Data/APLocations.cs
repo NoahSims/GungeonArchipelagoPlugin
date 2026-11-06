@@ -60,7 +60,7 @@ namespace ArchiGungeon.Data
         TUTORIAL_COMPLETED = 2001,
         TUTORIAL_UNLOCK_HELMET = 2050,
         TUTORIAL_UNLOCK_SHIELD = 2051,
-        BustedTVDelivered,
+        BLACKSMITH_RECEIVED_BUSTED_TELEVISION = 51101,
         OldCrestPickup,
         OPEN_TRUTH_CHEST = 400302,
         ITEMSPECIFIC_STOLE_BANKBAG = 170001,
