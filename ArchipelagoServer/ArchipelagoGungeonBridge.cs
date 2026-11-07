@@ -86,7 +86,7 @@ namespace ArchiGungeon.ArchipelagoServer
                 {
                     case ReceivedItemType.ETGBaseItemFiller:
                         // TODO refactor this now that we get the pickup obj earlier
-                        var spawneditem = SpecificItemSpawnHandler.GivePlayerSpecificItem(apItem.PickupObj.PickupObjectId);
+                        var spawneditem = SpecificItemSpawnHandler.DropPlayerSpecificItem(apItem.PickupObj.PickupObjectId);
                         GameStatsManager.Instance.ForceUnlock(spawneditem.GetComponent<EncounterTrackable>()?.EncounterGuid);
                         break;
                     case ReceivedItemType.FoyerShop:
@@ -341,6 +341,14 @@ namespace ArchiGungeon.ArchipelagoServer
                     GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.RESOURCEFUL_RAT_NOTE_04, true);
                     GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.RESOURCEFUL_RAT_NOTE_05, true);
                     GungeonFlagHandler.SafelySetGungeonFlag(GungeonFlags.RESOURCEFUL_RAT_NOTE_06, true);
+
+                    // Infuriating Notes are ids 243 - 248
+                    for (int noteId = 243; noteId <= 248; noteId++)
+                    {
+                        var spawneditem = SpecificItemSpawnHandler.GrantPlayerSpecificItem(noteId);
+                        GameStatsManager.Instance.ForceUnlock(spawneditem.GetComponent<EncounterTrackable>()?.EncounterGuid);
+                    }
+                    
                     break;
                 case "RnG Department Unlocked":
                     ArchipelaGunLocalDataManager.HasRnGAccess = true;

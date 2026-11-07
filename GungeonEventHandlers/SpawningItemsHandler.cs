@@ -283,13 +283,25 @@ namespace ArchiGungeon.GungeonEventHandlers
         /// </summary>
         /// <param name="itemId"></param>
         /// <returns>The PickupObject the item being spawned.</returns>
-        public static PickupObject GivePlayerSpecificItem(int itemId)
+        public static PickupObject DropPlayerSpecificItem(int itemId)
         {
             EffectsController.PlaySynergyVFX();
             PlayerController playerToSpawnOn = GungeonPlayerEventListener.GetFirstAlivePlayer();
             PickupObject objToGive = PickupObjectDatabase.GetById(itemId);
             ArchDebugPrint.DebugLog(DebugCategory.ItemHandling, $"Giving item: {objToGive.name}");
             LootEngine.SpawnItem(objToGive.gameObject, playerToSpawnOn.CenterPosition, Vector2.zero, 0);
+            
+            return objToGive;
+        }
+
+        public static PickupObject GrantPlayerSpecificItem(int itemId)
+        {
+            EffectsController.PlaySynergyVFX();
+            PlayerController playerToSpawnOn = GungeonPlayerEventListener.GetFirstAlivePlayer();
+            PickupObject objToGive = PickupObjectDatabase.GetById(itemId);
+            ArchDebugPrint.DebugLog(DebugCategory.ItemHandling, $"Giving item: {objToGive.name}");
+            LootEngine.TryGivePrefabToPlayer(objToGive.gameObject, playerToSpawnOn, true);
+
             return objToGive;
         }
     }
