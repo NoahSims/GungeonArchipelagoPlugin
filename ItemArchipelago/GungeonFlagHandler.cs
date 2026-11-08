@@ -245,7 +245,8 @@ namespace ArchiGungeon.ItemArchipelago
             GungeonFlags.TUTORIAL_COMPLETED,
             GungeonFlags.ITEMSPECIFIC_STOLE_DRILL,
             GungeonFlags.ITEMSPECIFIC_STOLE_BANKBAG,
-            GungeonFlags.ITEMSPECIFIC_STOLE_BANKMASK
+            GungeonFlags.ITEMSPECIFIC_STOLE_BANKMASK,
+            GungeonFlags.BLACKSMITH_BULLET_COMPLETE
         };
 
         public static HashSet<GungeonFlags> _pastKilledFlags = new HashSet<GungeonFlags>{
@@ -589,7 +590,11 @@ namespace ArchiGungeon.ItemArchipelago
         [HarmonyPostfix]
         public static void InitializeInternalPostFix(PickupObject i, ShopItemController __instance)
         {
-            if (__instance.IsResourcefulRatKey && !ArchipelaGunLocalDataManager.HasRatLairAccess)
+            if (__instance.item.PickupObjectId == 348 && ArchipelaGunLocalDataManager.FoundLocationsAPIds.Contains((long)APLocations.BLACKSMITH_ELEMENT1))
+            {
+                __instance.ForceOutOfStock();
+            }
+            if (__instance.IsResourcefulRatKey)
             {
                 __instance.ForceOutOfStock();
             }
