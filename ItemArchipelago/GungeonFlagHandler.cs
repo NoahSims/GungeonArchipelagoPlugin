@@ -650,6 +650,25 @@ namespace ArchiGungeon.ItemArchipelago
             return true;
         }
 
+        /// <summary>
+        /// Catch the method that opens to the rng department before it happens to prevent it from happening if the player doesn't have access
+        /// </summary>
+        /// <param name="__instance"></param>
+        /// <returns></returns>
+        [HarmonyPatch(typeof(SellCellController), nameof(SellCellController.HandleSellPitOpening))]
+        [HarmonyPrefix]
+        public static bool HandleSellPitOpeningPrefix(SellCellController __instance)
+        {
+            if (ArchipelaGunLocalDataManager.HasRnGAccess)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         // This function will trigger any time the game tries to generate the loot pool and read what it thinks are in the pool. Could be useful for debugging.
         // I don't know where else to put this, so this can hang out here for now. Uncomment if you want, I guess
         /*
