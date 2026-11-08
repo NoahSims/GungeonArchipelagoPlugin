@@ -504,28 +504,23 @@ namespace ArchiGungeon.GungeonEventHandlers
         
         private static void OnRewardPedestalSpawn(RewardPedestal pedestal)
         {
-            //throw new NotImplementedException();
+            if(pedestal.contents?.PickupObjectId == 305 || pedestal.contents?.itemName == "old_crest")
+            {
+                ArchDebugPrint.DebugLog(DebugCategory.PlayerEventListener, $"Old Crest Found!");
+
+                PickupObject archItem = PickupObjectDatabase.GetById(CrestLocationItem.SpawnItemID);
+                pedestal.contents = archItem;
+                pedestal.sprite.DetachRenderer(pedestal.m_itemDisplaySprite);
+                pedestal.m_itemDisplaySprite = null;
+                pedestal.ForceConfiguration();
+            }
+
+            ArchDebugPrint.DebugLog(DebugCategory.PlayerEventListener, $"Pedestal found with item: " + pedestal.contents?.itemName);
         }
 
         private static void OnRewardPedestalDetermineContent(RewardPedestal pedestal, PlayerController controller, CustomActions.ValidPedestalContents contents)
         {
-            if(!APPickUpItem.HasAPItemChecksRemaining())
-            {
-                return;
-            }
 
-            if(pedestal.IsBossRewardPedestal)
-            {   
-                //pedestal.contents = PickupObjectDatabase.GetById(APPickUpItem.SpawnItemID);
-                if(GameManager.Instance.CurrentFloor == 2 || GameManager.Instance.CurrentFloor == 4)
-                {
-                    ArchipelagoGungeonBridge.SpawnAPItem(1);
-                }
-            }
-            else
-            {
-                ArchipelagoGungeonBridge.SpawnAPItem(1);
-            }
         }
         #endregion
 

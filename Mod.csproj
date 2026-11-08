@@ -62,6 +62,7 @@
     <Compile Include="DebugTools\UnitTests.cs" />
     <Compile Include="EnemyHandlers\EnemySwapping.cs" />
     <Compile Include="GungeonEventHandlers\EffectsController.cs" />
+    <Compile Include="ItemArchipelago\CrestLocationItem.cs" />
     <Compile Include="ItemArchipelago\NpcCellLocationItem.cs" />
     <Compile Include="ItemArchipelago\GungeonFlagHandler.cs" />
     <Compile Include="ItemArchipelago\ReverseCurseItems.cs" />

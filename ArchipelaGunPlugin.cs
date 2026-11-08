@@ -92,6 +92,7 @@ namespace ArchiGungeon
             //Archipelagun.Register();
             APPickUpItem.RegisterItemBase();
             NpcCellLocationItem.RegisterItemBase();
+            CrestLocationItem.RegisterItemBase();
             ReverseCurse.RegisterItem();
             ReverseCurseReversal.RegisterItem();
             

@@ -11,7 +11,7 @@ using ArchiGungeon.Data;
 
 namespace ArchiGungeon.ItemArchipelago
 {
-
+    // TODO: We should make this a generic parent item for all of the version of the custom AP items we want to spawn. The initial set up is the same between them all so we should condense the code.
     public class APPickUpItem: PassiveItem
     {
         #region Item Init
